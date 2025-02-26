@@ -5,15 +5,13 @@ import Link from "next/link";
 const categories = [
   {
     name: "Seafood",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ygq7l8oOKUUxAY9mGTic2LXEMEx7HJ.png",
+    image: "/images/category/seafood.png",
     href: "/categories/seafood",
     count: 12,
   },
   {
     name: "Soups",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ygq7l8oOKUUxAY9mGTic2LXEMEx7HJ.png",
+    image: "/images/category/soups.png",
     href: "/categories/soups",
     count: 8,
   },
@@ -26,15 +24,13 @@ const categories = [
   },
   {
     name: "Meat & Poultry",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ygq7l8oOKUUxAY9mGTic2LXEMEx7HJ.png",
+    image: "/images/category/meat.png",
     href: "/categories/meat",
     count: 20,
   },
   {
     name: "Pasta",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ygq7l8oOKUUxAY9mGTic2LXEMEx7HJ.png",
+    image: "/images/category/seafood.png",
     href: "/categories/pasta",
     count: 10,
   },
@@ -44,6 +40,12 @@ const categories = [
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ygq7l8oOKUUxAY9mGTic2LXEMEx7HJ.png",
     href: "/categories/pizza",
     count: 6,
+  },
+  {
+    name: "Pancakes",
+    image: "/images/category/pancakes.png",
+    href: "/categories/pancakes",
+    count: 18,
   },
   {
     name: "Desserts",
@@ -96,7 +98,7 @@ export default function CategoriesPage() {
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categories.map((category) => (
           <Link key={category.name} href={category.href}>
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
               <CardContent className="p-0">
                 <div className="aspect-square relative">
                   <Image
@@ -105,8 +107,8 @@ export default function CategoriesPage() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/40" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                  {/* <div className="absolute inset-0   opacity-0 " /> */}
+                  <div className="absolute inset-0 bg-black/40   group-hover:opacity-100 transition-all opacity-0 flex flex-col items-center justify-center text-white">
                     <h3 className="text-xl font-semibold">{category.name}</h3>
                     <p className="text-sm">{category.count} recipes</p>
                   </div>

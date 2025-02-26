@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import Logo from "./logo";
 
 const footerLinks = {
   tastebite: [
@@ -29,14 +29,8 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
-            <Link href="/" className="inline-block">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-imWshGD3PHhhM8cemexHKNWTwgzPpu.png"
-                alt="Tastebite Logo"
-                width={150}
-                height={50}
-              />
-            </Link>
+            <Logo />
+
             <p className="mt-4 text-sm text-muted-foreground">
               &quot;On the other hand, we denounce with righteous indignation
               and dislike men who are so beguiled and demoralized by the charms
