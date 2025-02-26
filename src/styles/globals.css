@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FFFFFF;
+    --foreground: #060B19;
+
+    --card: #FFFFFF;
+    --card-foreground: #060B19;
+
+    --popover: #FFFFFF;
+    --popover-foreground: #060B19;
+
+    --primary: #2563EB;
+    --primary-foreground: #F1F5F9;
+
+    --secondary: #F1F5F9;
+    --secondary-foreground: #161B29;
+
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+
+    --accent: #F1F5F9;
+    --accent-foreground: #161B29;
+
+    --destructive: #EF4444;
+    --destructive-foreground: #F1F5F9;
+
+    --border: #E2E8F0;
+    --input: #E2E8F0;
+    --ring: #2563EB;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: #060B19;
+    --foreground: #F1F5F9;
+
+    --card: #060B19;
+    --card-foreground: #F1F5F9;
+
+    --popover: #060B19;
+    --popover-foreground: #F1F5F9;
+
+    --primary: #3B82F6;
+    --primary-foreground: #161B29;
+
+    --secondary: #1E293B;
+    --secondary-foreground: #F1F5F9;
+
+    --muted: #1E293B;
+    --muted-foreground: #94A3B8;
+
+    --accent: #1E293B;
+    --accent-foreground: #F1F5F9;
+
+    --destructive: #7F1D1D;
+    --destructive-foreground: #F1F5F9;
+
+    --border: #1E293B;
+    --input: #1E293B;
+    --ring: #2563EB;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* 
+Primary Colors:
+
+- Primary: `hsl(221.2, 83.2%, 53.3%)` (Tailwind class: `bg-primary`, `text-primary`)
+- Primary Foreground: `hsl(210, 40%, 98%)` (Tailwind class: `text-primary-foreground`)
+
+
+
+Secondary Colors:
+
+- Secondary: `hsl(210, 40%, 96.1%)` (Tailwind class: `bg-secondary`, `text-secondary`)
+- Secondary Foreground: `hsl(222.2, 47.4%, 11.2%)` (Tailwind class: `text-secondary-foreground`)
+
+
+
+Background Colors:
+
+- Background: `hsl(0, 0%, 100%)` (Tailwind class: `bg-background`)
+- Foreground: `hsl(222.2, 84%, 4.9%)` (Tailwind class: `text-foreground`)
+
+
+
+Muted Colors:
+
+- Muted: `hsl(210, 40%, 96.1%)` (Tailwind class: `bg-muted`)
+- Muted Foreground: `hsl(215.4, 16.3%, 46.9%)` (Tailwind class: `text-muted-foreground`)
+
+
+
+Accent Colors:
+
+- Accent: `hsl(210, 40%, 96.1%)` (Tailwind class: `bg-accent`)
+- Accent Foreground: `hsl(222.2, 47.4%, 11.2%)` (Tailwind class: `text-accent-foreground`)
+
+
+
+Destructive Colors:
+
+- Destructive: `hsl(0, 84.2%, 60.2%)` (Tailwind class: `bg-destructive`)
+- Destructive Foreground: `hsl(210, 40%, 98%)` (Tailwind class: `text-destructive-foreground`)
+
+
+
+Border and Ring Colors:
+
+- Border: `hsl(214.3, 31.8%, 91.4%)` (Tailwind class: `border-border`)
+- Ring: `hsl(221.2, 83.2%, 53.3%)` (Tailwind class: `ring-ring`)
+
+
+
+Input Color:
+
+- Input: `hsl(214.3, 31.8%, 91.4%)` (Tailwind class: `bg-input`) */
