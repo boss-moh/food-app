@@ -1,7 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star } from "lucide-react"
-import Image from "next/image"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Star } from "lucide-react";
+import Image from "next/image";
 
 export default function MenuPage() {
   return (
@@ -12,7 +18,12 @@ export default function MenuPage() {
         {menuItems.map((item) => (
           <Card key={item.id}>
             <div className="relative aspect-[4/3]">
-              <Image src={item.image || "/placeholder.svg"} alt={item.name} className="object-cover" fill />
+              <Image
+                src={item.image || "/placeholder.svg"}
+                alt={item.name}
+                className="object-cover"
+                fill
+              />
             </div>
             <CardHeader>
               <CardTitle>{item.name}</CardTitle>
@@ -21,7 +32,9 @@ export default function MenuPage() {
                   <Star
                     key={i}
                     className={`h-4 w-4 ${
-                      i < item.rating ? "fill-primary text-primary" : "fill-muted text-muted-foreground"
+                      i < item.rating
+                        ? "fill-primary text-primary"
+                        : "fill-muted text-muted-foreground"
                     }`}
                   />
                 ))}
@@ -38,7 +51,7 @@ export default function MenuPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 const menuItems = [
@@ -67,5 +80,4 @@ const menuItems = [
     rating: 4,
   },
   // Add more menu items as needed
-]
-
+];

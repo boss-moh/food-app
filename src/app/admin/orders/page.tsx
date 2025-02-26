@@ -1,8 +1,21 @@
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 export default function OrdersPage() {
   return (
@@ -49,7 +62,9 @@ export default function OrdersPage() {
                 <TableCell>
                   <div>
                     <div className="font-medium">{order.customer.name}</div>
-                    <div className="text-sm text-muted-foreground">{order.customer.email}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {order.customer.email}
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>{order.date}</TableCell>
@@ -92,7 +107,7 @@ export default function OrdersPage() {
         </Table>
       </div>
     </div>
-  )
+  );
 }
 
 const orders = [
@@ -138,5 +153,4 @@ const orders = [
     total: 35.97,
     status: "completed",
   },
-]
-
+];

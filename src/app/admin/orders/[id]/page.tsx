@@ -17,15 +17,21 @@ import {
 } from "@/components/ui/table";
 import { Clock, MapPin, Phone, User } from "lucide-react";
 
-export default function OrderDetailsPage({
+type paramsType = Promise<{
+  id: string;
+}>;
+type OrderDetailsPageProps = {
+  params: paramsType;
+};
+
+export default async function OrderDetailsPage({
   params,
-}: {
-  params: { id: string };
-}) {
+}: OrderDetailsPageProps) {
+  const id = (await params).id;
   return (
     <div className="container mx-auto py-10">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Order #{params.id}</h1>
+        <h1 className="text-3xl font-bold">Order #{id}</h1>
         <Select defaultValue="processing">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Status" />

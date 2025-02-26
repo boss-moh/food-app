@@ -1,8 +1,21 @@
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
 
 export default function CustomersPage() {
   return (
@@ -12,7 +25,10 @@ export default function CustomersPage() {
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search customers..." className="pl-8 w-[250px]" />
+            <Input
+              placeholder="Search customers..."
+              className="pl-8 w-[250px]"
+            />
           </div>
           <Select defaultValue="all">
             <SelectTrigger className="w-[150px]">
@@ -67,7 +83,7 @@ export default function CustomersPage() {
         </Table>
       </div>
     </div>
-  )
+  );
 }
 
 const customers = [
@@ -107,5 +123,4 @@ const customers = [
     totalSpent: 345.9,
     joinDate: "2024-01-25",
   },
-]
-
+];
