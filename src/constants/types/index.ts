@@ -1,5 +1,5 @@
 export {};
 
-export type DynamicProps = {
-  params: Promise<{ id: string }>;
+export type DynamicProps<T extends string> = {
+  params: Record<T, string>;
 };
