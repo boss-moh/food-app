@@ -1,6 +1,7 @@
 export const URL_PATHS = {
   HOME: "/",
   CATEGORIES: "/categories",
+  CATEGORIY: (id: string) => `/categories/${id}`,
   ADMIN: "/admin",
 } as const;
 

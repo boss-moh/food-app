@@ -1,13 +1,36 @@
 import prisma from "../prisma";
 
-
 export async function fetchCategories() {
   try {
-    
     const categories = await prisma.category.findMany();
-    return categories
+    return categories;
+  } catch {
+    throw new Error("Faild to fetch categories");
   }
-  catch {
-    throw new Error('Faild to fetch categories')
+}
+
+export async function fetchCategoryById(id: string) {
+  try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+    return category;
+  } catch {
+    throw new Error("Faild to fetch category");
+  }
+}
+
+export async function fetchProductsById(id: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: id,
+      },
+    });
+    return products;
+  } catch {
+    throw new Error("Faild to fetch products");
   }
 }
