@@ -5,6 +5,8 @@ export const URL_PATHS = {
   PRODUCTS: (categoryId: string, productId: string) =>
     `${URL_PATHS.CATEGORIY(categoryId)}/${productId}`,
   ADMIN: "/admin",
+
+  MENU: "/menu",
 } as const;
 
 export const NAV_LINKS = {

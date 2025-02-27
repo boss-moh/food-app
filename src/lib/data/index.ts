@@ -34,3 +34,23 @@ export async function fetchProductsById(id: string) {
     throw new Error("Faild to fetch products");
   }
 }
+export async function fetchProductById(id: string) {
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
+    return product;
+  } catch {
+    throw new Error("Faild to fetch product");
+  }
+}
+export async function fetchMenu() {
+  try {
+    const products = await prisma.product.findMany();
+    return products;
+  } catch {
+    throw new Error("Faild to fetch Menu");
+  }
+}

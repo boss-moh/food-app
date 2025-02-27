@@ -1,58 +1,19 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Star, Minus, Plus, ShoppingCart } from "lucide-react";
+import { DynamicProps } from "@/constants";
+import { ActionsButtons } from "./Actions";
+import { fetchProductById } from "@/lib/data";
 
-// This would typically come from an API or database
-const product = {
-  id: "1",
-  name: "Mighty Super Cheesecake",
-  description:
-    "A creamy and delicious cheesecake topped with fresh berries and a drizzle of berry sauce. This indulgent dessert is perfect for any occasion and will satisfy your sweet tooth cravings.",
-  price: 8.99,
-  rating: 4.5,
-  image: "/placeholder.svg",
-  ingredients: [
-    "Cream Cheese",
-    "Sugar",
-    "Eggs",
-    "Vanilla Extract",
-    "Graham Cracker Crust",
-    "Fresh Berries",
-  ],
-  nutritionalInfo: {
-    calories: 350,
-    fat: 24,
-    carbs: 28,
-    protein: 6,
-  },
-};
+export default async function ProductPage({
+  params,
+}: DynamicProps<"productId">) {
+  const productId = params.productId;
 
-export default function ProductPage() {
-  const { id } = useParams();
-  const [quantity, setQuantity] = useState(1);
+  const product = await fetchProductById(productId);
 
-  const handleQuantityChange = (amount: number) => {
-    setQuantity(Math.max(1, quantity + amount));
-  };
-
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} ${product.name}(s) to cart`);
-    // Here you would typically update your cart state or send a request to your backend
-  };
+  if (!product) return "there is no product";
+  const { imageUrl, name, price, description } = product!;
 
   return (
     <div className="container mx-auto py-10">
@@ -60,8 +21,8 @@ export default function ProductPage() {
         <div className="md:flex">
           <div className="md:w-1/2">
             <Image
-              src={product.image || "/placeholder.svg"}
-              alt={product.name}
+              src={imageUrl || "/placeholder.svg"}
+              alt={name}
               width={600}
               height={600}
               className="w-full object-cover h-full"
@@ -69,10 +30,8 @@ export default function ProductPage() {
           </div>
           <div className="md:w-1/2 p-6">
             <CardHeader>
-              <CardTitle className="text-3xl font-bold">
-                {product.name}
-              </CardTitle>
-              <div className="flex items-center mt-2">
+              <CardTitle className="text-3xl font-bold">{name}</CardTitle>
+              {/* <div className="flex items-center mt-2">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
@@ -86,57 +45,20 @@ export default function ProductPage() {
                 <span className="ml-2 text-sm text-muted-foreground">
                   ({product.rating})
                 </span>
-              </div>
+              </div> */}
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold mt-4">
-                ${product.price.toFixed(2)}
-              </p>
-              <p className="mt-4 text-muted-foreground">
-                {product.description}
-              </p>
+              <p className="text-2xl font-bold mt-4">${price.toFixed(2)}</p>
+              <p className="mt-4 text-muted-foreground">{description}</p>
+
               <Separator className="my-6" />
-              <div className="flex items-center mt-6">
-                <Label htmlFor="quantity" className="mr-4">
-                  Quantity
-                </Label>
-                <div className="flex items-center">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleQuantityChange(-1)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(Math.max(1, Number.parseInt(e.target.value)))
-                    }
-                    className="w-16 mx-2 text-center"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleQuantityChange(1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+
+              <ActionsButtons />
             </CardContent>
-            <CardFooter>
-              <Button className="w-full" onClick={handleAddToCart}>
-                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
-              </Button>
-            </CardFooter>
           </div>
         </div>
       </Card>
-      <div className="mt-12 grid md:grid-cols-2 gap-8">
+      {/* <div className="mt-12 grid md:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
             <CardTitle>Ingredients</CardTitle>
@@ -162,7 +84,7 @@ export default function ProductPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }
