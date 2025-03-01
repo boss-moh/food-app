@@ -1,0 +1,255 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// model Admin {
+//   id           String     @id @default(cuid())
+//   email        String     @unique
+//   password     String
+//   permissions  String[]
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+
+//   // Admin-specific relationships
+//   managedRestaurants Restaurant[]
+// }
+
+// model Chef {
+//   id           String     @id @default(cuid())
+//   email        String     @unique
+//   password     String
+//   bio          String?
+//   specialty    String?
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+
+//   // Chef-specific relationships
+//   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+//   restaurantId String
+//   orders       Order[]
+//   menus        MenuItem[]
+// }
+
+// model Customer {
+//   id             String     @id @default(cuid())
+//   email          String     @unique
+//   password       String
+//   deliveryAddress String?
+//   phone          String?
+//   createdAt      DateTime   @default(now())
+//   updatedAt      DateTime   @updatedAt
+
+//   // Customer-specific relationships
+//   cart           Cart?
+//   orders         Order[]
+//   favoriteItems  MenuItem[]
+// }
+
+// // Other models remain similar but update relationships:
+// model Order {
+//   id          String      @id @default(cuid())
+//   status      OrderStatus
+//   createdAt   DateTime    @default(now())
+//   updatedAt   DateTime    @updatedAt
+  
+//   // Relationships
+//   customer    Customer @relation(fields: [customerId], references: [id])
+//   customerId  String
+//   chef        Chef?    @relation(fields: [chefId], references: [id])
+//   chefId      String?
+//   items       OrderItem[]
+// }
+
+// model Cart {
+//   id         String     @id @default(cuid())
+//   customer   Customer   @relation(fields: [customerId], references: [id])
+//   customerId String
+//   items      CartItem[]
+// }
+
+// schema.prisma
+
+// enum Role {
+//   ADMIN
+//   CUSTOMER
+//   CHEF
+// }
+
+// enum OrderStatus {
+//   PENDING
+//   PREPARING
+//   READY
+//   DELIVERED
+//   CANCELLED
+// }
+
+// model User {
+//   id        String   @id @default(cuid())
+//   email     String   @unique
+//   password  String
+//   role      Role
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // Role-specific relationships
+//   chef     Chef?
+//   customer Customer?
+//   // Additional relations (e.g., orders) can be linked directly to Customer if needed.
+// }
+
+// model Chef {
+//   id         String   @id @default(cuid())
+//   bio        String?
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+
+//   // Relationships
+//   userId     String   @unique
+//   user       User     @relation(fields: [userId], references: [id])
+//   restaurant Restaurant? @relation(fields: [restaurantId], references: [id])
+//   restaurantId String?
+//   orders     Order[]  // Orders assigned to this chef (if applicable)
+// }
+
+// model Customer {
+//   id        String   @id @default(cuid())
+//   address   String?  // Default or primary address (can be extended to support multiple addresses)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // Relationships
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id])
+//   cart   Cart?
+//   orders Order[]
+//   reviews Review[]
+// }
+
+// model Restaurant {
+//   id          String   @id @default(cuid())
+//   name        String
+//   description String
+//   imageUrl    String?  // Store the CDN URL for the restaurant image
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+
+//   // Relationships
+//   menuItems MenuItem[]
+//   chefs     Chef[]
+//   reviews   Review[]
+// }
+
+// model Category {
+//   id        String   @id @default(cuid())
+//   name      String
+//   imageUrl  String?  // CDN URL for category image
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // Relationships
+//   menuItems MenuItem[]
+// }
+
+// model MenuItem {
+//   id          String   @id @default(cuid())
+//   name        String
+//   description String
+//   price       Float
+//   imageUrl    String?  // CDN URL for the food image
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+
+//   // Relationships
+//   category   Category  @relation(fields: [categoryId], references: [id])
+//   categoryId String
+//   restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+//   restaurantId String
+// }
+
+// model Cart {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // Relationships
+//   customer   Customer @relation(fields: [customerId], references: [id])
+//   customerId String
+//   items      CartItem[]
+// }
+
+// model CartItem {
+//   id         String   @id @default(cuid())
+//   quantity   Int      @default(1)
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+
+//   // Relationships
+//   cart       Cart     @relation(fields: [cartId], references: [id])
+//   cartId     String
+//   menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+//   menuItemId String
+// }
+
+// model Order {
+//   id              String      @id @default(cuid())
+//   status          OrderStatus @default(PENDING)
+//   // Order enhancements:
+//   preparationTime DateTime?   // When the order starts being prepared
+//   deliveryTime    DateTime?   // When the order is delivered
+//   deliveryAddress String?     // Delivery address for this order
+//   createdAt       DateTime    @default(now())
+//   updatedAt       DateTime    @updatedAt
+
+//   // Relationships
+//   customer   Customer @relation(fields: [customerId], references: [id])
+//   customerId String
+//   chef       Chef?    @relation(fields: [chefId], references: [id])
+//   chefId     String?
+//   items      OrderItem[]
+// }
+
+// model OrderItem {
+//   id         String   @id @default(cuid())
+//   quantity   Int      @default(1)
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+
+//   // Relationships
+//   order      Order    @relation(fields: [orderId], references: [id])
+//   orderId    String
+//   menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+//   menuItemId String
+// }
+
+// model Review {
+//   id          String   @id @default(cuid())
+//   rating      Int      // e.g., 1 to 5
+//   comment     String?
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+
+//   // Relationships
+//   // Reviews here are associated with a Restaurant.
+//   restaurant  Restaurant @relation(fields: [restaurantId], references: [id])
+//   restaurantId String
+
+//   // The customer who wrote the review
+//   customer   Customer @relation(fields: [customerId], references: [id])
+//   customerId String
+// }
+
+
+
+
+// schema.prisma
