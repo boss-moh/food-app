@@ -16,31 +16,19 @@ import { NAV_LINKS } from "@/constants";
 
 const NavItems = ({ mobile = false }) => (
   <>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-1">
-          Homepage
-          <ChevronDown className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {NAV_LINKS.homepage.map((item) => (
-          <DropdownMenuItem key={item.name} asChild>
-            <Link href={item.href}>{item.name}</Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button variant="ghost" className="flex items-center gap-1">
+      Home
+    </Button>
 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="flex items-center gap-1">
-          Recipe Page
+          Menu
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {NAV_LINKS.recipe.map((item) => (
+        {NAV_LINKS.menu.map((item) => (
           <DropdownMenuItem key={item.name} asChild>
             <Link href={item.href}>{item.name}</Link>
           </DropdownMenuItem>
