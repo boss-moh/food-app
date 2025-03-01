@@ -18,26 +18,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signupSchema, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const formSchema = z
-  .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
 export default function SignUpPage() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -46,7 +35,7 @@ export default function SignUpPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof signupSchema>) {
     console.log(values);
     // Here you would typically send the data to your backend
   }
@@ -157,7 +146,7 @@ export default function SignUpPage() {
               <div className="text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
-                  href="/sign-in"
+                  href={URL_PATHS.AUTH.SIGN_IN}
                   className="text-primary underline-offset-4 transition-colors hover:underline"
                 >
                   Sign in

@@ -12,14 +12,14 @@ import { ChevronDown, Menu, Search, User, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "./logo";
-import { NAV_LINKS } from "@/constants";
+import { NAV_LINKS, URL_PATHS } from "@/constants";
 
 const NavItems = ({ mobile = false }) => (
   <>
-    <Button variant="ghost" className="flex items-center gap-1">
-      Home
+    <Button asChild variant="ghost">
+      {/* <User className="h-5 w-5" /> */}
+      <Link href={URL_PATHS.HOME}>Home</Link>
     </Button>
-
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="flex items-center gap-1">
@@ -52,17 +52,23 @@ const NavItems = ({ mobile = false }) => (
       </DropdownMenuContent>
     </DropdownMenu>
 
-    <Button variant="ghost">Buy</Button>
-
+    <Button asChild variant="ghost">
+      {/* <User className="h-5 w-5" /> */}
+      <Link href={URL_PATHS.CART}>Cart</Link>
+    </Button>
     {mobile && (
       <div className="mt-4 flex flex-col gap-4">
         <Button variant="outline" className="w-full justify-start">
           <Search className="mr-2 h-4 w-4" />
           Search
         </Button>
-        <Button variant="outline" className="w-full justify-start">
+        {/* <Button variant="outline" className="w-full justify-start">
           <User className="mr-2 h-4 w-4" />
           Profile
+        </Button> */}
+        <Button variant="outline" className="w-full justify-start">
+          <User className="mr-2 h-4 w-4" />
+          Sign In
         </Button>
       </div>
     )}
@@ -83,8 +89,9 @@ export default function Header() {
               <Button variant="ghost" size="icon">
                 <Search className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
+              <Button asChild variant="ghost">
+                {/* <User className="h-5 w-5" /> */}
+                <Link href={URL_PATHS.AUTH.SIGN_IN}>Sign In</Link>
               </Button>
             </div>
           </nav>
@@ -111,6 +118,7 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                   >
                     <X className="h-5 w-5" />
+                    <span className="sr-only">Close Drawer</span>
                   </Button>
                 </div>
                 <nav className="flex flex-col gap-4">
