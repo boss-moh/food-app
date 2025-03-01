@@ -6,13 +6,20 @@ export const URL_PATHS = {
     `${URL_PATHS.CATEGORIY(categoryId)}/${productId}`,
   ADMIN: "/admin",
 
-  MENU: "/menu",
+  MEALS: "/meals",
+
+  AUTH: {
+    SIGN_IN: "login",
+    SIGN_UP: "register",
+  },
+
+  CART: "/cart",
 } as const;
 
 export const NAV_LINKS = {
   // homepage: [{ name: "Home Classic", href: URL_PATHS.HOME }],
   menu: [
-    { name: "Menu", href: URL_PATHS.MENU },
+    { name: "Meals", href: URL_PATHS.MEALS },
     { name: "Categories", href: URL_PATHS.CATEGORIES },
   ],
   pages: [

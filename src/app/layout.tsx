@@ -9,7 +9,6 @@ import { font } from "@/fonts";
 export const metadata: Metadata = {
   title: "TastyLife - Food Delivery",
   description: "Delicious food delivered to your doorstep",
-  generator: "v0.dev",
 };
 
 export default function RootLayout({

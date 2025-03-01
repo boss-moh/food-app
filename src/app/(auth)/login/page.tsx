@@ -18,26 +18,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signinSchema, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-});
-
 export default function SignInPage() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof signinSchema>) {
     console.log(values);
     // Here you would typically send the data to your backend
   }
@@ -118,7 +114,7 @@ export default function SignInPage() {
               <div className="text-sm text-muted-foreground">
                 Don&apos;t have an account?{" "}
                 <Link
-                  href="/sign-up"
+                  href={URL_PATHS.AUTH.SIGN_UP}
                   className="text-primary underline-offset-4 transition-colors hover:underline"
                 >
                   Sign up

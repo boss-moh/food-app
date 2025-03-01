@@ -28,19 +28,22 @@ async function main() {
   // Create categories
   const category1 = await prisma.category.create({
     data: {
-      name: "Pizza",
+      name: "meat",
+      imageUrl: "/public/images/category/meat.png",
     },
   });
 
   const category2 = await prisma.category.create({
     data: {
-      name: "Burgers",
+      name: "Pancakes",
+      imageUrl: "/public/images/category/pancakes.png",
     },
   });
 
   const category3 = await prisma.category.create({
     data: {
-      name: "Drinks",
+      name: "Soups",
+      imageUrl: "/images/category/soups.png",
     },
   });
 

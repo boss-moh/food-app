@@ -1,3 +1,4 @@
+import { GridTemplate } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -53,9 +54,9 @@ export default function MealsPage() {
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div className="relative w-full md:w-64">
+        <div className="relative w-full">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search meals..." className="pl-8" />
+          <Input placeholder="Search meals..." className="pl-8 w-full" />
         </div>
         <Select>
           <SelectTrigger className="w-full md:w-[180px]">
@@ -69,7 +70,7 @@ export default function MealsPage() {
           </SelectContent>
         </Select>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <GridTemplate>
         {meals.map((meal) => (
           <Card key={meal.id} className="overflow-hidden">
             <div className="relative aspect-video">
@@ -108,7 +109,7 @@ export default function MealsPage() {
             </CardFooter>
           </Card>
         ))}
-      </div>
+      </GridTemplate>
     </div>
   );
 }
