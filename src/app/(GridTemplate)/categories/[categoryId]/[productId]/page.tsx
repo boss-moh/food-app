@@ -8,7 +8,7 @@ import { fetchProductById } from "@/lib/data";
 export default async function ProductPage({
   params,
 }: DynamicProps<"productId">) {
-  const productId = params.productId;
+  const productId = (await params).productId;
 
   const product = await fetchProductById(productId);
 

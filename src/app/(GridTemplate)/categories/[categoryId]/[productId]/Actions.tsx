@@ -52,8 +52,9 @@ export const ActionsButtons = () => {
           </Button>
         </div>
       </div>
-
-      <AddToCardButton />
+      <div className="mt-4">
+        <AddToCardButton />
+      </div>
     </>
   );
 };

@@ -10,8 +10,11 @@ export const URL_PATHS = {
 } as const;
 
 export const NAV_LINKS = {
-  homepage: [{ name: "Home Classic", href: URL_PATHS.HOME }],
-  recipe: [{ name: "Recipe Categories", href: URL_PATHS.CATEGORIES }],
+  // homepage: [{ name: "Home Classic", href: URL_PATHS.HOME }],
+  menu: [
+    { name: "Menu", href: URL_PATHS.MENU },
+    { name: "Categories", href: URL_PATHS.CATEGORIES },
+  ],
   pages: [
     { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
