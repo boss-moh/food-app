@@ -41,4 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # any file in side prisma
-prisma/*
+# prisma/*
