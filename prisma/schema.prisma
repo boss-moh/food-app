@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -13,22 +8,133 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
-model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
-  posts Post[]
+enum Role {
+  ADMIN
+  CHEF
+  CUSTOMER
 }
 
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String  
-  content   String?  // Optional content
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model User {
+  // Base User Fields
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  role         Role
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Role-Specific Relationships
+  admin admin?
+  // chef  chef?
+  customer customer?
+}
+
+model admin {
+  id          String     @id @default(cuid())
+  userId      String     @unique
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+}
+
+// model chef {
+//   id           String     @id @default(cuid())
+//   userId       String     @unique
+//   user         User       @relation(fields: [userId], references: [id])
+
+//   orders       Order[]
+
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+// }
+
+model customer {
+  id              String     @id @default(cuid())
+  userId          String     @unique
+  user            User       @relation(fields: [userId], references: [id])
+
+  address String?
+  phone           String?
+
+  orders          Order[]
+
+  favoriteItems product[] @relation("Favorites")
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  imageUrl    String?
+  count       Int?     @default(0)
+  menuItems   product[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model product {
+  id           String     @id @default(cuid())
+  name         String
+  description  String
+  price        Float
+  imageUrl     String?
+
+  categoryId   String
+  category     Category   @relation(fields: [categoryId], references: [id])
+
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+
+
+
+  customer customer[] @relation("Favorites")
+
+
+  OrderItem OrderItem[]
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  status       OrderStatus @default(PENDING)
+  customer     customer @relation(fields: [customerId], references: [id])
+  customerId   String
+
+
+  items        OrderItem[]
+  
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orderedAt    DateTime    @default(now())
+
+  acceptedAt   DateTime?
+  preparedAt   DateTime?
+  deliveredAt  DateTime?
+}
+
+model OrderItem {
+
+  id         String    @id @default(cuid())
+
+  quantity   Int       @default(1)
+
+  menuItem   product  @relation(fields: [menuItemId], references: [id])
+  menuItemId String
+
+  order      Order     @relation(fields: [orderId], references: [id])
+  orderId    String
+
+
+  createdAt  DateTime  @default(now())
 }
