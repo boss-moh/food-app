@@ -29,14 +29,14 @@
 //   const category1 = await prisma.category.create({
 //     data: {
 //       name: "meat",
-//       imageUrl: "/public/images/category/meat.png",
+//       imageUrl: "/images/category/meat.png",
 //     },
 //   });
 
 //   const category2 = await prisma.category.create({
 //     data: {
 //       name: "Pancakes",
-//       imageUrl: "/public/images/category/pancakes.png",
+//       imageUrl: "/images/category/pancakes.png",
 //     },
 //   });
 
