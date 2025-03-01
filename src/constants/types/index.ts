@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export {};
 
 export type DynamicProps<T extends string> = {
-  params: Record<T, string>;
+  params: Promise<Record<T, string>>;
 };
 export type childrenProps = {
   children: ReactNode;
