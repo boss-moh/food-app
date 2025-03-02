@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
 import { font } from "@/fonts";
+import { ReactQueryProvider } from "@/lib";
 
 export const metadata: Metadata = {
   title: "TastyLife - Food Delivery",
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <Header />
-        <main className="min-h-screen bg-background">{children}</main>
-        <Toaster />
-        <Footer />
+        <ReactQueryProvider>
+          <Header />
+          <main className="min-h-screen bg-background">{children}</main>
+          <Toaster />
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );

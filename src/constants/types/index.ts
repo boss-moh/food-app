@@ -10,3 +10,4 @@ export type childrenProps = {
 };
 
 export type { product as productType } from "@prisma/client";
+export type { Category as categoryType } from "@prisma/client";

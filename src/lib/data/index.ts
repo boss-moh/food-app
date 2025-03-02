@@ -1,3 +1,4 @@
+// import "server-only";
 import prisma from "../prisma";
 
 export async function fetchCategories() {
@@ -15,6 +16,7 @@ export async function fetchCategoryById(id: string) {
       where: {
         id,
       },
+      
     });
     return category;
   } catch {
@@ -27,6 +29,13 @@ export async function fetchProductsById(id: string) {
     const products = await prisma.product.findMany({
       where: {
         categoryId: id,
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     return products;
@@ -69,3 +78,5 @@ export async function fetchMenu() {
     throw new Error("Faild to fetch Menu");
   }
 }
+
+export type mealsType = Awaited<ReturnType<typeof fetchMenu>>;
