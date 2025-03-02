@@ -1,3 +1,3 @@
 export * from "./menuItem";
-export * from "./addToCardButton";
+export * from "./AddToOrderButton";
 export * from "./gridTemplate";

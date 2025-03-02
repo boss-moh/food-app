@@ -26,31 +26,3 @@
 //     protein: 6,
 //   },
 // };
-
-// const menuItems = [
-//   {
-//     id: 1,
-//     name: "Mighty Super Cheesecake",
-//     description: "Creamy and smooth cheesecake topped with fresh berries",
-//     price: 8.99,
-//     image: "/placeholder.svg",
-//     rating: 5,
-//   },
-//   {
-//     id: 2,
-//     name: "Spinach and Cheese Pasta",
-//     description: "Fresh pasta tossed with spinach and melted cheese",
-//     price: 12.99,
-//     image: "/placeholder.svg",
-//     rating: 4,
-//   },
-//   {
-//     id: 3,
-//     name: "Berry Bliss Smoothie",
-//     description: "Blend of fresh berries, yogurt, and honey",
-//     price: 6.99,
-//     image: "/placeholder.svg",
-//     rating: 4,
-//   },
-//   // Add more menu items as needed
-// ];

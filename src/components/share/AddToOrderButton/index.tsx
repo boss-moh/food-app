@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 
-export const AddToCardButton = () => {
+export const AddToOrderButton = () => {
   return (
     <Button className="w-full " onClick={() => {}}>
       <ShoppingCart className="mr-2 h-5 w-5" /> Add to Order
@@ -10,4 +10,4 @@ export const AddToCardButton = () => {
   );
 };
 
-export default AddToCardButton;
+export default AddToOrderButton;
