@@ -1,125 +1,101 @@
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// async function main() {
-//   // Create 5-10 users
-//   const users = [];
-//   for (let i = 0; i < 10; i++) {
-//     const role = i % 3 === 0 ? "ADMIN" : i % 3 === 1 ? "CHEF" : "CUSTOMER";
-//     const user = await prisma.user.create({
-//       data: {
-//         email: `user${i + 1}${Date.now()}@test.com`,
-//         password: "password123",
-//         role: role,
-//         ...(role === "CUSTOMER" && {
-//           customer: {
-//             create: {
-//               address: `Address ${i + 1}`,
-//               phone: `12345678${i + 1}`,
-//             },
-//           },
-//         }),
-//       },
-//     });
-//     users.push(user);
-//   }
+const products = [
+  {
+    id: "product-1",
+    name: "Mighty Super Cheesecake",
+    description:
+      "A creamy and delicious cheesecake topped with fresh berries and a drizzle of berry sauce. This indulgent dessert is perfect for any occasion and will satisfy your sweet tooth cravings.",
+    price: 8.99,
+    imageUrl:
+      "https://res.cloudinary.com/demo/image/upload/v1612431962/cheesecake.jpg",
+    categoryId: "category-1",
+    prepTime: 45,
+    rating: 5,
+    ingredients: [
+      "Cream Cheese",
+      "Sugar",
+      "Eggs",
+      "Vanilla Extract",
+      "Graham Cracker Crust",
+      "Fresh Berries",
+    ],
+    nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", " protein: 6"],
+  },
+  {
+    id: "product-2",
+    name: "Classic Spaghetti Bolognese",
+    description:
+      "A savory and hearty spaghetti with rich tomato and meat sauce, topped with grated Parmesan.",
+    price: 12.99,
+    imageUrl:
+      "https://res.cloudinary.com/demo/image/upload/v1612431962/spaghetti.jpg",
+    categoryId: "category-2",
+    prepTime: 30,
+    rating: 3,
+    ingredients: [
+      "Spaghetti",
+      "Ground Beef",
+      "Tomatoes",
+      "Garlic",
+      "Olive Oil",
+      "Parmesan",
+    ],
+    nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", "protein: 6"],
+  },
+  {
+    id: "product-3",
+    name: "Iced Latte",
+    description: "A smooth and refreshing iced coffee with a hint of milk.",
+    price: 3.99,
+    imageUrl:
+      "https://res.cloudinary.com/demo/image/upload/v1612431962/iced-latte.jpg",
+    categoryId: "category-3",
+    prepTime: 5,
+    rating: 4.5,
+    ingredients: ["Espresso", "Ice", "Milk"],
+    nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", " protein: 6"],
+  },
+];
 
-//   // Create categories
-//   const category1 = await prisma.category.create({
-//     data: {
-//       name: "meat",
-//       imageUrl: "/images/category/meat.png",
-//     },
-//   });
+const categories = [
+  {
+    id: "category-1",
+    name: "Desserts",
+  },
+  {
+    id: "category-2",
+    name: "Main Courses",
+  },
+  {
+    id: "category-3",
+    name: "Beverages",
+  },
+];
 
-//   const category2 = await prisma.category.create({
-//     data: {
-//       name: "Pancakes",
-//       imageUrl: "/images/category/pancakes.png",
-//     },
-//   });
+async function seed() {
+  // Create categories
+  console.log("run seed");
 
-//   const category3 = await prisma.category.create({
-//     data: {
-//       name: "Soups",
-//       imageUrl: "/images/category/soups.png",
-//     },
-//   });
+  for (const category of categories) {
+    await prisma.category.create({
+      data: category,
+    });
+  }
 
-//   // Create products
-//   const products = [];
-//   const productNames = [
-//     "Pepperoni Pizza",
-//     "Cheeseburger",
-//     "Cola",
-//     "Margherita Pizza",
-//     "Veggie Burger",
-//     "Lemonade",
-//   ];
-//   for (const name of productNames) {
-//     const category = [category1, category2, category3][
-//       Math.floor(Math.random() * 3)
-//     ]; // Randomly assign to a category
-//     const product = await prisma.product.create({
-//       data: {
-//         name,
-//         description: `${name} description.`,
-//         price: Math.floor(Math.random() * 10) + 5, // Random price between 5-15
-//         categoryId: category.id,
-//       },
-//     });
+  // Create food items
+  for (const foodItem of products) {
+    await prisma.product.create({
+      data: foodItem,
+    });
+  }
+  console.log("finsih file");
+}
 
-//     const catg = await prisma.category.findUnique({
-//       where: {
-//         id: category.id,
-//       },
-//     });
-
-//     const count = catg?.count ?? 0 + 1;
-//     await prisma.category.update({
-//       where: {
-//         id: category.id,
-//       },
-//       data: {
-//         count,
-//       },
-//     });
-
-//     products.push(product);
-//   }
-
-//   // Create orders for customers with 5-10 items
-//   for (const user of users.filter((user) => user.role === "CUSTOMER")) {
-//     const orderItemCount = Math.floor(Math.random() * 6) + 5; // Random number of items between 5 and 10
-//     const items = [];
-//     for (let i = 0; i < orderItemCount; i++) {
-//       const product = products[Math.floor(Math.random() * products.length)];
-//       items.push({
-//         menuItemId: product.id,
-//         quantity: Math.floor(Math.random() * 3) + 1, // Random quantity between 1-3
-//       });
-//     }
-
-//     //   await prisma.order.create({
-//     //     data: {
-//     //       customerId: user.id,
-//     //       status: "PENDING",
-//     //       items: {
-//     //         create: items,
-//     //       },
-//     //     },
-//     //   });
-//     // }
-//   }
-//   console.log("Seed data created!");
-// }
-
-// main()
-//   .catch((e) => {
-//     console.error(e);
-//     process.exit(1);
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect();
-//   });
+// Call the seed function
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

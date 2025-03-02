@@ -4,6 +4,11 @@ export const URL_PATHS = {
   CATEGORIY: (id: string) => `/categories/${id}`,
   PRODUCTS: (categoryId: string, productId: string) =>
     `${URL_PATHS.CATEGORIY(categoryId)}/${productId}`,
+
+  MENU: {
+    GET_DISH: (categoryId: string, dishId: string) =>
+      `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
+  },
   ADMIN: "/admin",
 
   MEALS: "/meals",

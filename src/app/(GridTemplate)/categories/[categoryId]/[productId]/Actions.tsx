@@ -1,5 +1,5 @@
 "use client";
-import { AddToCardButton } from "@/components/share";
+import { AddToOrderButton } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,7 +53,7 @@ export const ActionsButtons = () => {
         </div>
       </div>
       <div className="mt-4">
-        <AddToCardButton />
+        <AddToOrderButton />
       </div>
     </>
   );

@@ -4,6 +4,9 @@ import { Separator } from "@/components/ui/separator";
 import { DynamicProps } from "@/constants";
 import { ActionsButtons } from "./Actions";
 import { fetchProductById } from "@/lib/data";
+import Rating from "./rating";
+import { Clock, Utensils } from "lucide-react";
+import { formatPrice } from "@/utils";
 
 export default async function ProductPage({
   params,
@@ -13,7 +16,8 @@ export default async function ProductPage({
   const product = await fetchProductById(productId);
 
   if (!product) return "there is no product";
-  const { imageUrl, name, price, description } = product!;
+  const { imageUrl, name, price, description, rating, nutritionalInfo } =
+    product!;
 
   return (
     <div className="container mx-auto py-10">
@@ -31,24 +35,22 @@ export default async function ProductPage({
           <div className="md:w-1/2 p-6">
             <CardHeader>
               <CardTitle className="text-3xl font-bold">{name}</CardTitle>
-              {/* <div className="flex items-center mt-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < Math.floor(product.rating)
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-                <span className="ml-2 text-sm text-muted-foreground">
-                  ({product.rating})
-                </span>
-              </div> */}
+              <div className="flex justify-between items-center">
+                <Rating rating={rating} />
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Utensils className="h-4 w-4" />
+                    <span>{product.category.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{product.prepTime}</span>
+                  </div>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold mt-4">${price.toFixed(2)}</p>
+            <CardContent className="flex-grow">
+              <p className="text-2xl font-bold mt-4">{formatPrice(price)}</p>
               <p className="mt-4 text-muted-foreground">{description}</p>
 
               <Separator className="my-6" />
@@ -58,7 +60,7 @@ export default async function ProductPage({
           </div>
         </div>
       </Card>
-      {/* <div className="mt-12 grid md:grid-cols-2 gap-8">
+      <div className="mt-12 grid md:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
             <CardTitle>Ingredients</CardTitle>
@@ -77,14 +79,13 @@ export default async function ProductPage({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>Calories: {product.nutritionalInfo.calories}</p>
-              <p>Fat: {product.nutritionalInfo.fat}g</p>
-              <p>Carbs: {product.nutritionalInfo.carbs}g</p>
-              <p>Protein: {product.nutritionalInfo.protein}g</p>
+              {nutritionalInfo.map((info, index) => (
+                <p key={index}>{info}</p>
+              ))}
             </div>
           </CardContent>
         </Card>
-      </div> */}
+      </div>
     </div>
   );
 }

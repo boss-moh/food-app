@@ -1,4 +1,4 @@
-import { GridTemplate } from "@/components/share";
+import { AddToOrderButton, GridTemplate } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,41 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { URL_PATHS } from "@/constants";
+import { fetchMenu } from "@/lib";
+import { formatPrice } from "@/utils";
 import { Clock, Search, Utensils } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
-const meals = [
-  {
-    id: 1,
-    name: "Mighty Super Cheesecake",
-    description: "Creamy and smooth cheesecake topped with fresh berries",
-    price: 8.99,
-    category: "Desserts",
-    prepTime: "20 mins",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    name: "Spinach and Cheese Pasta",
-    description: "Fresh pasta tossed with spinach and melted cheese",
-    price: 12.99,
-    category: "Pasta",
-    prepTime: "25 mins",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    name: "Berry Bliss Smoothie",
-    description: "Blend of fresh berries, yogurt, and honey",
-    price: 6.99,
-    category: "Drinks",
-    prepTime: "10 mins",
-    image: "/placeholder.svg",
-  },
-  // Add more meals as needed
-];
-
-export default function MealsPage() {
+export default async function MealsPage() {
+  const meals = await fetchMenu();
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
@@ -72,10 +46,10 @@ export default function MealsPage() {
       </div>
       <GridTemplate>
         {meals.map((meal) => (
-          <Card key={meal.id} className="overflow-hidden">
+          <Card key={meal.id} className="overflow-hidden flex flex-col">
             <div className="relative aspect-video">
               <Image
-                src={meal.image || "/placeholder.svg"}
+                src={meal.imageUrl || "/placeholder.svg"}
                 alt={meal.name}
                 className="object-cover"
                 fill
@@ -85,18 +59,18 @@ export default function MealsPage() {
               <CardTitle className="flex justify-between items-center">
                 <span>{meal.name}</span>
                 <span className="text-lg font-normal">
-                  ${meal.price.toFixed(2)}
+                  {formatPrice(meal.price)}
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <p className="text-sm text-muted-foreground mb-4">
                 {meal.description}
               </p>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Utensils className="h-4 w-4" />
-                  <span>{meal.category}</span>
+                  <span>{meal.category.name}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
@@ -104,8 +78,13 @@ export default function MealsPage() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full">Add to Order</Button>
+            <CardFooter className="flex gap-2">
+              <AddToOrderButton />
+              <Button asChild variant={"outline"}>
+                <Link href={URL_PATHS.MENU.GET_DISH(meal.categoryId, meal.id)}>
+                  View
+                </Link>
+              </Button>
             </CardFooter>
           </Card>
         ))}

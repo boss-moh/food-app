@@ -8,7 +8,7 @@ import {
 import { productType } from "@/constants";
 import Image from "next/image";
 import React from "react";
-import AddToCardButton from "../addToCardButton";
+import AddToOrderButton from "../AddToOrderButton";
 
 type MenuItemProps = {
   product: productType;
@@ -46,7 +46,7 @@ export const MenuItem = ({ product }: MenuItemProps) => {
         <p className="text-lg font-bold mt-2">${price.toFixed(2)}</p>
       </CardContent>
       <CardFooter>
-        <AddToCardButton />
+        <AddToOrderButton />
       </CardFooter>
     </Card>
   );

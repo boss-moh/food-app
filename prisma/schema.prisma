@@ -98,12 +98,21 @@ model product {
   updatedAt    DateTime   @updatedAt
 
 
-
+  rating Float 
 
   customer customer[] @relation("Favorites")
 
 
   OrderItem OrderItem[]
+
+
+  prepTime  Int
+
+
+  ingredients String[] 
+
+  nutritionalInfo String[] 
+
 }
 
 model Order {
