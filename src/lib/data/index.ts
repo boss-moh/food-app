@@ -1,4 +1,5 @@
 // import "server-only";
+import { productType } from "@/constants";
 import prisma from "../prisma";
 
 export async function fetchCategories() {
@@ -16,7 +17,6 @@ export async function fetchCategoryById(id: string) {
       where: {
         id,
       },
-      
     });
     return category;
   } catch {
@@ -80,3 +80,30 @@ export async function fetchMenu() {
 }
 
 export type mealsType = Awaited<ReturnType<typeof fetchMenu>>;
+
+type options = keyof productType;
+type selectedOptions = Extract<
+  options,
+  "price" | "createdAt" | "rating" | "prepTime"
+>;
+
+export async function fetchDishesBaseOn(baseOn: selectedOptions) {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        [baseOn]: "desc",
+      },
+      take: 4,
+    });
+    return products;
+  } catch {
+    throw new Error("Faild to fetch Latest Dishes");
+  }
+}
