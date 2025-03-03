@@ -1,28 +1,36 @@
 "use client";
-import { GridTemplate, SearchInput } from "@/components/share";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useCategoriy, useMeals } from "@/lib";
-import Meals from "./Meals";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+  GridTemplate,
+  SearchInput,
+  Meals,
+  CategoriesSelecter,
+} from "@/components/share";
+
+import { useMeals } from "@/lib";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import DishCardSkeleton from "./DishCardSkeleton";
 
 export default function MealsPage() {
-  const { categories, isLoading, isError } = useCategoriy();
   const mealsData = useMeals();
 
   const path = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const selecetedCategoryID = searchParams.get("categoryId");
-  const selecetedCategory = categories?.find(
-    (category) => category.id == selecetedCategoryID
-  );
+
+  const query = searchParams.get("query");
+  const filterMeals = !query
+    ? mealsData.meals
+    : mealsData.meals.filter((meal) => {
+        if (meal.description.includes(query)) return true;
+        if (meal.name.includes(query)) return true;
+
+        return false;
+      });
+
+  // const selecetedCategoryID = searchParams.get("categoryId");
+  // const selecetedCategory = categories?.find(
+  // (category) => category.id == selecetedCategoryID
+  // );
 
   const handleChangeCategory = (categoryId: string) => {
     const params = new URLSearchParams(searchParams);
@@ -33,40 +41,13 @@ export default function MealsPage() {
     }
     router.replace(`${path}?${params.toString()}`);
   };
-
+  // onValueChange={handleChangeCategory}
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <SearchInput />
-        <Select onValueChange={handleChangeCategory}>
-          <SelectTrigger className="w-full md:w-[180px]">
-            <SelectValue
-              placeholder={selecetedCategory?.name ?? "All Categories"}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-
-            {isLoading ? (
-              "loading..."
-            ) : isError ? (
-              "Error..."
-            ) : categories?.length == 0 ? (
-              <p>There Are No categories</p>
-            ) : (
-              categories?.map((category) => (
-                <SelectItem
-                  className="capitalize"
-                  key={category.id}
-                  value={category.id}
-                >
-                  {category.name}
-                </SelectItem>
-              ))
-            )}
-          </SelectContent>
-        </Select>
+        <CategoriesSelecter onChange={handleChangeCategory} />
       </div>
       {mealsData.isLoading ? (
         <GridTemplate>
@@ -75,7 +56,7 @@ export default function MealsPage() {
           ))}
         </GridTemplate>
       ) : (
-        <Meals meals={mealsData.meals} />
+        <Meals meals={filterMeals} />
       )}
     </div>
   );

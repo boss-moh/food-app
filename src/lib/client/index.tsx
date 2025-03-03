@@ -16,7 +16,7 @@ export const useCategoriy = () => {
   });
 
   return {
-    categories,
+    categories: categories ?? [],
     isLoading,
     isError,
   };
