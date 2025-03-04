@@ -43,6 +43,8 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
+export type signupType = z.infer<typeof signupSchema>;
+
 export const signinSchema = z.object({
   email: RULES.EMAIL,
   password: RULES.PASSWORD,

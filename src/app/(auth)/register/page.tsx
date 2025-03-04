@@ -18,14 +18,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signupSchema, URL_PATHS } from "@/constants";
+import {
+  API_END_POINT,
+  signupSchema,
+  signupType,
+  URL_PATHS,
+} from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { axios, useMutation } from "@/lib";
+import { toast } from "@/hooks/use-toast";
+import HelperText from "@/components/share/helperText";
+
+type errors = {
+  name?: string[] | undefined;
+  email?: string[] | undefined;
+  password?: string[] | undefined;
+  confirmPassword?: string[] | undefined;
+};
+
+// {
+//   "errors": {
+//       "name": [
+//           "Name must be at least 2 characters"
+//       ],
+//       "email": [
+//           "Invalid email address"
+//       ],
+//       "password": [
+//           "Password must be at least 8 characters"
+//       ],
+//       "confirmPassword": [
+//           "String must contain at least 1 character(s)"
+//       ]
+//   }
+// }
 
 export default function SignUpPage() {
-  const form = useForm<z.infer<typeof signupSchema>>({
+  const form = useForm<signupType>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
@@ -35,11 +66,33 @@ export default function SignUpPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof signupSchema>) {
-    console.log(values);
-    // Here you would typically send the data to your backend
-  }
+  const {
+    mutate,
+    isPending: isLoading,
+    error,
+    isError,
+  } = useMutation<void, { errors: errors }>({
+    mutationFn: async () => {
+      await axios.post(API_END_POINT.USER.CREATE, form.getValues());
+    },
+    onError(error) {
+      console.log("error", error);
+    },
+    onSuccess() {
+      form.reset();
+      toast({
+        title: "New Account has been created.",
+      });
+    },
+  });
 
+  async function onSubmit() {
+    if (isLoading) {
+      return;
+    }
+
+    mutate();
+  }
   return (
     <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
@@ -136,9 +189,15 @@ export default function SignUpPage() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
-                    Sign Up
+                  <Button type="submit" disabled={isLoading} className="w-full">
+                    {isLoading ? "loading ..." : "Sign Up"}
                   </Button>
+                  <div>
+                    {isError &&
+                      Object.values(error.errors).map((error, key) => (
+                        <HelperText key={key}>{error}</HelperText>
+                      ))}
+                  </div>
                 </form>
               </Form>
             </CardContent>
