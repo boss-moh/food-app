@@ -2,8 +2,11 @@ import { ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import LandingImage from "localImages/landing.png";
+import { auth } from "@/auth";
 
-export default function Home() {
+export default async function Home() {
+  const data = await auth();
+  console.log("data", data);
   return (
     <div>
       {/* Hero Section */}
