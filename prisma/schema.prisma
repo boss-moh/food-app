@@ -67,6 +67,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+    password      String?   // <-- add this field to store the hashed password
+
 }
 
 model Account {
