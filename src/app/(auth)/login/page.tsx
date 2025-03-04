@@ -1,4 +1,4 @@
-// "use client";
+import { signIn } from "@/auth";
 
 // import { signIn } from "@/auth";
 
@@ -144,25 +144,34 @@
 //   );
 // }
 
-import { signIn } from "@/auth";
-async function action(formData) {
-  "use server";
-
-  await signIn("credentials", formData);
-}
+// export default function SignIn() {
+//   return (
+//     <>
+//       <button onClick={() => signIn("github")}>github</button>
+//       <form>
+//         <label>
+//           Email
+//           <input name="email" type="email" />
+//         </label>
+//         <label>
+//           Password
+//           <input name="password" type="password" />
+//         </label>
+//         <button>Sign In</button>
+//       </form>
+//     </>
+//   );
+// }
 
 export default function SignIn() {
   return (
-    <form action={action}>
-      <label>
-        Email
-        <input name="email" type="email" />
-      </label>
-      <label>
-        Password
-        <input name="password" type="password" />
-      </label>
-      <button>Sign In</button>
+    <form
+      action={async () => {
+        "use server";
+        await signIn("github");
+      }}
+    >
+      <button type="submit">Signin with GitHub</button>
     </form>
   );
 }
