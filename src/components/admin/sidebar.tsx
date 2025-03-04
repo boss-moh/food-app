@@ -55,11 +55,13 @@ const routes = [
   },
 ];
 
-export function AdminSidebar() {
+const SidebarContent = ({
+  setIsMobileOpen,
+}: {
+  setIsMobileOpen: (isOpen: boolean) => void;
+}) => {
   const pathname = usePathname();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const SidebarContent = () => (
+  return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-white">
       <div className="px-3 py-2 flex-1">
         <Link href="/admin" className="flex items-center pl-3 mb-14">
@@ -88,11 +90,15 @@ export function AdminSidebar() {
       </div>
     </div>
   );
+};
+
+export function AdminSidebar() {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
     <>
-      <aside className="hidden md:flex h-full w-64 flex-col fixed inset-y-0 z-50 top-20">
-        <SidebarContent />
+      <aside className="hidden md:flex h-full w-[19rem] flex-col  z-50 top-20">
+        <SidebarContent setIsMobileOpen={setIsMobileOpen} />
       </aside>
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetTrigger asChild className="md:hidden fixed left-4 top-24 z-50">
@@ -101,7 +107,7 @@ export function AdminSidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 w-64">
-          <SidebarContent />
+          <SidebarContent setIsMobileOpen={setIsMobileOpen} />
         </SheetContent>
       </Sheet>
     </>
