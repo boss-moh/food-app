@@ -2,14 +2,11 @@ import { ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import LandingImage from "localImages/landing.png";
-import { auth } from "@/auth";
 import { fetchDishesBaseOn } from "@/lib";
 import { GridItem, GridTemplate } from "@/components/share";
 import { URL_PATHS } from "@/constants";
 
 export default async function Home() {
-  const data = await auth();
-  console.log("data", data);
   const [topRatings, latestDishes] = await Promise.all([
     fetchDishesBaseOn("rating"),
     fetchDishesBaseOn("createdAt"),

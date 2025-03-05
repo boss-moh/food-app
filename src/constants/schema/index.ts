@@ -49,3 +49,9 @@ export const signinSchema = z.object({
   email: RULES.EMAIL,
   password: RULES.PASSWORD,
 });
+
+export type signinType = z.infer<typeof signinSchema>;
+
+export type ErrorResponse<T> =
+  | Partial<Record<keyof T, string[]>>
+  | Record<string, string[]>;

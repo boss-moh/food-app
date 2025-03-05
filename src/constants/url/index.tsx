@@ -10,8 +10,8 @@ export const URL_PATHS = {
       `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
   },
 
-  PRODUCT:{
-    CREATE:"/admin/products/create"
+  PRODUCT: {
+    CREATE: "/admin/products/create",
   },
 
   ADMIN: "/admin",
@@ -19,8 +19,8 @@ export const URL_PATHS = {
   MEALS: "/meals",
 
   AUTH: {
-    SIGN_IN: "login",
-    SIGN_UP: "register",
+    SIGN_IN: "/login",
+    SIGN_UP: "/register",
   },
 
   CART: "/cart",
@@ -39,3 +39,13 @@ export const NAV_LINKS = {
     { name: "Admin Dashboard", href: URL_PATHS.ADMIN },
   ],
 };
+
+export const PUBLICE_PATHS: string[] = [
+  URL_PATHS.HOME,
+  URL_PATHS.AUTH.SIGN_IN,
+  URL_PATHS.AUTH.SIGN_UP,
+];
+export const PROTECTED_PATHS: string[] = [URL_PATHS.HOME, "/settings"];
+
+export const DEFAULT_REDIRECTED = URL_PATHS.AUTH.SIGN_IN;
+export const API_PREFIX = "/api/";

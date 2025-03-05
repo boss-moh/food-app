@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   API_END_POINT,
+  ErrorResponse,
   signupSchema,
   signupType,
   URL_PATHS,
@@ -31,29 +32,7 @@ import { axios, useMutation } from "@/lib";
 import { toast } from "@/hooks/use-toast";
 import HelperText from "@/components/share/helperText";
 
-type errors = {
-  name?: string[] | undefined;
-  email?: string[] | undefined;
-  password?: string[] | undefined;
-  confirmPassword?: string[] | undefined;
-};
-
-// {
-//   "errors": {
-//       "name": [
-//           "Name must be at least 2 characters"
-//       ],
-//       "email": [
-//           "Invalid email address"
-//       ],
-//       "password": [
-//           "Password must be at least 8 characters"
-//       ],
-//       "confirmPassword": [
-//           "String must contain at least 1 character(s)"
-//       ]
-//   }
-// }
+type errors = ErrorResponse<signupType>;
 
 export default function SignUpPage() {
   const form = useForm<signupType>({
@@ -192,6 +171,7 @@ export default function SignUpPage() {
                   <Button type="submit" disabled={isLoading} className="w-full">
                     {isLoading ? "loading ..." : "Sign Up"}
                   </Button>
+
                   <div>
                     {isError &&
                       Object.values(error.errors).map((error, key) => (
