@@ -1,8 +1,11 @@
+import { signinType } from "@/constants";
 import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
-import { NextAuthConfig } from "next-auth";
+import { CredentialsSignin, NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
+
+class CredentialError extends CredentialsSignin {}
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -14,39 +17,45 @@ export const authConfig: NextAuthConfig = {
         email: {},
         password: {},
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials: signinType) => {
         console.log("credentials", credentials);
+        const { email, password } = credentials;
 
-        if (!credentials?.email || !credentials?.password) {
-          // throw new Error("Please enter email and password");
-          console.log("there is no data");
-          return null;
-        }
-
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
+        const existingUser = await prisma.user.findUnique({
+          where: { email },
         });
-        console.log("user", user);
-        if (!user || !user.password) {
-          console.log("No user found with the provided email.");
-          return null;
-          // throw new Error("No user found with the provided email.");
-        }
-        // logic to salt and hash password
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
-        // logic to verify if the user exists
-        // user = await getUserFromDb(credentials.email, pwHash)
-        if (!isValid) {
-          console.log("is not isValid");
-          // throw new Error("Invalid credentials");
+
+        if (existingUser === null) {
+          throw new CredentialError("Email Not  exists");
         }
 
-        // return user object with their profile data
-        return user;
+        if (!existingUser.password) {
+          throw new CredentialError(
+            "InValid Login , The Account Created Via Oauth"
+          );
+        }
+
+        const hasTheSamePassword = await bcrypt.compare(
+          password,
+          existingUser.password
+        );
+        if (!hasTheSamePassword) {
+          throw new CredentialError('"InValid Password "');
+        }
+
+        return existingUser;
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token }) => {
+      console.log("token", token);
+      return token;
+    },
+    session: async ({ session }) => {
+      console.log("session", session);
+
+      return { ...session, customFiled: "sadsa" };
+    },
+  },
 };

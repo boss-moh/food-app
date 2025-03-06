@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { signinSchema } from "@/constants";
-import { prisma } from "@/lib";
+import { DEFAULT_REDIRECTED, signinSchema } from "@/constants";
 import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 
 export async function POST(request: Request) {
   const data = await request.json();
@@ -17,52 +16,32 @@ export async function POST(request: Request) {
 
   const { email, password } = errors.data;
 
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  });
-
-  if (existingUser === null) {
-    return NextResponse.json(
-      { errors: { email: "Email Not  exists" } },
-      { status: 400 }
-    );
-  }
-
-  if (!existingUser.password) {
-    return NextResponse.json(
-      { errors: { account: "InValid Login , The Account Created Via Oauth" } },
-      { status: 400 }
-    );
-  }
-
-  const hasTheSamePassword = await bcrypt.compare(
-    password,
-    existingUser.password
-  );
-  if (!hasTheSamePassword) {
-    return NextResponse.json(
-      { errors: { password: "InValid Password " } },
-      { status: 400 }
-    );
-  }
-
-  // Ssfaule
-
-  // const responseUser = {
-  //   id: existingUser.id,
-  //   email: existingUser.email,
-  //   image: existingUser.image,
-  //   name: existingUser.name,
-  // };
-  const form = new FormData();
-  form.append("email", email);
-  form.append("password", password);
   try {
     await signIn("credentials", {
-      form,
+      email,
+      password,
+      redirectTo: DEFAULT_REDIRECTED,
     });
   } catch (e) {
-    console.log(e);
+    if (e instanceof AuthError) {
+      switch (e.type) {
+        case "CredentialsSignin": {
+          return NextResponse.json(
+            { errors: { error: e.message } },
+            { status: 400 }
+          );
+        }
+
+        default: {
+          return NextResponse.json(
+            { errors: { error: "Internal server error" } },
+            { status: 500 }
+          );
+        }
+      }
+    }
+
+    throw e;
   }
-  // return NextResponse.json(responseUser);
+  return null;
 }

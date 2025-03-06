@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
 import { font } from "@/fonts";
 import { ReactQueryProvider } from "@/lib";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "TastyLife - Food Delivery",
@@ -21,10 +22,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={font.className}>
         <ReactQueryProvider>
-          <Header />
-          <main className="min-h-screen bg-background">{children}</main>
-          <Toaster />
-          <Footer />
+          <SessionProvider>
+            <Header />
+            <main className="min-h-screen bg-background">{children}</main>
+            <Toaster />
+            <Footer />
+          </SessionProvider>
         </ReactQueryProvider>
       </body>
     </html>
