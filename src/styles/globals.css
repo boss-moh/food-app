@@ -4,65 +4,97 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
-    --foreground: #060b19;
+    /* Base colors */
+    --background: 255 255 255;
+    --foreground: 0 0 0;
 
-    --card: #ffffff;
-    --card-foreground: #060b19;
+    /* Card colors */
+    --card: 255 255 255;
+    --card-foreground: 0 0 0;
 
-    --popover: #ffffff;
-    --popover-foreground: #060b19;
+    /* Popover colors */
+    --popover: 255 255 255;
+    --popover-foreground: 0 0 0;
 
-    --primary: #2563eb;
-    --primary-foreground: #f1f5f9;
+    /* Primary - Red */
+    --primary: 255 102 102;
+    --primary-foreground: 255 255 255;
 
-    --secondary: #f1f5f9;
-    --secondary-foreground: #161b29;
+    /* Secondary - Light Gray */
+    --secondary: 245 245 245;
+    --secondary-foreground: 0 0 0;
 
-    --muted: #f1f5f9;
-    --muted-foreground: #64748b;
+    /* Muted - Gray */
+    --muted: 245 245 245;
+    --muted-foreground: 115 115 115;
 
-    --accent: #f1f5f9;
-    --accent-foreground: #161b29;
+    /* Accent - Light Primary */
+    --accent: 255 242 242;
+    --accent-foreground: 255 102 102;
 
-    --destructive: #ef4444;
-    --destructive-foreground: #f1f5f9;
+    /* Success - Green */
+    --success: 0 255 0;
+    --success-foreground: 255 255 255;
 
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #2563eb;
+    /* Warning - Orange */
+    --warning: 255 166 0;
+    --warning-foreground: 255 255 255;
+
+    /* Destructive - Dark Red */
+    --destructive: 89 0 0;
+    --destructive-foreground: 255 255 255;
+
+    /* Info - Blue */
+    --info: 0 0 255;
+    --info-foreground: 255 255 255;
+
+    /* Border and Input */
+    --border: 230 230 230;
+    --input: 230 230 230;
+    --ring: 255 102 102;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: #060b19;
-    --foreground: #f1f5f9;
+    --background: 26 26 26;
+    --foreground: 255 255 255;
 
-    --card: #060b19;
-    --card-foreground: #f1f5f9;
+    --card: 26 26 26;
+    --card-foreground: 255 255 255;
 
-    --popover: #060b19;
-    --popover-foreground: #f1f5f9;
+    --popover: 26 26 26;
+    --popover-foreground: 255 255 255;
 
-    --primary: #3b82f6;
-    --primary-foreground: #161b29;
+    /* Primary stays vibrant in dark mode */
+    --primary: 255 102 102;
+    --primary-foreground: 255 255 255;
 
-    --secondary: #1e293b;
-    --secondary-foreground: #f1f5f9;
+    --secondary: 38 38 38;
+    --secondary-foreground: 255 255 255;
 
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
+    --muted: 38 38 38;
+    --muted-foreground: 166 166 166;
 
-    --accent: #1e293b;
-    --accent-foreground: #f1f5f9;
+    --accent: 33 0 0;
+    --accent-foreground: 255 102 102;
 
-    --destructive: #7f1d1d;
-    --destructive-foreground: #f1f5f9;
+    /* Status colors stay vibrant in dark mode */
+    --success: 0 255 0;
+    --success-foreground: 255 255 255;
 
-    --border: #1e293b;
-    --input: #1e293b;
-    --ring: #2563eb;
+    --warning: 255 166 0;
+    --warning-foreground: 255 255 255;
+
+    --destructive: 89 0 0;
+    --destructive-foreground: 255 255 255;
+
+    --info: 0 0 255;
+    --info-foreground: 255 255 255;
+
+    --border: 51 51 51;
+    --input: 51 51 51;
+    --ring: 255 102 102;
   }
 }
 
@@ -74,6 +106,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Utility classes for new colors */
 
 /* 
 Primary Colors:
