@@ -23,7 +23,7 @@ export const Meals = ({ meals }: { meals: mealsType }) => {
     );
   return (
     <GridTemplate>
-      {meals.map((meal) => (
+      {meals?.map((meal) => (
         <Card key={meal.id} className="overflow-hidden flex flex-col">
           <div className="relative aspect-video">
             <Image
