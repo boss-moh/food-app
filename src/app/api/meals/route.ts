@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const categoryId = searchParams.get("categoryId");
     // Get the URL from the request
-    console.log("categoryId", categoryId);
+    // console.log("categoryId", categoryId);
     if (categoryId) {
       const mealsByCategory = await fetchProductsById(categoryId);
 

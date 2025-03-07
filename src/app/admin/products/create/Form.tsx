@@ -34,8 +34,6 @@ export default function CreateProductForm() {
   });
   // imageUrl: "",
 
-  console.log(form.watch());
-
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () =>
       await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues()),
