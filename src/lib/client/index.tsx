@@ -25,7 +25,6 @@ export const useCategoriy = () => {
 export const useMeals = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
-  console.log("categoryId from hook ", categoryId);
   const {
     data: meals,
     isPending,
@@ -34,7 +33,6 @@ export const useMeals = () => {
     queryKey: ["meals", categoryId || "all"],
     queryFn: async () => await axios.get(API_END_POINT.GET_MEALS(categoryId)),
   });
-  console.log("meals inside hook", meals);
 
   return {
     meals: meals ?? [],
