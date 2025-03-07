@@ -51,7 +51,7 @@ export default function MealsPage() {
       </div>
       {mealsData.isLoading ? (
         <GridTemplate>
-          {new Array(8).fill(0).map((_, key) => (
+          {new Array(8).fill(0)?.map((_, key) => (
             <DishCardSkeleton key={key} />
           ))}
         </GridTemplate>
