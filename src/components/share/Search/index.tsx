@@ -23,7 +23,7 @@ export const SearchInput = (props: ComponentProps<"input">) => {
       console.log("filter here", searchTerm);
     }, 500);
     return () => clearTimeout(time);
-  }, [searchTerm]);
+  }, [searchTerm, path, router, searchParams]);
 
   return (
     <div className="relative w-full">

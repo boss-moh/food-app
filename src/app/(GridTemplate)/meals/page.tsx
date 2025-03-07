@@ -61,5 +61,3 @@ export default function MealsPage() {
     </div>
   );
 }
-
-export { MealsPage };
