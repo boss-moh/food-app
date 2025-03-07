@@ -9,6 +9,11 @@ export const URL_PATHS = {
     GET_DISH: (categoryId: string, dishId: string) =>
       `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
   },
+
+  PRODUCT:{
+    CREATE:"/admin/products/create"
+  },
+
   ADMIN: "/admin",
 
   MEALS: "/meals",
