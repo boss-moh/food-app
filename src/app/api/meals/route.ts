@@ -1,4 +1,6 @@
-import { fetchMenu, fetchProductsById } from "@/lib";
+import { createDishSchema } from "@/constants";
+import { fetchMenu, fetchProductsById, prisma } from "@/lib";
+import { uploadImage } from "@/lib/cloudinary";
 import { NextResponse } from "next/server";
 
 import { type NextRequest } from "next/server";
@@ -30,52 +32,35 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST() {
-  // const body = await req.json();
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  const { success, data, error } = createDishSchema.safeParse(body);
+
+  if (!success) {
+    return NextResponse.json(
+      {
+        success: false,
+        data: { message: "Invalid data", errors: error.formErrors.fieldErrors },
+      },
+      { status: 400 }
+    );
+  }
+
+  //upload image
+
+  const { imageUrl, ...rest } = data;
+  // const t = delete data.imageUrl
+
+  const { secure_url } = await uploadImage(imageUrl);
+
+  // create product
+  const product = await prisma.product.create({
+    data: { imageUrl: secure_url, ...rest },
+  });
+
   return NextResponse.json(
-    { success: true, data: { message: "new Product create" } },
+    { success: true, data: { message: "new Product create", data: product } },
     { status: 201 }
   );
-
-  // const errors = createDishSchema.safeParse(body);
-
-  // try {
-  //   if (!errors.success) {
-  //     return NextResponse.json(
-  //       { errors: errors.error.flatten().fieldErrors },
-  //       { status: 400 }
-  //     );
-  //   }
-
-  //   //   type productType = {
-  //   //     name: string;
-  //   //     id: string;
-  //   //     createdAt: Date;
-  //   //     updatedAt: Date;
-  //   //     description: string;
-  //   //     price: number;
-  //   //     imageUrl: string | null;
-  //   //     categoryId: string;
-  //   //     rating: number;
-  //   //     prepTime: number;
-  //   //     ingredients: string[];
-  //   //     nutritionalInfo: string[];
-  //   // }
-
-  //   // Your logic (e.g., saving to DB)
-  //   const product = await prisma.product.create({
-  //     data: errors.data,
-  //   });
-
-  //   return NextResponse.json(
-  //     { success: true, data: { message: "new Product create", data: product } },
-  //     { status: 201 }
-  //   );
-  // } catch (error) {
-  //   console.error("API Error:", error);
-  //   return NextResponse.json(
-  //     { message: "Internal Server Error" },
-  //     { status: 500 }
-  //   );
-  // }
 }

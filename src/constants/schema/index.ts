@@ -27,6 +27,7 @@ export const createDishSchema = z.object({
   prepTime: RULES.PERPTIME,
   ingredients: z.array(z.string()),
   nutritionalInfo: z.array(z.string()),
+  imageUrl:z.string().url('Should Be URL')
 });
 
 export type createDishType = z.infer<typeof createDishSchema>;

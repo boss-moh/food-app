@@ -15,11 +15,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { createDishSchema, createDishType, API_END_POINT } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
-import { ImagePlus, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { CategoriesSelecter } from "@/components/share";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
+import ImageInput from "./ImageInput";
+
 export default function CreateProductForm() {
   const form = useForm<createDishType>({
     resolver: zodResolver(createDishSchema),
@@ -30,9 +33,9 @@ export default function CreateProductForm() {
       rating: 0,
       ingredients: [""],
       nutritionalInfo: [""],
+      imageUrl: "",
     },
   });
-  // imageUrl: "",
 
   console.log(form.watch());
 
@@ -63,6 +66,7 @@ export default function CreateProductForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-1 space-y-6">
+            <Button onClick={mutate}>mutate</Button>
             <FormField
               control={form.control}
               name="name"
@@ -178,22 +182,19 @@ export default function CreateProductForm() {
           </div>
 
           <div className="w-full md:w-72">
-            <FormLabel>Product Image</FormLabel>
-            <div className="mt-2 flex flex-col items-center gap-4">
-              <div className="flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed">
-                <Button variant="ghost" className="h-full w-full">
-                  <div className="flex flex-col items-center gap-2">
-                    <ImagePlus className="h-8 w-8" />
-                    <span>Upload Image</span>
-                  </div>
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Supported formats: JPEG, PNG, WebP
-                <br />
-                Maximum file size: 5MB
-              </p>
-            </div>
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                // field: ControllerRenderProps<TFieldValues, TName>;
+
+                <FormItem>
+                  <FormLabel>Product Image</FormLabel>
+                  <ImageInput onChange={(url) => field.onChange(url)} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -309,7 +310,9 @@ export default function CreateProductForm() {
           <Button variant="outline" type="button" onClick={() => form.reset()}>
             Cancel
           </Button>
-          <Button type="submit">Create Product</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "loadind ... " : "Create Product"}
+          </Button>
         </div>
       </form>
     </Form>
