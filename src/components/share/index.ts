@@ -4,3 +4,4 @@ export * from "./gridTemplate";
 export * from "./Search";
 export * from "./Meals";
 export * from "./CategoriesSelecter";
+export * from "./Selecter";

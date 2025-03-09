@@ -27,21 +27,15 @@ export default function MealsPage() {
         return false;
       });
 
-  // const selecetedCategoryID = searchParams.get("categoryId");
-  // const selecetedCategory = categories?.find(
-  // (category) => category.id == selecetedCategoryID
-  // );
-
   const handleChangeCategory = (categoryId: string) => {
     const params = new URLSearchParams(searchParams);
-    if (categoryId === "all") {
+    if (categoryId.toLowerCase() === "all") {
       params.delete("categoryId");
     } else {
       params.set("categoryId", categoryId);
     }
     router.replace(`${path}?${params.toString()}`);
   };
-  // onValueChange={handleChangeCategory}
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
