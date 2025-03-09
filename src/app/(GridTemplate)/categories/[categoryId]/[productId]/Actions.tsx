@@ -3,20 +3,17 @@ import { AddToOrderButton } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { productType } from "@/constants";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
-export const ActionsButtons = () => {
+export const ActionsButtons = ({ meal }: { meal: productType }) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity(Math.max(1, quantity + amount));
   };
 
-  // const handleAddToCart = () => {
-  //   console.log(`Added ${quantity} (s) to cart`);
-  //   // Here you would typically update your cart state or send a request to your backend
-  // };
   return (
     <>
       <div className="flex items-center mt-6">
@@ -53,7 +50,7 @@ export const ActionsButtons = () => {
         </div>
       </div>
       <div className="mt-4">
-        <AddToOrderButton />
+        <AddToOrderButton item={{ ...meal, quantity }} />
       </div>
     </>
   );
