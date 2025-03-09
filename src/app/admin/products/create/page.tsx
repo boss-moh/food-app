@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import CreateProductForm from "./Form";
+import ProductForm from "./Form";
 
-const CreatProductPage = async () => {
+const CreatProductPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ data: string }>;
+}) => {
+  const data = (await searchParams).data ?? null;
+  const values = JSON.parse(decodeURIComponent(data));
+
   return (
     <div className="container mx-auto py-10">
       <Card>
@@ -9,7 +16,11 @@ const CreatProductPage = async () => {
           <CardTitle>Create New Product</CardTitle>
         </CardHeader>
         <CardContent>
-          <CreateProductForm />
+          {!!values ? (
+            <ProductForm defaultValues={values} isEditMode={!!data} />
+          ) : (
+            <ProductForm />
+          )}
         </CardContent>
       </Card>
     </div>

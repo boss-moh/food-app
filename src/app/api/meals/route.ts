@@ -1,6 +1,7 @@
 import { createDishSchema } from "@/constants";
 import { fetchMenu, fetchProductsById, prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { type NextRequest } from "next/server";
@@ -53,11 +54,15 @@ export async function POST(request: NextRequest) {
   // const t = delete data.imageUrl
 
   const { secure_url } = await uploadImage(imageUrl);
+  const optimizedUrl = secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
 
+  // const fullUrl
   // create product
   const product = await prisma.product.create({
-    data: { imageUrl: secure_url, ...rest },
+    data: { imageUrl: optimizedUrl, ...rest },
   });
+
+  revalidatePath("/");
 
   return NextResponse.json(
     { success: true, data: { message: "new Product create", data: product } },

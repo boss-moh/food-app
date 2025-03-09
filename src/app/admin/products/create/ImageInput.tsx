@@ -1,43 +1,66 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 import { ImagePlus } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useId, useRef, useState } from "react";
 
-type ImageInputProps = {
-  onChange: (url: string) => void;
-};
+export const useImageInput = (
+  onChange: (url: string) => void,
+  defaultValue: string | null = ""
+) => {
+  const [imagePreview, setImagePreview] = useState<string | null>(defaultValue);
 
-export const ImageInput = ({ onChange }: ImageInputProps) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const isValidate = (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB limit
 
-  const refInput = useRef<HTMLInputElement>(null);
-  const id = useId();
+      return false;
+    }
+    return true;
+  };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        // 5MB limit
-        toast({
-          title: "Error",
-          description: "File size should be less than 5MB",
-          variant: "destructive",
-        });
-        return;
-      }
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
         onChange(reader.result as string);
-        // form.setValue("imageUrl", reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const reset = () => {
+    setImagePreview(null);
+    onChange("");
+  };
+
+  return {
+    imagePreview,
+    onChange: handleImageUpload,
+    reset,
+    isValidate,
+  };
+};
+
+type ImageInputProps = {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  imagePreview: string | null;
+  reset: () => void;
+};
+
+// type typeUseImageInput = ReturnType<typeof useImageInput>
+
+export const ImageInput = ({
+  onChange,
+  imagePreview,
+  reset,
+}: ImageInputProps) => {
+  const refInput = useRef<HTMLInputElement>(null);
+  const id = useId();
+
   return (
     <div className="mt-2 flex flex-col items-center gap-4">
       <div className="flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed relative overflow-hidden">
@@ -64,10 +87,7 @@ export const ImageInput = ({ onChange }: ImageInputProps) => {
                 variant="ghost"
                 className="text-white"
                 type="button"
-                onClick={() => {
-                  setImagePreview(null);
-                  onChange("");
-                }}
+                onClick={reset}
               >
                 Remove image
               </Button>
@@ -89,7 +109,13 @@ export const ImageInput = ({ onChange }: ImageInputProps) => {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           className="hidden"
-          onChange={handleImageUpload}
+          // onChange={onChange}
+          // onSelect={onChange}
+          onChange={onChange}
+          onClick={(e) => {
+            // Clear value on click to allow re-selection
+            e.currentTarget.value = "";
+          }}
         />
       </div>
       <p className="text-xs text-muted-foreground">

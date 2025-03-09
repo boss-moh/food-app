@@ -10,8 +10,9 @@ export const URL_PATHS = {
       `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
   },
 
-  PRODUCT:{
-    CREATE:"/admin/products/create"
+  PRODUCT: {
+    CREATE: "/admin/products/create",
+    EDIT: "/admin/products/create",
   },
 
   ADMIN: "/admin",

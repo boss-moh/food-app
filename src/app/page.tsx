@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchDishesBaseOn } from "@/lib";
 import { GridItem, GridTemplate } from "@/components/share";
-import LandingImage from "localImages/newLanding.avif";
+import LandingImage from "localImages/newLanding.webp";
 import { Button } from "@/components/ui/button";
 import { URL_PATHS } from "@/constants";
 

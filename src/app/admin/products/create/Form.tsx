@@ -21,32 +21,52 @@ import { CategoriesSelecter } from "@/components/share";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
-import ImageInput from "./ImageInput";
+import ImageInput, { useImageInput } from "./ImageInput";
 
-export default function CreateProductForm() {
+type ProductFormProps = {
+  defaultValues?: createDishType;
+  isEditMode?: boolean;
+};
+
+const Values = {
+  name: "",
+  description: "",
+  price: 0,
+  rating: 0,
+  categoryId: "",
+  prepTime: 0,
+  ingredients: [""],
+  nutritionalInfo: [""],
+  imageUrl: "",
+};
+
+export default function ProductForm({
+  defaultValues = Values,
+  isEditMode = false,
+}: ProductFormProps) {
   const form = useForm<createDishType>({
     resolver: zodResolver(createDishSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      rating: 0,
-      ingredients: [""],
-      nutritionalInfo: [""],
-      imageUrl: "",
-    },
+    defaultValues,
   });
 
-  console.log(form.watch());
+  const imagePorps = useImageInput(
+    (url) => form.setValue("imageUrl", url),
+    defaultValues.imageUrl
+  );
 
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () =>
       await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues()),
     onError(error) {
-      console.log("error", error);
+      toast({
+        title: "there is error happen",
+        description: error.message,
+        variant: "destructive",
+      });
     },
     onSuccess() {
       form.reset();
+      imagePorps.reset();
       toast({
         title: "New Dish has been created.",
       });
@@ -61,12 +81,16 @@ export default function CreateProductForm() {
     mutate();
   }
 
+  const clear = () => {
+    form.reset();
+    imagePorps.reset();
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-1 space-y-6">
-            <Button onClick={mutate}>mutate</Button>
             <FormField
               control={form.control}
               name="name"
@@ -185,12 +209,10 @@ export default function CreateProductForm() {
             <FormField
               control={form.control}
               name="imageUrl"
-              render={({ field }) => (
-                // field: ControllerRenderProps<TFieldValues, TName>;
-
+              render={() => (
                 <FormItem>
                   <FormLabel>Product Image</FormLabel>
-                  <ImageInput onChange={(url) => field.onChange(url)} />
+                  <ImageInput {...imagePorps} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -307,11 +329,17 @@ export default function CreateProductForm() {
         <Separator className="my-4" />
 
         <div className="flex justify-end gap-4">
-          <Button variant="outline" type="button" onClick={() => form.reset()}>
-            Cancel
-          </Button>
+          {!isEditMode && (
+            <Button variant="outline" type="button" onClick={clear}>
+              Clear
+            </Button>
+          )}
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "loadind ... " : "Create Product"}
+            {isLoading
+              ? "loadind ... "
+              : isEditMode
+              ? "Save Changes"
+              : "Create Product"}
           </Button>
         </div>
       </form>

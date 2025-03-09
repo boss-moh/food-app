@@ -23,7 +23,10 @@ cloudinary.config({
 
 export const uploadImage = async (image: string, folder = "food-app") => {
   try {
-    const response = await cloudinary.uploader.upload(image, { folder });
+    const response = await cloudinary.uploader.upload(image, {
+      folder,
+      transformation: [{ quality: "auto", fetch_format: "auto" }],
+    });
     return response; // Contains details like secure_url
   } catch (error) {
     console.error("Cloudinary upload error:", error);
