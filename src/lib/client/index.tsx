@@ -15,10 +15,13 @@ export const useCategoriy = () => {
     staleTime: Infinity,
   });
 
+  const placeholder = isLoading ? "loading ... " : isError ? "Error" : "";
+
   return {
     categories: categories ?? [],
     isLoading,
     isError,
+    placeholder,
   };
 };
 
