@@ -8,6 +8,7 @@ interface useOrderType {
   removeItem: (id: string) => void;
   update: (id: string, newQuantity: number) => void;
   calcOrder: () => { subtotal: number; tax: number; total: number };
+  checkIsInOrder: (id: string) => boolean;
 }
 
 export const useOrder = create<useOrderType>((set, get) => ({
@@ -45,5 +46,11 @@ export const useOrder = create<useOrderType>((set, get) => ({
     const total = subtotal + tax;
 
     return { subtotal, tax, total };
+  },
+
+  checkIsInOrder: (id: string) => {
+    const { items } = get();
+
+    return !!items.find((item) => item.id === id);
   },
 }));
