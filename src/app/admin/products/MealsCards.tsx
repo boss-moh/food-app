@@ -7,11 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { URL_PATHS } from "@/constants";
+import { API_END_POINT, URL_PATHS } from "@/constants";
 import { mealsType } from "@/lib";
 import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteAction from "./DeleteAction";
 
 export const MealsCards = ({ meals }: { meals: mealsType }) => {
   return (
@@ -62,9 +63,7 @@ export const MealsCards = ({ meals }: { meals: mealsType }) => {
                   Edit
                 </Link>
               </Button>
-              <Button variant="outline" className="flex-1">
-                Delete
-              </Button>
+              <DeleteAction url={API_END_POINT.PRODUCT.DELETE(meal.id)} />
             </CardFooter>
           </Card>
         );
