@@ -27,7 +27,8 @@ export const uploadImage = async (image: string, folder = "food-app") => {
       folder,
       transformation: [{ quality: "auto", fetch_format: "auto" }],
     });
-    return response; // Contains details like secure_url
+    const { secure_url } = response;
+    return secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
   } catch (error) {
     console.error("Cloudinary upload error:", error);
     throw error;

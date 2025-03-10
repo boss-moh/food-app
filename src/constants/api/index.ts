@@ -5,5 +5,6 @@ export const API_END_POINT = {
   GET_MEALS: (categoryId: string) => `/meals?categoryId=${categoryId}`,
   PRODUCT: {
     CREATE: "/meals/",
+    EDIT: "/meals/",
   },
 };
