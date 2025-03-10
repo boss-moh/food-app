@@ -12,7 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
-import { createDishSchema, createDishType, API_END_POINT } from "@/constants";
+import {
+  createDishSchema,
+  createDishType,
+  API_END_POINT,
+  URL_PATHS,
+} from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
 import { Plus, Trash2 } from "lucide-react";
@@ -22,13 +27,15 @@ import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 import ImageInput, { useImageInput } from "./ImageInput";
+import { useRouter } from "next/navigation";
 
 type ProductFormProps = {
   defaultValues?: createDishType;
   isEditMode?: boolean;
 };
 
-const Values = {
+const values = {
+  id: null,
   name: "",
   description: "",
   price: 0,
@@ -41,9 +48,10 @@ const Values = {
 };
 
 export default function ProductForm({
-  defaultValues = Values,
+  defaultValues = values,
   isEditMode = false,
 }: ProductFormProps) {
+  const router = useRouter();
   const form = useForm<createDishType>({
     resolver: zodResolver(createDishSchema),
     defaultValues,
@@ -55,8 +63,12 @@ export default function ProductForm({
   );
 
   const { mutate, isPending: isLoading } = useMutation({
-    mutationFn: async () =>
-      await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues()),
+    mutationFn: async () => {
+      if (isEditMode) {
+        return await axios.put(API_END_POINT.PRODUCT.EDIT, form.getValues());
+      }
+      return await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues());
+    },
     onError(error) {
       toast({
         title: "there is error happen",
@@ -65,10 +77,11 @@ export default function ProductForm({
       });
     },
     onSuccess() {
-      form.reset();
-      imagePorps.reset();
+      clear();
       toast({
-        title: "New Dish has been created.",
+        title: isEditMode
+          ? "The Dish has been Edited."
+          : "New Dish has been created.",
       });
     },
   });
@@ -82,7 +95,8 @@ export default function ProductForm({
   }
 
   const clear = () => {
-    form.reset();
+    router.replace(URL_PATHS.PRODUCT.CREATE);
+    form.reset(values);
     imagePorps.reset();
   };
 
@@ -198,7 +212,11 @@ export default function ProductForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <CategoriesSelecter onChange={field.onChange} />
+                  <CategoriesSelecter
+                    withOutAll
+                    defaultValue={field.value}
+                    onChange={field.onChange}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

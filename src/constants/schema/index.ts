@@ -19,6 +19,7 @@ const RULES = {
 //   prepTime: 10,
 // };
 export const createDishSchema = z.object({
+  id:z.string().or(z.null()),
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
   price: RULES.PRICE,
@@ -29,6 +30,7 @@ export const createDishSchema = z.object({
   nutritionalInfo: z.array(z.string()),
   imageUrl:z.string().url('Should Be URL')
 });
+
 
 export type createDishType = z.infer<typeof createDishSchema>;
 

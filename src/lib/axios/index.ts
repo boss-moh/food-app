@@ -1,10 +1,11 @@
-import axiosLib from 'axios';
+import { BASE_URL } from "@/constants";
+import axiosLib from "axios";
 
 // Create a custom axios instance with default configurations
 const axios = axiosLib.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ,
+  baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 10000, // 10 seconds
 });
@@ -29,17 +30,17 @@ axios.interceptors.response.use(
     // Handle common errors here
     if (error.response) {
       // Server responded with error status
-      console.error('Response error:', error.response.status);
+      console.error("Response error:", error.response.status);
     } else if (error.request) {
       // Request was made but no response received
-      console.error('Request error:', error.request);
+      console.error("Request error:", error.request);
     } else {
       // Something else happened
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
     }
     return Promise.reject(error);
   }
 );
 
 export default axios;
-export {axios};
+export { axios };
