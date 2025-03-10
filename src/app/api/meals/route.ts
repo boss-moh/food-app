@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { id: _, imageUrl, ...rest } = data;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: _unused, imageUrl, ...rest } = data;
 
   //upload image
 
