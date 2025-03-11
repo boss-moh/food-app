@@ -1,3 +1,4 @@
+"use client";
 import { useCategoriy } from "@/lib";
 import Selecter from "../Selecter";
 
@@ -25,11 +26,17 @@ export const CategoriesSelecter = ({
       name: "All",
     });
 
+  const value = defaultValue
+    ? defaultValue
+    : withOutAll
+    ? ""
+    : options[0].value;
+
   return (
     <Selecter
       options={options}
       onChange={onChange}
-      defaultValue={defaultValue || options[0].value}
+      defaultValue={value}
       placeholder={placeholder}
     />
   );

@@ -1,27 +1,24 @@
+"use client";
 import { Button } from "@/components/ui/button";
 
-import { fetchCategories, fetchMenu } from "@/lib";
 import { Plus } from "lucide-react";
-import { SearchInput, Selecter } from "@/components/share";
+import {
+  CategoriesSelecter,
+  GridTemplate,
+  SearchInput,
+} from "@/components/share";
 import Link from "next/link";
 import { URL_PATHS } from "@/constants";
+import { useCategoryHandlerURL } from "@/hooks/useCategoryURL";
+import { useFilterMeals } from "@/hooks/useFilterMeals";
 import MealsCards from "./MealsCards";
-export default async function ProductsPage() {
-  const [meals, categories] = await Promise.all([
-    fetchMenu(),
-    fetchCategories(),
-  ]);
+import DishCardSkeleton from "@/app/(GridTemplate)/meals/DishCardSkeleton";
 
-  const options = [
-    {
-      name: "All",
-      value: "All",
-    },
-    ...categories.map((item) => ({
-      name: item.name,
-      value: item.id,
-    })),
-  ];
+export default function ProductsPage() {
+  const { filterMeals, isLoading, queryKey } = useFilterMeals();
+
+  const onChange = useCategoryHandlerURL();
+
   return (
     <section className="">
       <header className="mb-4">
@@ -29,7 +26,7 @@ export default async function ProductsPage() {
         <div className="flex flex-col md:flex-row  w-full gap-4">
           <SearchInput />
           <div className="flex gap-4 flex-shrink-0">
-            <Selecter options={options} defaultValue={options[0].value} />
+            <CategoriesSelecter onChange={onChange} />
             <Button asChild>
               <Link href={URL_PATHS.PRODUCT.CREATE}>
                 Add Product
@@ -39,7 +36,15 @@ export default async function ProductsPage() {
           </div>
         </div>
       </header>
-      <MealsCards meals={meals} />
+      {isLoading ? (
+        <GridTemplate>
+          {new Array(8).fill(0).map((_, key) => (
+            <DishCardSkeleton key={key} />
+          ))}
+        </GridTemplate>
+      ) : (
+        <MealsCards meals={filterMeals} Invalidatekey={queryKey} />
+      )}
     </section>
   );
 }

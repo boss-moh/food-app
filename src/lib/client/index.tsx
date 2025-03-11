@@ -28,12 +28,13 @@ export const useCategoriy = () => {
 export const useMeals = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
+  const queryKey = ["meals", categoryId || "all"];
   const {
     data: meals,
     isPending,
     isError,
   } = useQuery<mealsType>({
-    queryKey: ["meals", categoryId || "all"],
+    queryKey,
     queryFn: async () => await axios.get(API_END_POINT.GET_MEALS(categoryId)),
   });
 
@@ -41,5 +42,6 @@ export const useMeals = () => {
     meals: meals ?? [],
     isLoading: isPending,
     isError,
+    queryKey,
   };
 };

@@ -14,7 +14,19 @@ import Image from "next/image";
 import Link from "next/link";
 import DeleteAction from "./DeleteAction";
 
-export const MealsCards = ({ meals }: { meals: mealsType }) => {
+export const MealsCards = ({
+  meals,
+  Invalidatekey,
+}: {
+  meals: mealsType;
+  Invalidatekey: string[];
+}) => {
+  if (!meals.length)
+    return (
+      <p className="text-center text-muted-foreground mt-8">
+        No meals found. Try adjusting your search or category.
+      </p>
+    );
   return (
     <GridTemplate>
       {meals.map((meal) => {
@@ -63,7 +75,10 @@ export const MealsCards = ({ meals }: { meals: mealsType }) => {
                   Edit
                 </Link>
               </Button>
-              <DeleteAction url={API_END_POINT.PRODUCT.DELETE(meal.id)} />
+              <DeleteAction
+                Invalidatekey={Invalidatekey}
+                url={API_END_POINT.PRODUCT.DELETE(meal.id)}
+              />
             </CardFooter>
           </Card>
         );
