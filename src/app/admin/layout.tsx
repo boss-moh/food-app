@@ -1,11 +1,7 @@
-import type React from "react";
-import { AdminSidebar } from "@/app/admin/sidebar";
+import { childrenProps } from "@/constants";
+import { AdminSidebar } from "./sidebar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: childrenProps) {
   return (
     <div className="flex min-h-screen ">
       <div className="flex-shrink-0">
