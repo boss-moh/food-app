@@ -1,17 +1,15 @@
-import type React from "react";
-import { AdminSidebar } from "@/components/admin/sidebar";
+import { childrenProps } from "@/constants";
+import { AdminSidebar } from "./sidebar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: childrenProps) {
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
+    <div className="flex min-h-screen ">
+      <div className="flex-shrink-0">
+        <AdminSidebar />
+      </div>
       <div className=" bg-gray-100 pt-20 flex-grow">
         <div className="flex-1 p-8 ">
-          <div className="max-w-7xl max-w- mx-auto">{children}</div>
+          <div className="max-w-6xl max-w- mx-auto">{children}</div>
         </div>
       </div>
     </div>

@@ -15,7 +15,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const routes = [
   {
@@ -97,11 +102,12 @@ export function AdminSidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex h-full w-[19rem] flex-col  z-50 top-20">
+      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20">
         <SidebarContent setIsMobileOpen={setIsMobileOpen} />
       </aside>
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetTrigger asChild className="md:hidden fixed left-4 top-24 z-50">
+        <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
+        <SheetTrigger asChild className="lg:hidden fixed left-4 top-24 z-50">
           <Button variant="outline" size="icon">
             <Menu className="h-6 w-6" />
           </Button>
