@@ -103,7 +103,7 @@ export default function Header() {
 
           {/* moblie */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTitle>Drawer&apos;s Links</SheetTitle>
+            <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon">
                 <Menu className="h-5 w-5" />

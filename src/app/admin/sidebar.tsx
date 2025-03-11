@@ -106,8 +106,7 @@ export function AdminSidebar() {
         <SidebarContent setIsMobileOpen={setIsMobileOpen} />
       </aside>
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetTitle>Drawer&apos;s Links</SheetTitle>
-
+        <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
         <SheetTrigger asChild className="lg:hidden fixed left-4 top-24 z-50">
           <Button variant="outline" size="icon">
             <Menu className="h-6 w-6" />
