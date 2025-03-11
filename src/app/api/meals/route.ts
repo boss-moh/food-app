@@ -1,4 +1,4 @@
-import { createDishSchema } from "@/constants";
+import { createDishSchema, URL_PATHS } from "@/constants";
 import { fetchMenu, fetchProductsById, prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     data: { imageUrl: optimizedUrl, ...rest },
   });
 
-  revalidatePath("/");
+  revalidatePath(URL_PATHS.HOME);
 
   return NextResponse.json(
     { success: true, data: { message: "new Product create", data: product } },
@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest) {
     },
   });
 
-  revalidatePath("/");
+  revalidatePath(URL_PATHS.HOME);
 
   return NextResponse.json(
     { success: true, data: { message: "new Product create", data: product } },

@@ -29,18 +29,20 @@ export const Selecter = ({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {(placeholder && !options.length) || (
-          <>
-            {options?.map((option) => (
-              <SelectItem
-                className="capitalize"
-                key={option.value}
-                value={option.value}
-              >
-                {option.name}
-              </SelectItem>
-            ))}
-          </>
+        {options?.map((option) => (
+          <SelectItem
+            className="capitalize"
+            key={option.value}
+            value={option.value}
+          >
+            {option.name}
+          </SelectItem>
+        ))}
+
+        {placeholder && (
+          <div className=" w-full  select-none   py-1.5 pl-8 pr-2 text-sm">
+            {placeholder}
+          </div>
         )}
       </SelectContent>
     </Select>
