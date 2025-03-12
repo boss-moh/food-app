@@ -1,5 +1,5 @@
 import { createDishSchema, URL_PATHS } from "@/constants";
-import { fetchMenu, fetchProductsById, prisma } from "@/lib";
+import { createProduct, fetchMenu, fetchProductsById, prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
@@ -48,9 +48,8 @@ export async function POST(request: NextRequest) {
   const optimizedUrl = await uploadImage(imageUrl);
 
   // create product
-  const product = await prisma.product.create({
-    data: { imageUrl: optimizedUrl, ...rest },
-  });
+
+  const product = createProduct({ imageUrl: optimizedUrl, ...rest });
 
   revalidatePath(URL_PATHS.HOME);
 
