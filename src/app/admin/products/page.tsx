@@ -1,23 +1,30 @@
-"use client";
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
-import {
-  CategoriesSelecter,
-  GridTemplate,
-  SearchInput,
-} from "@/components/share";
+import { CategoriesSelecter, SearchInput } from "@/components/share";
 import Link from "next/link";
-import { URL_PATHS } from "@/constants";
-import { useCategoryHandlerURL } from "@/hooks/useCategoryURL";
-import { useFilterMeals } from "@/hooks/useFilterMeals";
+import { categoryType, searchParamsProps, URL_PATHS } from "@/constants";
 import MealsCards from "./MealsCards";
-import DishCardSkeleton from "@/app/(GridTemplate)/meals/DishCardSkeleton";
+import { fetchCategories, fetchProductsById } from "@/lib";
+import { getFilterMeals, makeOptions } from "@/utils";
 
-export default function ProductsPage() {
-  const { filterMeals, isLoading, queryKey } = useFilterMeals();
+export default async function ProductsPage({
+  searchParams,
+}: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
+  const categoryId = (await searchParams).categoryId;
+  const query = (await searchParams).query;
 
-  const onChange = useCategoryHandlerURL();
+  const [categories, meals] = await Promise.all([
+    fetchCategories(),
+    fetchProductsById(categoryId),
+  ]);
+
+  const filterMeals = getFilterMeals(meals, query);
+
+  const options = makeOptions<categoryType>(categories, (i) => ({
+    name: i.name,
+    value: i.id,
+  }));
 
   return (
     <section className="">
@@ -26,7 +33,7 @@ export default function ProductsPage() {
         <div className="flex flex-col md:flex-row  w-full gap-4">
           <SearchInput />
           <div className="flex gap-4 flex-shrink-0">
-            <CategoriesSelecter onChange={onChange} />
+            <CategoriesSelecter options={options} defaultValue="All" />
             <Button asChild>
               <Link href={URL_PATHS.PRODUCT.CREATE}>
                 Add Product
@@ -36,7 +43,7 @@ export default function ProductsPage() {
           </div>
         </div>
       </header>
-      {isLoading ? (
+      {/* {isLoading ? (
         <GridTemplate>
           {new Array(8).fill(0).map((_, key) => (
             <DishCardSkeleton key={key} />
@@ -44,7 +51,9 @@ export default function ProductsPage() {
         </GridTemplate>
       ) : (
         <MealsCards meals={filterMeals} Invalidatekey={queryKey} />
-      )}
+      )} */}
+
+      <MealsCards meals={filterMeals} Invalidatekey={["queryKey"]} />
     </section>
   );
 }

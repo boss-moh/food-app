@@ -1,43 +1,23 @@
 "use client";
-import { useCategoriy } from "@/lib";
+import { option } from "@/constants";
 import Selecter from "../Selecter";
+import { useCategoryHandlerURL } from "@/hooks/useCategoryURL";
 
 type CategoriesSelecterProps = {
-  defaultValue?: string | null;
-  onChange: (id: string) => void;
-  withOutAll?: boolean;
+  defaultValue?: string;
+  options: option[];
 };
 export const CategoriesSelecter = ({
-  onChange,
-  defaultValue = null,
-  withOutAll = false,
+  options,
+  defaultValue,
 }: CategoriesSelecterProps) => {
-  const { categories, placeholder } = useCategoriy();
-  const options = [
-    ...categories.map((item) => ({
-      name: item.name,
-      value: item.id,
-    })),
-  ];
-
-  if (!withOutAll)
-    options.unshift({
-      value: "All",
-      name: "All",
-    });
-
-  const value = defaultValue
-    ? defaultValue
-    : withOutAll
-    ? ""
-    : options[0].value;
+  const onChange = useCategoryHandlerURL();
 
   return (
     <Selecter
       options={options}
       onChange={onChange}
-      defaultValue={value}
-      placeholder={placeholder}
+      defaultValue={defaultValue}
     />
   );
 };
