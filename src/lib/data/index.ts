@@ -1,4 +1,6 @@
-// import "server-only";
+// #TODO:create Folder For Get And One For POST
+// #TODO:Server-only
+
 import { productType } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
@@ -17,10 +19,6 @@ export const fetchCategories = nextCache(
     tags: ["Categories"],
   }
 );
-
-// export function fetchCategories() {
-//   return ;
-// }
 
 export async function fetchCategoryById(id: string) {
   try {
@@ -118,3 +116,29 @@ export async function fetchDishesBaseOn(baseOn: selectedOptions) {
     throw new Error("Faild to fetch Latest Dishes");
   }
 }
+
+export const createProduct = async (
+  foodItem: Omit<productType, "id" | "createdAt" | "updatedAt">
+) => {
+  try {
+    await prisma.$transaction(async () => {
+      await prisma.product.create({
+        data: foodItem,
+      });
+      const { categoryId } = foodItem;
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+      });
+      const { count } = category!;
+      await prisma.category.update({
+        where: { id: categoryId },
+        data: {
+          count: count + 1,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
+  }
+};
