@@ -5,11 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { option } from "@/constants";
 
-type option = {
-  name: string;
-  value: string;
-};
 type SelecterProps = {
   defaultValue?: string;
   onChange?: (value: string) => void;
