@@ -1,35 +1,35 @@
-"use client";
-import {
-  GridTemplate,
-  SearchInput,
-  Meals,
-  CategoriesSelecter,
-} from "@/components/share";
+import { SearchInput, CategoriesSelecter, Meals } from "@/components/share";
+import { categoryType, searchParamsProps } from "@/constants";
+import { fetchCategories, fetchProductsById } from "@/lib";
+import { makeOptions } from "@/utils";
+import { getFilterMeals } from "@/utils/getFilterMeals";
 
-import DishCardSkeleton from "./DishCardSkeleton";
-import { useCategoryHandlerURL } from "@/hooks/useCategoryURL";
-import { useFilterMeals } from "@/hooks/useFilterMeals";
+export default async function MealsPage({
+  searchParams,
+}: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
+  const categoryId = (await searchParams).categoryId;
+  const query = (await searchParams).query;
 
-export default function MealsPage() {
-  const { filterMeals, isLoading } = useFilterMeals();
-  const onchange = useCategoryHandlerURL();
+  const [categories, meals] = await Promise.all([
+    fetchCategories(),
+    fetchProductsById(categoryId),
+  ]);
+
+  const filterMeals = getFilterMeals(meals, query);
+
+  const options = makeOptions<categoryType>(categories, (i) => ({
+    name: i.name,
+    value: i.id,
+  }));
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <SearchInput />
-        <CategoriesSelecter onChange={onchange} />
+        <CategoriesSelecter defaultValue="All" options={options} />
       </div>
-      {isLoading ? (
-        <GridTemplate>
-          {new Array(8).fill(0).map((_, key) => (
-            <DishCardSkeleton key={key} />
-          ))}
-        </GridTemplate>
-      ) : (
-        <Meals meals={filterMeals} />
-      )}
+      <Meals meals={filterMeals} />
     </div>
   );
 }

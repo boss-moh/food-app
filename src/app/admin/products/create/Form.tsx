@@ -17,6 +17,7 @@ import {
   createDishType,
   API_END_POINT,
   URL_PATHS,
+  option,
 } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
@@ -32,6 +33,7 @@ import { useRouter } from "next/navigation";
 type ProductFormProps = {
   defaultValues?: createDishType;
   isEditMode?: boolean;
+  categories: option[];
 };
 
 const values = {
@@ -50,6 +52,7 @@ const values = {
 export default function ProductForm({
   defaultValues = values,
   isEditMode = false,
+  categories,
 }: ProductFormProps) {
   const router = useRouter();
   const form = useForm<createDishType>({
@@ -213,9 +216,8 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <CategoriesSelecter
-                    withOutAll
+                    options={categories}
                     defaultValue={field.value}
-                    onChange={field.onChange}
                   />
                   <FormMessage />
                 </FormItem>

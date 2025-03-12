@@ -1,15 +1,26 @@
 // import "server-only";
 import { productType } from "@/constants";
 import prisma from "../prisma";
+import { unstable_cache as nextCache } from "next/cache";
 
-export async function fetchCategories() {
-  try {
-    const categories = await prisma.category.findMany();
-    return categories;
-  } catch {
-    throw new Error("Faild to fetch categories");
+export const fetchCategories = nextCache(
+  async () => {
+    try {
+      const categories = await prisma.category.findMany();
+      return categories;
+    } catch {
+      throw new Error("Faild to fetch categories");
+    }
+  },
+  ["Categories"],
+  {
+    tags: ["Categories"],
   }
-}
+);
+
+// export function fetchCategories() {
+//   return ;
+// }
 
 export async function fetchCategoryById(id: string) {
   try {
