@@ -1,10 +1,10 @@
+import { createProduct } from "@/lib";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const products = [
   {
-    id: "product-1",
     name: "Mighty Super Cheesecake",
     description:
       "A creamy and delicious cheesecake topped with fresh berries and a drizzle of berry sauce. This indulgent dessert is perfect for any occasion and will satisfy your sweet tooth cravings.",
@@ -25,7 +25,6 @@ const products = [
     nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", " protein: 6"],
   },
   {
-    id: "product-2",
     name: "Classic Spaghetti Bolognese",
     description:
       "A savory and hearty spaghetti with rich tomato and meat sauce, topped with grated Parmesan.",
@@ -46,7 +45,6 @@ const products = [
     nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", "protein: 6"],
   },
   {
-    id: "product-3",
     name: "Margherita Pizza",
     description:
       "Classic pizza topped with fresh tomatoes, mozzarella, and basil.",
@@ -65,7 +63,6 @@ const products = [
     ],
   },
   {
-    id: "product-5",
     name: "Grilled Salmon",
     description: "Perfectly grilled salmon with a lemon butter sauce.",
     price: 12.99,
@@ -78,7 +75,6 @@ const products = [
     nutritionalInfo: ["calories: 220", "fat: 14g", "carbs: 2g", "protein: 25g"],
   },
   {
-    id: "product-6",
     name: "Voicdian Delight",
     description: "A mysterious and exquisite dish from the lands of Voicdia.",
     price: 15.99,
@@ -96,26 +92,32 @@ const categories = [
   {
     id: "category-1",
     name: "Desserts",
-  },
-  {
-    id: "category-2",
-    name: "Main Courses",
+    imageUrl:
+      "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741688453/food-app/gnz3xfmfgwjp56u5uq3j.jpg",
   },
   {
     id: "category-3",
     name: "Pizzas",
+    imageUrl:
+      "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741771119/pexels-photo-2147491_rryys6.jpg",
   },
   {
     id: "category-4",
     name: "Fish and Seafood",
+    imageUrl:
+      "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557810/samples/food/fish-vegetables.jpg",
   },
   {
     id: "category-5",
-    name: "Vegetables & Fruits ",
+    name: "Vegetables & Fruits",
+    imageUrl:
+      "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557818/samples/breakfast.jpg",
   },
   {
     id: "category-6",
-    name: "Spaghettis ",
+    name: "Spaghettis",
+    imageUrl:
+      "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741770931/pexels-photo-1279330_gs70yc.jpg",
   },
 ];
 
@@ -130,11 +132,11 @@ async function seed() {
   }
 
   // Create food items
-  for (const foodItem of products) {
-    await prisma.product.create({
-      data: foodItem,
-    });
-  }
+  // for (const foodItem of products) {
+  //   await createProduct(foodItem);
+  // }
+  await Promise.all(products.map((i) => createProduct(i)));
+
   console.log("finsih file");
 }
 
