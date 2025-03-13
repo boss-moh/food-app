@@ -1,5 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProductForm from "./Form";
+import { fetchCategories } from "@/lib";
+import { makeOptions } from "@/utils";
+import { categoryType } from "@/constants";
 
 const CreatProductPage = async ({
   searchParams,
@@ -9,6 +12,13 @@ const CreatProductPage = async ({
   const data = (await searchParams).data ?? null;
   const values = JSON.parse(decodeURIComponent(data));
   const haveData = !!values;
+
+  const categories = await fetchCategories();
+  const options = makeOptions<categoryType>(
+    categories,
+    (i) => ({ name: i.name, value: i.id }),
+    false
+  );
 
   return (
     <div className="container mx-auto py-10">
@@ -20,9 +30,13 @@ const CreatProductPage = async ({
         </CardHeader>
         <CardContent>
           {!!values ? (
-            <ProductForm defaultValues={values} isEditMode={!!data} />
+            <ProductForm
+              categories={options}
+              defaultValues={values}
+              isEditMode={!!data}
+            />
           ) : (
-            <ProductForm />
+            <ProductForm categories={options} />
           )}
         </CardContent>
       </Card>
