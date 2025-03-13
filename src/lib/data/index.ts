@@ -1,7 +1,7 @@
 // #TODO:create Folder For Get And One For POST
 // #TODO:Server-only
 
-import { productType } from "@/constants";
+import { CACHCES_KEYS, productType } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
 
@@ -14,9 +14,9 @@ export const fetchCategories = nextCache(
       throw new Error("Faild to fetch categories");
     }
   },
-  ["Categories"],
+  [CACHCES_KEYS.CATEGORIES],
   {
-    tags: ["Categories"],
+    tags: [CACHCES_KEYS.CATEGORIES],
   }
 );
 

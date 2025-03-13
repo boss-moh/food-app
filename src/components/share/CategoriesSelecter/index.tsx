@@ -11,12 +11,12 @@ export const CategoriesSelecter = ({
   options,
   defaultValue,
 }: CategoriesSelecterProps) => {
-  const onChange = useCategoryHandlerURL();
+  const handler = useCategoryHandlerURL();
 
   return (
     <Selecter
       options={options}
-      onChange={onChange}
+      onChange={handler}
       defaultValue={defaultValue}
     />
   );

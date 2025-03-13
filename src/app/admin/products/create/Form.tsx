@@ -23,11 +23,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
 import { Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { CategoriesSelecter } from "@/components/share";
+import { Selecter } from "@/components/share";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
-import ImageInput, { useImageInput } from "./ImageInput";
+import ImageInput, { useImageInput } from "@/components/share/ImageInput";
 import { useRouter } from "next/navigation";
 
 type ProductFormProps = {
@@ -215,7 +215,8 @@ export default function ProductForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <CategoriesSelecter
+                  <Selecter
+                    onChange={(id) => field.onChange(id)}
                     options={categories}
                     defaultValue={field.value}
                   />

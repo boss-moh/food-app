@@ -19,16 +19,23 @@ export const URL_PATHS = {
   },
 
   ADMIN: {
+    HOME_PAGE: "/admin",
     PRODUCT: {
       CREATE: "/admin/products/create",
       EDIT: "/admin/products/create",
     },
 
-    HOME_PAGE: "/admin",
-    ORDERS: "/admin/orders",
-    PRODUCTS: "/admin/products",
-    CATEGORIES: "/admin/categories",
-    CUSTOMERS: "/admin/customers",
+    CATEGORIE: {
+      HOME_PAGE: "/admin/categories/",
+      CREATE: "/admin/categories/create",
+      EDIT: "/admin/categories/edit",
+    },
+    SIDE_BAR: {
+      ORDERS: "/admin/orders",
+      PRODUCTS: "/admin/products",
+      CATEGORIES: "/admin/categories",
+      CUSTOMERS: "/admin/customers",
+    },
   },
 
   MEALS: "/meals",
@@ -63,22 +70,22 @@ export const ADMIN_LINKS = [
   {
     label: "Orders",
     icon: ShoppingBag,
-    href: URL_PATHS.ADMIN.ORDERS,
+    href: URL_PATHS.ADMIN.SIDE_BAR.ORDERS,
   },
   {
     label: "Products",
     icon: Coffee,
-    href: URL_PATHS.ADMIN.PRODUCTS,
+    href: URL_PATHS.ADMIN.SIDE_BAR.PRODUCTS,
   },
   {
     label: "Categories",
     icon: Package,
-    href: URL_PATHS.ADMIN.CATEGORIES,
+    href: URL_PATHS.ADMIN.SIDE_BAR.CATEGORIES,
   },
   {
     label: "Customers",
     icon: Users,
-    href: URL_PATHS.ADMIN.CUSTOMERS,
+    href: URL_PATHS.ADMIN.SIDE_BAR.CUSTOMERS,
   },
 ] as const;
 

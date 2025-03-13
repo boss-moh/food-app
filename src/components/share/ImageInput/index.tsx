@@ -51,8 +51,6 @@ type ImageInputProps = {
   reset: () => void;
 };
 
-// type typeUseImageInput = ReturnType<typeof useImageInput>
-
 export const ImageInput = ({
   onChange,
   imagePreview,
@@ -109,11 +107,8 @@ export const ImageInput = ({
           type="file"
           accept="image/jpeg,image/png,image/webp"
           className="hidden"
-          // onChange={onChange}
-          // onSelect={onChange}
           onChange={onChange}
           onClick={(e) => {
-            // Clear value on click to allow re-selection
             e.currentTarget.value = "";
           }}
         />
