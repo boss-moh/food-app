@@ -1,3 +1,5 @@
+//# TODO:fetch again after delete
+
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
@@ -35,7 +37,7 @@ export default async function ProductsPage({
           <div className="flex gap-4 flex-shrink-0">
             <CategoriesSelecter options={options} defaultValue="All" />
             <Button asChild>
-              <Link href={URL_PATHS.PRODUCT.CREATE}>
+              <Link href={URL_PATHS.ADMIN.PRODUCT.CREATE}>
                 Add Product
                 <Plus className="mr-2 h-4 w-4" />
               </Link>
@@ -53,7 +55,7 @@ export default async function ProductsPage({
         <MealsCards meals={filterMeals} Invalidatekey={queryKey} />
       )} */}
 
-      <MealsCards meals={filterMeals} Invalidatekey={["queryKey"]} />
+      <MealsCards meals={filterMeals} />
     </section>
   );
 }

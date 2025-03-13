@@ -12,15 +12,9 @@ import { mealsType } from "@/lib";
 import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteAction from "./DeleteAction";
+import DeleteAction from "../../../components/share/DeleteAction";
 
-export const MealsCards = ({
-  meals,
-  Invalidatekey,
-}: {
-  meals: mealsType;
-  Invalidatekey: string[];
-}) => {
+export const MealsCards = ({ meals }: { meals: mealsType }) => {
   if (!meals.length)
     return (
       <p className="text-center text-muted-foreground mt-8">
@@ -66,7 +60,7 @@ export const MealsCards = ({
               <Button asChild variant="outline" className="flex-1">
                 <Link
                   href={{
-                    pathname: URL_PATHS.PRODUCT.CREATE,
+                    pathname: URL_PATHS.ADMIN.PRODUCT.CREATE,
                     query: {
                       data: formatData,
                     },
@@ -75,10 +69,7 @@ export const MealsCards = ({
                   Edit
                 </Link>
               </Button>
-              <DeleteAction
-                Invalidatekey={Invalidatekey}
-                url={API_END_POINT.PRODUCT.DELETE(meal.id)}
-              />
+              <DeleteAction url={API_END_POINT.PRODUCT.DELETE(meal.id)} />
             </CardFooter>
           </Card>
         );

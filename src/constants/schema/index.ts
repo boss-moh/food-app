@@ -10,16 +10,8 @@ const RULES = {
   PERPTIME: z.number().min(0, "Preparation time cannot be negative"),
 };
 
-// const data = {
-//   name: "new Product",
-//   description: "test For the new Product",
-//   price: 5.2,
-//   categoryId: "category-1",
-//   rating: 4.2,
-//   prepTime: 10,
-// };
 export const createDishSchema = z.object({
-  id:z.string().or(z.null()),
+  id: z.string().or(z.null()),
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
   price: RULES.PRICE,
@@ -28,9 +20,8 @@ export const createDishSchema = z.object({
   prepTime: RULES.PERPTIME,
   ingredients: z.array(z.string()),
   nutritionalInfo: z.array(z.string()),
-  imageUrl:z.string().url('Should Be URL')
+  imageUrl: z.string().url("Should Be URL"),
 });
-
 
 export type createDishType = z.infer<typeof createDishSchema>;
 
@@ -50,3 +41,10 @@ export const signinSchema = z.object({
   email: RULES.EMAIL,
   password: RULES.PASSWORD,
 });
+
+export const createCategorySchema = z.object({
+  name: RULES.NAME,
+  imageUrl: z.string().url("Should Be URL"),
+});
+
+export type createCategoryType = z.infer<typeof createCategorySchema>;

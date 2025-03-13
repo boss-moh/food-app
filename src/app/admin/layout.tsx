@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: childrenProps) {
       <div className="flex-shrink-0">
         <AdminSidebar />
       </div>
-      <div className=" bg-gray-100 pt-20 flex-grow">
+      <div className=" bg-gray-100 pt-14 flex-grow">
         <div className="flex-1 p-8 ">
           <div className="max-w-6xl max-w- mx-auto">{children}</div>
         </div>

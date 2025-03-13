@@ -12,15 +12,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { axios, queryClient, useMutation } from "@/lib";
+import { axios, useMutation } from "@/lib";
 import { toast } from "@/hooks/use-toast";
 
 export function DeleteAction({
   url,
-  Invalidatekey,
+  onSuccess = () => {},
 }: {
   url: string;
-  Invalidatekey: string[];
+  onSuccess?: () => void;
 }) {
   const { mutate, isPending } = useMutation({
     mutationKey: [url],
@@ -32,9 +32,7 @@ export function DeleteAction({
         title: "Success Delete Data.",
         description: data.message,
       });
-      queryClient.invalidateQueries({
-        queryKey: Invalidatekey,
-      });
+      onSuccess();
     },
     onError(error) {
       toast({

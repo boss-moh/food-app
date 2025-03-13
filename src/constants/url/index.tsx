@@ -1,3 +1,11 @@
+import {
+  Coffee,
+  LayoutDashboard,
+  Package,
+  ShoppingBag,
+  Users,
+} from "lucide-react";
+
 export const URL_PATHS = {
   HOME: "/",
   CATEGORIES: "/categories",
@@ -10,12 +18,25 @@ export const URL_PATHS = {
       `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
   },
 
-  PRODUCT: {
-    CREATE: "/admin/products/create",
-    EDIT: "/admin/products/create",
-  },
+  ADMIN: {
+    HOME_PAGE: "/admin",
+    PRODUCT: {
+      CREATE: "/admin/products/create",
+      EDIT: "/admin/products/create",
+    },
 
-  ADMIN: "/admin",
+    CATEGORIE: {
+      HOME_PAGE: "/admin/categories/",
+      CREATE: "/admin/categories/create",
+      EDIT: "/admin/categories/edit",
+    },
+    SIDE_BAR: {
+      ORDERS: "/admin/orders",
+      PRODUCTS: "/admin/products",
+      CATEGORIES: "/admin/categories",
+      CUSTOMERS: "/admin/customers",
+    },
+  },
 
   MEALS: "/meals",
 
@@ -28,7 +49,6 @@ export const URL_PATHS = {
 } as const;
 
 export const NAV_LINKS = {
-  // homepage: [{ name: "Home Classic", href: URL_PATHS.HOME }],
   menu: [
     { name: "Meals", href: URL_PATHS.MEALS },
     { name: "Categories", href: URL_PATHS.CATEGORIES },
@@ -37,6 +57,45 @@ export const NAV_LINKS = {
     { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
     { name: "FAQ", href: "/faq" },
-    { name: "Admin Dashboard", href: URL_PATHS.ADMIN },
+    { name: "Admin Dashboard", href: URL_PATHS.ADMIN.HOME_PAGE },
   ],
 };
+
+export const ADMIN_LINKS = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    href: URL_PATHS.ADMIN.HOME_PAGE,
+  },
+  {
+    label: "Orders",
+    icon: ShoppingBag,
+    href: URL_PATHS.ADMIN.SIDE_BAR.ORDERS,
+  },
+  {
+    label: "Products",
+    icon: Coffee,
+    href: URL_PATHS.ADMIN.SIDE_BAR.PRODUCTS,
+  },
+  {
+    label: "Categories",
+    icon: Package,
+    href: URL_PATHS.ADMIN.SIDE_BAR.CATEGORIES,
+  },
+  {
+    label: "Customers",
+    icon: Users,
+    href: URL_PATHS.ADMIN.SIDE_BAR.CUSTOMERS,
+  },
+] as const;
+
+// {
+//   label: "Analytics",
+//   icon: BarChart3,
+//   href: "/admin/analytics",
+// // },
+// {
+//   label: "Settings",
+//   icon: Settings,
+//   href: "/admin/settings",
+// },

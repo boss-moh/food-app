@@ -9,4 +9,11 @@ export const API_END_POINT = {
     EDIT: "/meals/",
     DELETE: (id: string) => `/meals/${id}`,
   },
+
+  ADMIN: {
+    CATEGORY: {
+      CREATE: "/categories",
+      DELETE: (id: string) => `/categories/${id}`,
+    },
+  },
 };

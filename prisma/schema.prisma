@@ -66,12 +66,10 @@ model Category {
 
   id          String     @id @default(cuid())
   name        String
-
-  imageUrl    String?
-
+  imageUrl    String
   count       Int     @default(0)
 
-  menuItems   product[]
+  menuItems   product[] 
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -82,10 +80,10 @@ model product {
   name         String
   description  String
   price        Float
-  imageUrl     String?
+  imageUrl     String
 
   categoryId   String
-  category     Category   @relation(fields: [categoryId], references: [id])
+  category     Category   @relation(fields: [categoryId], references: [id],onDelete: Cascade)
 
 
   createdAt    DateTime   @default(now())
