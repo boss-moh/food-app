@@ -44,6 +44,7 @@ const page = async ({ params }: DynamicProps<"categoryId">) => {
               subText={`${product.price}`}
               key={product.id}
               href={URL_PATHS.PRODUCTS(categoryId, product.id)}
+              imageUrl={product.imageUrl!}
             />
           ))}
         </GridTemplate>

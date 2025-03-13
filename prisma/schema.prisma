@@ -80,7 +80,7 @@ model product {
   name         String
   description  String
   price        Float
-  imageUrl     String?
+  imageUrl     String
 
   categoryId   String
   category     Category   @relation(fields: [categoryId], references: [id],onDelete: Cascade)

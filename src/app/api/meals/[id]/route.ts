@@ -1,9 +1,9 @@
 import { DynamicProps } from "@/constants";
 import { prisma } from "@/lib";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // TODO:Delete Image From Cloudainry
-export async function DELETE({}, { params }: DynamicProps<"id">) {
+export async function DELETE(req: NextRequest, { params }: DynamicProps<"id">) {
   try {
     const { id } = await params;
 

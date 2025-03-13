@@ -1,9 +1,9 @@
 import { CACHCES_KEYS, DynamicProps } from "@/constants";
 import { prisma } from "@/lib";
 import { revalidateTag } from "next/cache";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE({}, { params }: DynamicProps<"id">) {
+export async function DELETE(req: NextRequest, { params }: DynamicProps<"id">) {
   try {
     const { id } = await params;
     if (!id)
