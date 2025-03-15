@@ -1,4 +1,4 @@
-import { createProduct } from "@/lib";
+import { productType } from "@/constants";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -145,3 +145,29 @@ seed().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+const createProduct = async (
+  foodItem: Omit<productType, "id" | "createdAt" | "updatedAt">
+) => {
+  try {
+    await prisma.$transaction(async () => {
+      await prisma.product.create({
+        data: foodItem,
+      });
+      const { categoryId } = foodItem;
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+      });
+      const { count } = category!;
+      await prisma.category.update({
+        where: { id: categoryId },
+        data: {
+          count: count + 1,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
+  }
+};
