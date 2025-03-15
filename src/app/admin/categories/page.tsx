@@ -30,39 +30,53 @@ export default async function Page() {
 
       <CardContent>
         <GridTemplate>
-          {categories.map((i) => (
-            <Card key={i.id} className="overflow-hidden flex flex-col">
-              <div className="relative aspect-video">
-                <Image
-                  src={i.imageUrl!}
-                  alt={i.name}
-                  className="object-cover"
-                  fill
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="flex justify-between items-center">
-                  <span>{i.name}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground ">
-                  Items Count:
-                  <span className="text-sm font-medium text-black">
-                    {` `}
-                    {i.count}
-                  </span>
-                </p>
-              </CardContent>
+          {categories.map((i) => {
+            const data = encodeURIComponent(JSON.stringify(i));
+            return (
+              <Card key={i.id} className="overflow-hidden flex flex-col">
+                <div className="relative aspect-video">
+                  <Image
+                    src={i.imageUrl!}
+                    alt={i.name}
+                    className="object-cover"
+                    fill
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="flex justify-between items-center">
+                    <span>{i.name}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-sm text-muted-foreground ">
+                    Items Count:
+                    <span className="text-sm font-medium text-black">
+                      {` `}
+                      {i.count}
+                    </span>
+                  </p>
+                </CardContent>
 
-              <CardFooter className="flex gap-2">
-                <Button asChild variant="outline" className="flex-1">
-                  <Link href={URL_PATHS.ADMIN.CATEGORIE.EDIT}>Edit</Link>
-                </Button>
-                <DeleteAction url={API_END_POINT.ADMIN.CATEGORY.DELETE(i.id)} />
-              </CardFooter>
-            </Card>
-          ))}
+                <CardFooter className="flex gap-2">
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link
+                      href={{
+                        pathname: URL_PATHS.ADMIN.CATEGORIE.EDIT,
+                        query: {
+                          data,
+                        },
+                      }}
+                    >
+                      Edit
+                    </Link>
+                  </Button>
+                  <DeleteAction
+                    url={API_END_POINT.ADMIN.CATEGORY.DELETE(i.id)}
+                  />
+                </CardFooter>
+              </Card>
+            );
+          })}
         </GridTemplate>
       </CardContent>
     </Card>
