@@ -48,3 +48,10 @@ export const createCategorySchema = z.object({
 });
 
 export type createCategoryType = z.infer<typeof createCategorySchema>;
+export const editCategorySchema = z.object({
+  id: z.string({message:"It should Has ID"}),
+  name: RULES.NAME,
+  imageUrl: z.string().url("Should Be URL"),
+});
+
+export type editCategoryType = z.infer<typeof editCategorySchema>;

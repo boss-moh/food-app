@@ -13,6 +13,7 @@ export const API_END_POINT = {
   ADMIN: {
     CATEGORY: {
       CREATE: "/categories",
+      EDIT: "/categories",
       DELETE: (id: string) => `/categories/${id}`,
     },
   },
