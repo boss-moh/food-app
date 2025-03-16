@@ -19,6 +19,7 @@ import { useState } from "react";
 import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
 import { useOrder } from "@/store";
+import { useUserInfo } from "@/hooks/useUserInfo";
 
 const NavItems = ({ mobile = false, onClick = () => {} }) => {
   const { items } = useOrder();
@@ -91,6 +92,8 @@ const NavItems = ({ mobile = false, onClick = () => {} }) => {
 };
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const user = useUserInfo();
+  console.log(user);
 
   return (
     <header className="border-b  bg-white ">

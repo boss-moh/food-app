@@ -6,6 +6,15 @@ import {
   Users,
 } from "lucide-react";
 
+type PathsObject = Record<string, string>;
+type NestedPaths = Record<string, string | PathsObject>;
+
+const getPaths = (obj: NestedPaths): string[] => {
+  return Object.values(obj).flatMap((value) =>
+    typeof value === "string" ? value : getPaths(value)
+  );
+};
+
 export const URL_PATHS = {
   HOME: "/",
   CATEGORIES: "/categories",
@@ -50,6 +59,8 @@ export const URL_PATHS = {
   },
 
   CART: "/cart",
+
+  UN_AUTHORIZED: "/unauthorized",
 } as const;
 
 export const NAV_LINKS = {
@@ -69,8 +80,11 @@ export const PUBLICE_PATHS: string[] = [
   URL_PATHS.HOME,
   URL_PATHS.AUTH.SIGN_IN,
   URL_PATHS.AUTH.SIGN_UP,
+  URL_PATHS.UN_AUTHORIZED,
 ];
-export const PROTECTED_PATHS: string[] = [URL_PATHS.HOME, "/settings"];
+
+export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);
+export const PROTECTED_PATHS: string[] = [URL_PATHS.HOME];
 
 export const DEFAULT_REDIRECTED = URL_PATHS.AUTH.SIGN_IN;
 export const API_PREFIX = "/api/";
