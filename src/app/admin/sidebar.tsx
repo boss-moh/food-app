@@ -1,59 +1,18 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-  BarChart3,
-  Coffee,
-  LayoutDashboard,
-  Menu,
-  Package,
-  Settings,
-  ShoppingBag,
-  Users,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-const routes = [
-  {
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    href: "/admin",
-  },
-  {
-    label: "Orders",
-    icon: ShoppingBag,
-    href: "/admin/orders",
-  },
-  {
-    label: "Products",
-    icon: Coffee,
-    href: "/admin/products",
-  },
-  {
-    label: "Categories",
-    icon: Package,
-    href: "/admin/categories",
-  },
-  {
-    label: "Customers",
-    icon: Users,
-    href: "/admin/customers",
-  },
-  {
-    label: "Analytics",
-    icon: BarChart3,
-    href: "/admin/analytics",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/admin/settings",
-  },
-];
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { ADMIN_LINKS } from "@/constants";
 
 const SidebarContent = ({
   setIsMobileOpen,
@@ -68,7 +27,7 @@ const SidebarContent = ({
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </Link>
         <div className="space-y-1">
-          {routes.map((route) => (
+          {ADMIN_LINKS.map((route) => (
             <Link
               key={route.href}
               href={route.href}
@@ -97,11 +56,12 @@ export function AdminSidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex h-full w-[19rem] flex-col  z-50 top-20">
+      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20">
         <SidebarContent setIsMobileOpen={setIsMobileOpen} />
       </aside>
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetTrigger asChild className="md:hidden fixed left-4 top-24 z-50">
+        <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
+        <SheetTrigger asChild className="lg:hidden fixed left-4 top-24 z-50">
           <Button variant="outline" size="icon">
             <Menu className="h-6 w-6" />
           </Button>

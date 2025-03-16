@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { URL_PATHS } from "@/constants";
 import { ChefHat } from "lucide-react";
 import Link from "next/link";
 
@@ -15,7 +16,7 @@ export default function NotFound() {
           The page might have been moved, deleted, or perhaps never existed.
         </p>
         <Button asChild size="lg">
-          <Link href="/">Return to Home</Link>
+          <Link href={URL_PATHS.HOME}>Return to Home</Link>
         </Button>
       </div>
     </div>

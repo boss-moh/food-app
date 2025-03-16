@@ -1,8 +1,9 @@
+import { BASE_URL } from "@/constants";
 import axiosLib, { AxiosError } from "axios";
 
 // Create a custom axios instance with default configurations
 const axios = axiosLib.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

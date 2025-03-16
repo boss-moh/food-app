@@ -13,7 +13,6 @@ import { formatPrice } from "@/utils";
 import { Clock, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
 export const Meals = ({ meals }: { meals: mealsType }) => {
   if (!meals.length)
     return (
@@ -57,7 +56,7 @@ export const Meals = ({ meals }: { meals: mealsType }) => {
             </div>
           </CardContent>
           <CardFooter className="flex gap-2">
-            <AddToOrderButton />
+            <AddToOrderButton item={{ ...meal, quantity: 1 }} />
             <Button asChild variant={"outline"}>
               <Link href={URL_PATHS.MENU.GET_DISH(meal.categoryId, meal.id)}>
                 View

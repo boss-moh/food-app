@@ -12,40 +12,79 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
-import { createDishSchema, createDishType, API_END_POINT } from "@/constants";
+import {
+  createDishSchema,
+  createDishType,
+  API_END_POINT,
+  URL_PATHS,
+  option,
+} from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
-import { ImagePlus, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { CategoriesSelecter } from "@/components/share";
+import { Selecter } from "@/components/share";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
-export default function CreateProductForm() {
+import React from "react";
+import ImageInput, { useImageInput } from "@/components/share/ImageInput";
+import { useRouter } from "next/navigation";
+
+type ProductFormProps = {
+  defaultValues?: createDishType;
+  isEditMode?: boolean;
+  categories: option[];
+};
+
+const values = {
+  id: null,
+  name: "",
+  description: "",
+  price: 0,
+  rating: 0,
+  categoryId: "",
+  prepTime: 0,
+  ingredients: [""],
+  nutritionalInfo: [""],
+  imageUrl: "",
+};
+
+export default function ProductForm({
+  defaultValues = values,
+  isEditMode = false,
+  categories,
+}: ProductFormProps) {
+  const router = useRouter();
   const form = useForm<createDishType>({
     resolver: zodResolver(createDishSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      rating: 0,
-      ingredients: [""],
-      nutritionalInfo: [""],
-    },
+    defaultValues,
   });
-  // imageUrl: "",
 
-  console.log(form.watch());
+  const imagePorps = useImageInput(
+    (url) => form.setValue("imageUrl", url),
+    defaultValues.imageUrl
+  );
 
   const { mutate, isPending: isLoading } = useMutation({
-    mutationFn: async () =>
-      await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues()),
+    mutationFn: async () => {
+      if (isEditMode) {
+        return await axios.put(API_END_POINT.PRODUCT.EDIT, form.getValues());
+      }
+      return await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues());
+    },
     onError(error) {
-      console.log("error", error);
+      toast({
+        title: "there is error happen",
+        description: error.message,
+        variant: "destructive",
+      });
     },
     onSuccess() {
-      form.reset();
+      clear();
       toast({
-        title: "New Dish has been created.",
+        title: isEditMode
+          ? "The Dish has been Edited."
+          : "New Dish has been created.",
       });
     },
   });
@@ -57,6 +96,12 @@ export default function CreateProductForm() {
 
     mutate();
   }
+
+  const clear = () => {
+    router.replace(URL_PATHS.ADMIN.PRODUCT.CREATE);
+    form.reset(values);
+    imagePorps.reset();
+  };
 
   return (
     <Form {...form}>
@@ -170,7 +215,11 @@ export default function CreateProductForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <CategoriesSelecter onChange={field.onChange} />
+                  <Selecter
+                    onChange={(id) => field.onChange(id)}
+                    options={categories}
+                    defaultValue={field.value}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -178,22 +227,17 @@ export default function CreateProductForm() {
           </div>
 
           <div className="w-full md:w-72">
-            <FormLabel>Product Image</FormLabel>
-            <div className="mt-2 flex flex-col items-center gap-4">
-              <div className="flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed">
-                <Button variant="ghost" className="h-full w-full">
-                  <div className="flex flex-col items-center gap-2">
-                    <ImagePlus className="h-8 w-8" />
-                    <span>Upload Image</span>
-                  </div>
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Supported formats: JPEG, PNG, WebP
-                <br />
-                Maximum file size: 5MB
-              </p>
-            </div>
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Product Image</FormLabel>
+                  <ImageInput {...imagePorps} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -306,10 +350,18 @@ export default function CreateProductForm() {
         <Separator className="my-4" />
 
         <div className="flex justify-end gap-4">
-          <Button variant="outline" type="button" onClick={() => form.reset()}>
-            Cancel
+          {!isEditMode && (
+            <Button variant="outline" type="button" onClick={clear}>
+              Clear
+            </Button>
+          )}
+          <Button type="submit" disabled={isLoading}>
+            {isLoading
+              ? "loadind ... "
+              : isEditMode
+              ? "Save Changes"
+              : "Create Product"}
           </Button>
-          <Button type="submit">Create Product</Button>
         </div>
       </form>
     </Form>

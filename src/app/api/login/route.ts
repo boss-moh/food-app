@@ -21,6 +21,11 @@ export async function POST(request: Request) {
       password,
       redirectTo: DEFAULT_REDIRECTED,
     });
+
+    return NextResponse.json(
+      { message: 'success to login' },
+      { status: 200 }
+    )
   } catch (e) {
     if (e instanceof CredentialError) {
       switch (e.type) {
@@ -43,8 +48,4 @@ export async function POST(request: Request) {
 
     throw e;
   }
-    return NextResponse.json(
-    { message: 'success to login' },
-    { status: 200 }
-  );;
 }

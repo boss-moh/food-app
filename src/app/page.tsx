@@ -1,9 +1,10 @@
 import { ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import LandingImage from "localImages/landing.png";
 import { fetchDishesBaseOn } from "@/lib";
 import { GridItem, GridTemplate } from "@/components/share";
+import LandingImage from "localImages/newLanding.webp";
+import { Button } from "@/components/ui/button";
 import { URL_PATHS } from "@/constants";
 
 export default async function Home() {
@@ -16,32 +17,33 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative">
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 items-center">
-          <div className="relative aspect-square w-full">
+          <div className="relative aspect-square w-full py-5">
             <Image
               src={LandingImage}
               alt="Mighty Super Cheesecake"
-              className="object-cover"
+              className="object-cover rotate-180"
               fill
               priority
             />
           </div>
-          <div className="bg-blue-50 p-8 lg:p-12">
-            <div className="flex items-center gap-2 text-sm mb-4">
+          <div className="bg-primary/5 p-8 lg:p-12 rounded-2xl">
+            <div className="flex items-center gap-2 text-sm mb-4 text-primary">
               <TrendingUp className="h-4 w-4" />
               <span>85% would make this again</span>
             </div>
-            <h1 className="text-4xl font-bold mb-4">Mighty Super Cheesecake</h1>
-            <p className="text-gray-600 text-lg mb-6">
+            <h1 className="text-4xl font-bold mb-4 text-foreground">
+              Mighty Super Cheesecake
+            </h1>
+            <p className="text-muted-foreground text-lg mb-6">
               Look no further for a creamy and ultra smooth classic cheesecake
-              recipe! no one can deny its simple decadence.
+              recipe! No one can deny its simple decadence.
             </p>
-            <Link
-              href="/recipes/cheesecake"
-              className="inline-flex items-center text-primary hover:underline"
-            >
-              View Recipe
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Link>
+            <Button asChild>
+              <Link href={URL_PATHS.MEALS} className="inline-flex items-center">
+                View Recipe
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

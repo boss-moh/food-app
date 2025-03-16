@@ -18,6 +18,7 @@ enum OrderStatus {
   READY
   DELIVERED
   CANCELLED
+  DONE
 }
 
 model User {
@@ -31,6 +32,7 @@ model User {
 
   password String? // <-- add this field to store the hashed password
   role     RoleStatus @default(CUSTOMER)
+  admin    admin?
 
   @@map("users")
 }
@@ -55,6 +57,13 @@ model Account {
   @@map("accounts")
 }
 
+model admin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
 model customer {
   id String @id @default(cuid())
 
@@ -70,10 +79,11 @@ model customer {
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String
-  imageUrl  String?
-  count     Int?      @default(0)
+  id       String @id @default(cuid())
+  name     String
+  imageUrl String
+  count    Int    @default(0)
+
   menuItems product[]
 
   createdAt DateTime @default(now())
@@ -81,14 +91,14 @@ model Category {
 }
 
 model product {
-  id          String  @id @default(cuid())
+  id          String @id @default(cuid())
   name        String
   description String
   price       Float
-  imageUrl    String?
+  imageUrl    String
 
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,3 +146,10 @@ model OrderItem {
 
   createdAt DateTime @default(now())
 }
+
+// model Image {
+//   id        String      @id @default( cuid() ) // Unique ID
+//   url       String   // Cloudinary URL
+//   title     String?  // Optional title or description
+
+// }

@@ -55,7 +55,7 @@ export default async function ProductPage({
 
               <Separator className="my-6" />
 
-              <ActionsButtons />
+              <ActionsButtons meal={product} />
             </CardContent>
           </div>
         </div>

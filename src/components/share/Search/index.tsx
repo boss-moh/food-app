@@ -5,25 +5,28 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ComponentProps, useEffect, useState } from "react";
 
 export const SearchInput = (props: ComponentProps<"input">) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const searchParams = useSearchParams();
   const path = usePathname();
   const router = useRouter();
+
+  const [searchTerm, setSearchTerm] = useState(
+    () => searchParams.get("query") || ""
+  );
+
   useEffect(() => {
     const time = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
 
       if (searchTerm) {
-        params.set("query", searchTerm);
+        params.set("query", searchTerm.toLowerCase());
       } else {
         params.delete("query");
       }
 
       router.replace(`${path}?${params.toString()}`);
-      console.log("filter here", searchTerm);
     }, 500);
     return () => clearTimeout(time);
-  }, [searchTerm]);
+  }, [searchTerm, path, router, searchParams]);
 
   return (
     <div className="relative w-full">

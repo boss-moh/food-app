@@ -1,25 +1,20 @@
-import { fetchMenu, fetchProductsById } from "@/lib";
+import { createDishSchema, URL_PATHS } from "@/constants";
+import { createProduct, fetchMenu, fetchProductsById, prisma } from "@/lib";
+import { uploadImage } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { type NextRequest } from "next/server";
-
-import { prisma } from "@/lib/prisma";
-import { createDishSchema } from "@/constants";
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const categoryId = searchParams.get("categoryId");
-    // Get the URL from the request
-    console.log("categoryId", categoryId);
     if (categoryId) {
       const mealsByCategory = await fetchProductsById(categoryId);
-
       return NextResponse.json(mealsByCategory, { status: 200 });
     }
-    // Pass the parameter to fetchMenu
     const meals = await fetchMenu();
-
     return NextResponse.json(meals, { status: 200 });
   } catch (error) {
     console.error("Error fetching meals:", error);
@@ -30,52 +25,82 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(req: Request) {
-  const body = await req.json();
-  return NextResponse.json(
-    { success: true, data: { message: "new Product create" } },
-    { status: 201 }
-  );
+export async function POST(request: NextRequest) {
+  const body = await request.json();
 
-  const errors = createDishSchema.safeParse(body);
+  const { success, data, error } = createDishSchema.safeParse(body);
 
-  try {
-    if (!errors.success) {
-      return NextResponse.json(
-        { errors: errors.error.flatten().fieldErrors },
-        { status: 400 }
-      );
-    }
-
-    //   type productType = {
-    //     name: string;
-    //     id: string;
-    //     createdAt: Date;
-    //     updatedAt: Date;
-    //     description: string;
-    //     price: number;
-    //     imageUrl: string | null;
-    //     categoryId: string;
-    //     rating: number;
-    //     prepTime: number;
-    //     ingredients: string[];
-    //     nutritionalInfo: string[];
-    // }
-
-    // Your logic (e.g., saving to DB)
-    const product = await prisma.product.create({
-      data: errors.data,
-    });
-
+  if (!success) {
     return NextResponse.json(
-      { success: true, data: { message: "new Product create", data: product } },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
+      {
+        success: false,
+        data: { message: "Invalid data", errors: error.formErrors.fieldErrors },
+      },
+      { status: 400 }
     );
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: _unused, imageUrl, ...rest } = data;
+
+  //upload image
+
+  const optimizedUrl = await uploadImage(imageUrl);
+
+  // create product
+
+  const product = createProduct({ imageUrl: optimizedUrl, ...rest });
+
+  revalidatePath(URL_PATHS.HOME);
+
+  return NextResponse.json(
+    { success: true, data: { message: "new Product create", data: product } },
+    { status: 201 }
+  );
+}
+
+export async function PUT(request: NextRequest) {
+  const body = await request.json();
+
+  const { success, data, error } = createDishSchema.safeParse(body);
+
+  if (!success) {
+    return NextResponse.json(
+      {
+        success: false,
+        data: { message: "Invalid data", errors: error.formErrors.fieldErrors },
+      },
+      { status: 400 }
+    );
+  }
+
+  // Update Product
+  const oldProductData = await prisma.product.findUnique({
+    where: { id: data.id! },
+  });
+  //upload image
+
+  let optimizedUrl = oldProductData?.imageUrl;
+  if (oldProductData?.imageUrl !== data.imageUrl) {
+    const imageUrl = data.imageUrl;
+    optimizedUrl = await uploadImage(imageUrl);
+  }
+
+  const product = await prisma.product.update({
+    where: {
+      id: data.id!,
+    },
+    data: {
+      ...data,
+      imageUrl: optimizedUrl,
+      id: data.id!,
+    },
+  });
+
+  revalidatePath(URL_PATHS.HOME);
+
+  return NextResponse.json(
+    { success: true, data: { message: "new Product create", data: product } },
+    { status: 201 }
+  );
 }

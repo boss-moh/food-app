@@ -9,61 +9,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { useOrder } from "@/store";
+import { Clock, Minus, Plus, Trash2, Truck } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-
-const initialCartItems = [
-  {
-    id: 1,
-    name: "Mighty Super Cheesecake",
-    price: 8.99,
-    quantity: 1,
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    name: "Spinach and Cheese Pasta",
-    price: 12.99,
-    quantity: 2,
-    image: "/placeholder.svg",
-  },
-  // Add more items as needed
-];
+import EmptyCart from "./EmptyCart";
+import { formatPrice } from "@/utils";
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { removeItem, update, items, calcOrder } = useOrder();
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(0, newQuantity) } : item
-      )
-    );
-  };
+  const { subtotal, tax, total } = calcOrder();
 
-  const removeItem = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * 0.1; // Assuming 10% tax
-  const total = subtotal + tax;
+  if (items.length === 0) {
+    return <EmptyCart />;
+  }
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Your Shopping Cart</h1>
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1">
-          {cartItems.map((item) => (
+          {items.map((item) => (
             <Card key={item.id} className="mb-4">
               <CardContent className="flex items-center p-4">
                 <div className="relative w-20 h-20 mr-4">
                   <Image
-                    src={item.image || "/placeholder.svg"}
+                    src={item.imageUrl || "/placeholder.svg"}
                     alt={item.name}
                     fill
                     className="object-cover rounded-md"
@@ -72,29 +43,34 @@ export default function CartPage() {
                 <div className="flex-1">
                   <h3 className="font-semibold">{item.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    ${item.price.toFixed(2)} each
+                    {formatPrice(item.price)} each
                   </p>
                 </div>
                 <div className="flex items-center">
                   <Button
+                    disabled={item.quantity <= 1}
                     variant="outline"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    onClick={() => {
+                      if (item.quantity <= 1) return;
+                      update(item.id, item.quantity - 1);
+                    }}
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
                   <Input
                     type="number"
+                    min={1}
                     value={item.quantity}
                     onChange={(e) =>
-                      updateQuantity(item.id, Number.parseInt(e.target.value))
+                      update(item.id, Number.parseInt(e.target.value))
                     }
                     className="w-16 mx-2 text-center"
                   />
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    onClick={() => update(item.id, item.quantity + 1)}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -110,6 +86,24 @@ export default function CartPage() {
               </CardContent>
             </Card>
           ))}
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center">
+                <Truck className="mr-2 h-4 w-4" /> Delivery Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <span>Estimated delivery time: 30-45 minutes</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Orders over 50 qualify for free delivery. Your order will be
+                carefully packed and delivered to your doorstep.
+              </p>
+            </CardContent>
+          </Card>
         </div>
         <div className="lg:w-1/3">
           <Card>
@@ -120,15 +114,15 @@ export default function CartPage() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>{formatPrice(tax)}</span>
                 </div>
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
               </div>
             </CardContent>

@@ -1,65 +1,35 @@
-"use client";
-import {
-  GridTemplate,
-  SearchInput,
-  Meals,
-  CategoriesSelecter,
-} from "@/components/share";
+import { SearchInput, CategoriesSelecter, Meals } from "@/components/share";
+import { categoryType, searchParamsProps } from "@/constants";
+import { fetchCategories, fetchProductsById } from "@/lib";
+import { makeOptions } from "@/utils";
+import { getFilterMeals } from "@/utils/getFilterMeals";
 
-import { useMeals } from "@/lib";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import DishCardSkeleton from "./DishCardSkeleton";
+export default async function MealsPage({
+  searchParams,
+}: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
+  const categoryId = (await searchParams).categoryId;
+  const query = (await searchParams).query;
 
-export default function MealsPage() {
-  const mealsData = useMeals();
+  const [categories, meals] = await Promise.all([
+    fetchCategories(),
+    fetchProductsById(categoryId),
+  ]);
 
-  const path = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const filterMeals = getFilterMeals(meals, query);
 
-  const query = searchParams.get("query");
-  const filterMeals = !query
-    ? mealsData.meals
-    : mealsData.meals.filter((meal) => {
-        if (meal.description.includes(query)) return true;
-        if (meal.name.includes(query)) return true;
+  const options = makeOptions<categoryType>(categories, (i) => ({
+    name: i.name,
+    value: i.id,
+  }));
 
-        return false;
-      });
-
-  // const selecetedCategoryID = searchParams.get("categoryId");
-  // const selecetedCategory = categories?.find(
-  // (category) => category.id == selecetedCategoryID
-  // );
-
-  const handleChangeCategory = (categoryId: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (categoryId === "all") {
-      params.delete("categoryId");
-    } else {
-      params.set("categoryId", categoryId);
-    }
-    router.replace(`${path}?${params.toString()}`);
-  };
-  // onValueChange={handleChangeCategory}
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <SearchInput />
-        <CategoriesSelecter onChange={handleChangeCategory} />
+        <CategoriesSelecter defaultValue="All" options={options} />
       </div>
-      {mealsData.isLoading ? (
-        <GridTemplate>
-          {new Array(8).fill(0).map((_, key) => (
-            <DishCardSkeleton key={key} />
-          ))}
-        </GridTemplate>
-      ) : (
-        <Meals meals={filterMeals} />
-      )}
+      <Meals meals={filterMeals} />
     </div>
   );
 }
-
-export { MealsPage };

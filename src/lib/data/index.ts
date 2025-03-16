@@ -1,15 +1,24 @@
-// import "server-only";
-import { productType } from "@/constants";
-import prisma from "../prisma";
+// #TODO:create Folder For Get And One For POST
+// #TODO:Server-only
 
-export async function fetchCategories() {
-  try {
-    const categories = await prisma.category.findMany();
-    return categories;
-  } catch {
-    throw new Error("Faild to fetch categories");
+import { CACHCES_KEYS, productType } from "@/constants";
+import prisma from "../prisma";
+import { unstable_cache as nextCache } from "next/cache";
+
+export const fetchCategories = nextCache(
+  async () => {
+    try {
+      const categories = await prisma.category.findMany();
+      return categories;
+    } catch {
+      throw new Error("Faild to fetch categories");
+    }
+  },
+  [CACHCES_KEYS.CATEGORIES],
+  {
+    tags: [CACHCES_KEYS.CATEGORIES],
   }
-}
+);
 
 export async function fetchCategoryById(id: string) {
   try {
@@ -107,3 +116,29 @@ export async function fetchDishesBaseOn(baseOn: selectedOptions) {
     throw new Error("Faild to fetch Latest Dishes");
   }
 }
+
+export const createProduct = async (
+  foodItem: Omit<productType, "id" | "createdAt" | "updatedAt">
+) => {
+  try {
+    await prisma.$transaction(async () => {
+      await prisma.product.create({
+        data: foodItem,
+      });
+      const { categoryId } = foodItem;
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+      });
+      const { count } = category!;
+      await prisma.category.update({
+        where: { id: categoryId },
+        data: {
+          count: count + 1,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
+  }
+};
