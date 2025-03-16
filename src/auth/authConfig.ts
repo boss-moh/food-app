@@ -1,37 +1,52 @@
-import { signinType } from "@/constants";
+import { signinSchema } from "@/constants";
 import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
 import { CredentialsSignin, NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github";
 
-class CredentialError extends CredentialsSignin {}
+
+
+class CredentialError extends CredentialsSignin {
+  code = "Invalid identifier or password"
+
+}
+
+
 
 export const authConfig: NextAuthConfig = {
   providers: [
     GitHub,
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
+      id: "credentials",
+      name: "Credentials",
+      type: "credentials",
       credentials: {
-        email: {},
-        password: {},
+        username: { label: "Username" },
+        password: { label: "Password", type: "password" }
       },
-      authorize: async (credentials: signinType) => {
-        console.log("credentials", credentials);
-        const { email, password } = credentials;
+      async authorize(credential) {
+        const isValid = signinSchema.safeParse(credential);
+        if(!isValid.success){
+          throw new CredentialError("Failed To Login",{
+            message:isValid.error.flatten().fieldErrors
+            ,
+          })
+        }
+
+        const {password, email} = isValid.data
 
         const existingUser = await prisma.user.findUnique({
           where: { email },
         });
 
         if (existingUser === null) {
-          throw new CredentialError("Email Not  exists");
+          throw new CredentialError("Email Not exists");
         }
 
         if (!existingUser.password) {
           throw new CredentialError(
-            "InValid Login , The Account Created Via Oauth"
+            "Invalid Login, The Account Created Via OAuth"
           );
         }
 
@@ -40,22 +55,17 @@ export const authConfig: NextAuthConfig = {
           existingUser.password
         );
         if (!hasTheSamePassword) {
-          throw new CredentialError('"InValid Password "');
+          throw new CredentialError("Invalid Password");
         }
-
-        return existingUser;
+        
+        const {id, name,role} = existingUser;
+        
+        return {
+          userId:id,
+          name,
+          role
+        }
       },
-    }),
+    })
   ],
-  callbacks: {
-    jwt: async ({ token }) => {
-      console.log("token", token);
-      return token;
-    },
-    session: async ({ session }) => {
-      console.log("session", session);
-
-      return { ...session, customFiled: "sadsa" };
-    },
-  },
 };
