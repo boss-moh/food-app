@@ -7,8 +7,12 @@ import GitHub from "next-auth/providers/github";
 
 
 
-class CredentialError extends CredentialsSignin {
-  code = "Invalid identifier or password"
+export class CredentialError extends CredentialsSignin {
+  code =""
+  constructor(code:string){
+super("Faild To Login Via Credential")
+this.code = code
+  }
 
 }
 
@@ -28,10 +32,7 @@ export const authConfig: NextAuthConfig = {
       async authorize(credential) {
         const isValid = signinSchema.safeParse(credential);
         if(!isValid.success){
-          throw new CredentialError("Failed To Login",{
-            message:isValid.error.flatten().fieldErrors
-            ,
-          })
+          throw new CredentialError("Please Provider All Data")
         }
 
         const {password, email} = isValid.data
@@ -57,14 +58,10 @@ export const authConfig: NextAuthConfig = {
         if (!hasTheSamePassword) {
           throw new CredentialError("Invalid Password");
         }
+
+        const {id,image,name,role} = existingUser
         
-        const {id, name,role} = existingUser;
-        
-        return {
-          userId:id,
-          name,
-          role
-        }
+        return {id,image,email,name,role}
       },
     })
   ],

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { DEFAULT_REDIRECTED, signinSchema } from "@/constants";
-import { signIn } from "@/auth";
-import { AuthError } from "next-auth";
+import { CredentialError, signIn } from "@/auth";
 
 export async function POST(request: Request) {
   const data = await request.json();
@@ -23,11 +22,12 @@ export async function POST(request: Request) {
       redirectTo: DEFAULT_REDIRECTED,
     });
   } catch (e) {
-    if (e instanceof AuthError) {
+    if (e instanceof CredentialError) {
       switch (e.type) {
         case "CredentialsSignin": {
+          console.log(JSON.stringify(e))
           return NextResponse.json(
-            { errors: { error: e.message } },
+            { errors: { error: e.code } },
             { status: 400 }
           );
         }
@@ -43,5 +43,8 @@ export async function POST(request: Request) {
 
     throw e;
   }
-  return null;
+    return NextResponse.json(
+    { message: 'success to login' },
+    { status: 200 }
+  );;
 }

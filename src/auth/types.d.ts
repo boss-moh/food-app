@@ -13,7 +13,7 @@ export type {
 declare module "next-auth" {
   interface User {
     role:RoleStatus
-    userId:string
+    id:string
   }
 
   /**
@@ -29,7 +29,7 @@ declare module "next-auth" {
        * you need to add them back into the newly declared interface.
        */
       role:RoleStatus
-      userId:string
+      id:string
     } & DefaultSession["user"]
   }
 }
