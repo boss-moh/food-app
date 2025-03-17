@@ -15,20 +15,28 @@ const getPaths = (obj: NestedPaths): string[] => {
   );
 };
 
+/**
+ * #BUG: Put All URL To Public And Private
+ * #BUG: MENU CATEGORY - PRODUCT
+ */
+
+// Check if path matches category structure: /categories/:id
+// const categoryRex = /^\/categories\/[^/]+$/
+
+// Check if path matches product structure: /categories/:categoryId/:productId
+// const isProduct = /^\/categories\/[^/]+\/[^/]+$/
+
 export const URL_PATHS = {
   HOME: "/",
-  CATEGORIES: "/categories",
-  CATEGORIY: (id: string) => `/categories/${id}`,
-  PRODUCTS: (categoryId: string, productId: string) =>
-    `${URL_PATHS.CATEGORIY(categoryId)}/${productId}`,
 
   MENU: {
-    GET_DISH: (categoryId: string, dishId: string) =>
-      `${URL_PATHS.CATEGORIY(categoryId)}/${dishId}`,
-  },
+    HOME_PAGE: "/meals",
+    CATEGORIES: "/categories",
 
-  PRODUCT: {
-    CREATE: "/admin/products/create",
+    CATEGORIY: (id: string) => `/categories/${id}`,
+
+    GET_PRODUCT: (categoryId: string, productId: string) =>
+      `${URL_PATHS.MENU.CATEGORIY(categoryId)}/${productId}`,
   },
 
   ADMIN: {
@@ -51,8 +59,6 @@ export const URL_PATHS = {
     },
   },
 
-  MEALS: "/meals",
-
   AUTH: {
     SIGN_IN: "/login",
     SIGN_UP: "/register",
@@ -65,8 +71,8 @@ export const URL_PATHS = {
 
 export const NAV_LINKS = {
   menu: [
-    { name: "Meals", href: URL_PATHS.MEALS },
-    { name: "Categories", href: URL_PATHS.CATEGORIES },
+    { name: "Meals", href: URL_PATHS.MENU.HOME_PAGE },
+    { name: "Categories", href: URL_PATHS.MENU.CATEGORIES },
   ],
   pages: [
     { name: "About Us", href: "/about" },
@@ -74,20 +80,7 @@ export const NAV_LINKS = {
     { name: "FAQ", href: "/faq" },
     { name: "Admin Dashboard", href: URL_PATHS.ADMIN.HOME_PAGE },
   ],
-};
-
-export const PUBLICE_PATHS: string[] = [
-  URL_PATHS.HOME,
-  URL_PATHS.AUTH.SIGN_IN,
-  URL_PATHS.AUTH.SIGN_UP,
-  URL_PATHS.UN_AUTHORIZED,
-];
-
-export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);
-export const PROTECTED_PATHS: string[] = [URL_PATHS.HOME];
-
-export const DEFAULT_REDIRECTED = URL_PATHS.AUTH.SIGN_IN;
-export const API_PREFIX = "/api/";
+} as const;
 
 export const ADMIN_LINKS = [
   {
@@ -117,13 +110,18 @@ export const ADMIN_LINKS = [
   },
 ] as const;
 
-// {
-//   label: "Analytics",
-//   icon: BarChart3,
-//   href: "/admin/analytics",
-// // },
-// {
-//   label: "Settings",
-//   icon: Settings,
-//   href: "/admin/settings",
-// },
+export const PUBLICE_PATHS: string[] = [
+  URL_PATHS.HOME,
+  ...getPaths(URL_PATHS.AUTH),
+  URL_PATHS.MENU.CATEGORIES,
+  URL_PATHS.MENU.HOME_PAGE,
+  URL_PATHS.MENU.CATEGORIY("[id]"),
+  URL_PATHS.MENU.GET_PRODUCT("[categoryId]", "[productId]"),
+  URL_PATHS.UN_AUTHORIZED,
+];
+
+export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);
+export const PROTECTED_PATHS: string[] = [];
+
+export const DEFAULT_REDIRECTED = URL_PATHS.AUTH.SIGN_IN;
+export const API_PREFIX = "/api/";

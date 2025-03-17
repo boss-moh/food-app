@@ -39,7 +39,10 @@ export default async function Home() {
               recipe! No one can deny its simple decadence.
             </p>
             <Button asChild>
-              <Link href={URL_PATHS.MEALS} className="inline-flex items-center">
+              <Link
+                href={URL_PATHS.MENU.HOME_PAGE}
+                className="inline-flex items-center"
+              >
                 View Recipe
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -56,7 +59,7 @@ export default async function Home() {
             {topRatings.map((dish) => (
               <GridItem
                 key={dish.id}
-                href={URL_PATHS.PRODUCTS(dish.categoryId, dish.id)}
+                href={URL_PATHS.MENU.GET_PRODUCT(dish.categoryId, dish.id)}
                 {...dish}
                 subText={`Rating : ${dish.rating}`}
               />
@@ -73,7 +76,7 @@ export default async function Home() {
             {latestDishes.map((dish) => (
               <GridItem
                 key={dish.id}
-                href={URL_PATHS.PRODUCTS(dish.categoryId, dish.id)}
+                href={URL_PATHS.MENU.GET_PRODUCT(dish.categoryId, dish.id)}
                 {...dish}
                 subText={`Rating : ${dish.rating}`}
               />

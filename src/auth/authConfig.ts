@@ -54,9 +54,9 @@ export const authConfig: NextAuthConfig = {
           throw new CredentialError("Invalid Password");
         }
 
-        const { id, image, name, role } = existingUser;
+        const { id,  name, role } = existingUser;
 
-        return { id, image, email, name, role };
+        return { id,  email, name, role };
       },
     }),
   ],

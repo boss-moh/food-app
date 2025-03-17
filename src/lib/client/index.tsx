@@ -35,7 +35,8 @@ export const useMeals = () => {
     isError,
   } = useQuery<mealsType>({
     queryKey,
-    queryFn: async () => await axios.get(API_END_POINT.GET_MEALS(categoryId)),
+    queryFn: async () =>
+      await axios.get(API_END_POINT.GET_MENU.HOME_PAGE(categoryId)),
   });
 
   return {

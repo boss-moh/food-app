@@ -20,7 +20,7 @@ const page = async ({ params }: DynamicProps<"categoryId">) => {
           </p>
         </header>
         <Button asChild>
-          <Link href={URL_PATHS.CATEGORIES}>
+          <Link href={URL_PATHS.MENU.CATEGORIES}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Categories
           </Link>
@@ -43,7 +43,7 @@ const page = async ({ params }: DynamicProps<"categoryId">) => {
               {...product}
               subText={`${product.price}`}
               key={product.id}
-              href={URL_PATHS.PRODUCTS(categoryId, product.id)}
+              href={URL_PATHS.MENU.GET_PRODUCT(categoryId, product.id)}
               imageUrl={product.imageUrl!}
             />
           ))}
@@ -59,7 +59,7 @@ const page = async ({ params }: DynamicProps<"categoryId">) => {
               category. Check back soon for exciting new products!
             </p>
             <Button asChild>
-              <Link href={URL_PATHS.CATEGORIES}>
+              <Link href={URL_PATHS.MENU.CATEGORIES}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Categories
               </Link>

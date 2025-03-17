@@ -17,7 +17,7 @@ export const EmptyCart = () => {
           our delicious menu and find something you&apos;ll love!
         </p>
         <Button asChild size="lg">
-          <Link href={URL_PATHS.MEALS}>
+          <Link href={URL_PATHS.MENU.HOME_PAGE}>
             <ArrowLeft className="mr-2 h-4 w-4" /> Continue Shopping
           </Link>
         </Button>
