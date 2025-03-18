@@ -42,6 +42,7 @@ export const URL_PATHS = {
   ADMIN: {
     HOME_PAGE: "/admin",
     PRODUCT: {
+      HOME_PAGE: "/admin/products/",
       CREATE: "/admin/products/create",
       EDIT: "/admin/products/create",
     },
@@ -51,12 +52,16 @@ export const URL_PATHS = {
       CREATE: "/admin/categories/create",
       EDIT: "/admin/categories/edit",
     },
-    SIDE_BAR: {
-      ORDERS: "/admin/orders",
-      PRODUCTS: "/admin/products",
-      CATEGORIES: "/admin/categories",
-      CUSTOMERS: "/admin/customers",
+    CUSTOMERS: {
+      HOME_PAGE: "/admin/customers",
     },
+    ORDERS: {
+      HOME_PAGE: "/admin/orders",
+    },
+    //   ORDERS: "/admin/orders",
+    //   PRODUCTS: "/admin/products",
+    //   CATEGORIES: "/admin/categories",
+    //   CUSTOMERS:,
   },
 
   AUTH: {
@@ -102,22 +107,22 @@ export const ADMIN_LINKS = [
   {
     label: "Orders",
     icon: ShoppingBag,
-    href: URL_PATHS.ADMIN.SIDE_BAR.ORDERS,
+    href: URL_PATHS.ADMIN.ORDERS.HOME_PAGE,
   },
   {
     label: "Products",
     icon: Coffee,
-    href: URL_PATHS.ADMIN.SIDE_BAR.PRODUCTS,
+    href: URL_PATHS.ADMIN.PRODUCT.HOME_PAGE,
   },
   {
     label: "Categories",
     icon: Package,
-    href: URL_PATHS.ADMIN.SIDE_BAR.CATEGORIES,
+    href: URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE,
   },
   {
     label: "Customers",
     icon: Users,
-    href: URL_PATHS.ADMIN.SIDE_BAR.CUSTOMERS,
+    href: URL_PATHS.ADMIN.CUSTOMERS.HOME_PAGE,
   },
 ] as const;
 
