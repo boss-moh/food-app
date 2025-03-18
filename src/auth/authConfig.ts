@@ -54,9 +54,9 @@ export const authConfig: NextAuthConfig = {
           throw new CredentialError("Invalid Password");
         }
 
-        const { id,  name, role } = existingUser;
+        const { id, name, role } = existingUser;
 
-        return { id,  email, name, role };
+        return { id, email, name, role };
       },
     }),
   ],
@@ -81,4 +81,5 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
   },
+  trustHost: true,
 };

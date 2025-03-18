@@ -13,7 +13,7 @@ export default async function CategoriesPage() {
         {categories.map((category) => (
           <GridItem
             key={category.id}
-            href={URL_PATHS.CATEGORIY(category.id)}
+            href={URL_PATHS.MENU.CATEGORIY(category.id)}
             {...category}
             subText={`${category.count} recipes `}
           />

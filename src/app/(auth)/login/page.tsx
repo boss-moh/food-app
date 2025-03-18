@@ -29,10 +29,13 @@ import { axios, useMutation } from "@/lib";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import HelperText from "@/components/share/helperText";
+import { useRouter } from "next/navigation";
 
 type errors = ErrorResponse<signinType>;
 
 export default function SignInPage() {
+  const router = useRouter();
+
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -53,8 +56,9 @@ export default function SignInPage() {
     onError(error) {
       console.log("error", error);
     },
-    onSuccess() {
+    async onSuccess() {
       form.reset();
+      router.push(URL_PATHS.HOME);
     },
   });
 

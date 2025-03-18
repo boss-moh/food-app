@@ -67,20 +67,31 @@ export const URL_PATHS = {
   CART: "/cart",
 
   UN_AUTHORIZED: "/unauthorized",
+
+  USER: {
+    ORDERS: {
+      HOME_PAGE: "/user/orders",
+    },
+  },
 } as const;
 
-export const NAV_LINKS = {
-  menu: [
-    { name: "Meals", href: URL_PATHS.MENU.HOME_PAGE },
-    { name: "Categories", href: URL_PATHS.MENU.CATEGORIES },
-  ],
-  pages: [
-    { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Admin Dashboard", href: URL_PATHS.ADMIN.HOME_PAGE },
-  ],
-} as const;
+export const NAV_LINKS = [
+  {
+    label: "Home",
+
+    href: URL_PATHS.HOME,
+  },
+  {
+    label: "Categories",
+
+    href: URL_PATHS.MENU.CATEGORIES,
+  },
+  {
+    label: "Meals",
+
+    href: URL_PATHS.MENU.HOME_PAGE,
+  },
+];
 
 export const ADMIN_LINKS = [
   {

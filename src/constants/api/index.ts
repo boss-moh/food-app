@@ -10,7 +10,7 @@ export const API_END_POINT = {
   },
 
   GET_CATEGORIES: "/categories",
-  GET_MENU.HOME_PAGE: (categoryId: string) => `/meals?categoryId=${categoryId}`,
+  GET_MEALS: (categoryId: string) => `/meals?categoryId=${categoryId}`,
   PRODUCT: {
     CREATE: "/meals/",
     EDIT: "/meals/",
