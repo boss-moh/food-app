@@ -6,23 +6,17 @@ import { GridItem, GridTemplate } from "@/components/share";
 import LandingImage from "localImages/newLanding.webp";
 import { Button } from "@/components/ui/button";
 import { URL_PATHS } from "@/constants";
-import { auth } from "@/auth";
-import ClientSide from "./ClientSide";
-import { SessionProvider } from "next-auth/react";
 
 export default async function Home() {
   const [topRatings, latestDishes] = await Promise.all([
     fetchDishesBaseOn("rating"),
     fetchDishesBaseOn("createdAt"),
   ]);
-  const session = await auth();
-  console.log("session on server", session);
+
   return (
-    <div>
+    <>
       {/* Hero Section */}
-      <SessionProvider>
-        <ClientSide />
-      </SessionProvider>
+
       <section className="relative">
         <div className="container mx-auto grid lg:grid-cols-2 gap-8 items-center">
           <div className="relative aspect-square w-full py-5">
@@ -92,6 +86,6 @@ export default async function Home() {
           </GridTemplate>
         </div>
       </section>
-    </div>
+    </>
   );
 }

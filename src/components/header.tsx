@@ -6,7 +6,7 @@
 //
 //  */
 
-import { logout, signOut } from "@/auth";
+import { logout } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,7 +29,6 @@ import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
 import { useOrder } from "@/store";
 import { useUserInfo } from "@/hooks/useUserInfo";
-import { useUpdateSession } from "@/hooks/useUpdateSession";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,12 +111,7 @@ const NavItems = ({ onClick = () => {} }) => {
  */
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
   const user = useUserInfo();
-  const update = useUpdateSession();
 
-  const handleClick = async () => {
-    await logout();
-    await update();
-  };
 
   return user ? (
     <DropdownMenu>
@@ -145,7 +139,7 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleClick}>
+        <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

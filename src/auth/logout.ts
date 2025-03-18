@@ -1,11 +1,10 @@
 "use server";
 
 import { signOut } from "./auth";
-import { DEFAULT_REDIRECTED } from "@/constants";
+import { URL_PATHS } from "@/constants";
 
 export async function logout() {
-  console.log("handle logout on server");
   await signOut({
-    redirectTo: DEFAULT_REDIRECTED,
+    redirectTo: URL_PATHS.AUTH.SIGN_IN,
   });
 }

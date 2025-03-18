@@ -12,7 +12,7 @@ import { mealsType } from "@/lib";
 import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteAction from "../../../components/share/DeleteAction";
+import DeleteAction from "@/components/share/DeleteAction";
 
 export const MealsCards = ({ meals }: { meals: mealsType }) => {
   if (!meals.length)

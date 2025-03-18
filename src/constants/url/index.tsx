@@ -134,5 +134,5 @@ export const PUBLICE_PATHS: string[] = [
 export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);
 export const PROTECTED_PATHS: string[] = [];
 
-export const DEFAULT_REDIRECTED = URL_PATHS.AUTH.SIGN_IN;
+export const DEFAULT_REDIRECTED = URL_PATHS.HOME;
 export const API_PREFIX = "/api/";
