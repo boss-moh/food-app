@@ -3,7 +3,7 @@ import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
 import { CredentialsSignin, NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
+// import Google from "next-auth/providers/google";
 
 export class CredentialError extends CredentialsSignin {
   code = "";
@@ -15,7 +15,7 @@ export class CredentialError extends CredentialsSignin {
 
 export const authConfig: NextAuthConfig = {
   providers: [
-    Google,
+    // Google,
     Credentials({
       id: "credentials",
       name: "Credentials",
