@@ -6,6 +6,7 @@ import {
   PUBLICE_PATHS,
   URL_PATHS,
 } from "./constants";
+import { NextResponse } from "next/server";
 // import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
@@ -34,7 +35,7 @@ export default auth((req) => {
     return;
   }
 
-  console.log(URL_PATHS.NOT_FOUND, req.nextUrl.origin);
+  return NextResponse.redirect(new URL(URL_PATHS.NOT_FOUND, req.nextUrl));
   // return NextResponse.redirect(
   //   new URL(URL_PATHS.NOT_FOUND, req.nextUrl.origin)
   // );
