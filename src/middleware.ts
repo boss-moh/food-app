@@ -7,12 +7,13 @@ import {
   PUBLICE_PATHS,
   URL_PATHS,
 } from "./constants";
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const path = req.nextUrl.pathname;
-  console.log("path", path);
+  // console.log("path", path);
 
   const isApiRequest = path.startsWith(API_PREFIX);
   if (isApiRequest) return;
@@ -34,7 +35,7 @@ export default auth((req) => {
     return;
   }
 
-  return Response.redirect(new URL(URL_PATHS.NOT_FOUND, req.nextUrl));
+  return NextResponse.redirect(new URL(URL_PATHS.NOT_FOUND, req.nextUrl));
 });
 
 export const config = {
