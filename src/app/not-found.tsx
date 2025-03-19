@@ -1,24 +1,38 @@
-import { Button } from "@/components/ui/button";
-import { URL_PATHS } from "@/constants";
-import { ChefHat } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { URL_PATHS } from "@/constants";
 
 export default function NotFound() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
-      <div className="text-center">
-        <ChefHat className="h-24 w-24 text-primary mx-auto mb-6" />
-        <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          Oops! It seems we can&apos;t find the page you&apos;re looking for.
-        </p>
-        <p className="text-muted-foreground mb-8">
-          The page might have been moved, deleted, or perhaps never existed.
-        </p>
-        <Button asChild size="lg">
-          <Link href={URL_PATHS.HOME}>Return to Home</Link>
-        </Button>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
+      <Card className="mx-auto max-w-md shadow-lg">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Page Not Found</CardTitle>
+          <CardDescription>
+            We couldn&apos;t find the page you were looking for
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-muted p-4 text-sm">
+            <p>
+              The page you requested doesn&apos;t exist or may have been moved.
+            </p>
+          </div>
+
+          <div className="flex flex-row space-y-2">
+            <Button asChild variant="default" className="w-full">
+              <Link href={URL_PATHS.HOME}>Go to Homepage</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

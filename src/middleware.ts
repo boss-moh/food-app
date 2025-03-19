@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth";
 import {
-  ADMIN_PATHS,
+  // ADMIN_PATHS,
   API_PREFIX,
   PROTECTED_PATHS,
   PUBLICE_PATHS,
@@ -27,18 +27,14 @@ export default auth((req) => {
     return;
   }
 
-  const isAdminPath = ADMIN_PATHS.includes(path);
-  console.log(req.auth?.user, "<=== user");
+  const isAdminPath = path.includes("/admin/");
   const isThemAdmin = req.auth?.user.role === "ADMIN";
 
-  console.log("isThemAdmin", isThemAdmin);
   if (isAdminPath && isThemAdmin) {
     return;
-  } else {
-    return Response.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.nextUrl));
   }
 
-  // return Response.redirect(new URL(DEFAULT_REDIRECTED, req.nextUrl));
+  return Response.redirect(new URL(URL_PATHS.NOT_FOUND, req.nextUrl));
 });
 
 export const config = {

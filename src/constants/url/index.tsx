@@ -20,12 +20,6 @@ const getPaths = (obj: NestedPaths): string[] => {
  * #BUG: MENU CATEGORY - PRODUCT
  */
 
-// Check if path matches category structure: /categories/:id
-// const categoryRex = /^\/categories\/[^/]+$/
-
-// Check if path matches product structure: /categories/:categoryId/:productId
-// const isProduct = /^\/categories\/[^/]+\/[^/]+$/
-
 export const URL_PATHS = {
   HOME: "/",
 
@@ -58,10 +52,6 @@ export const URL_PATHS = {
     ORDERS: {
       HOME_PAGE: "/admin/orders",
     },
-    //   ORDERS: "/admin/orders",
-    //   PRODUCTS: "/admin/products",
-    //   CATEGORIES: "/admin/categories",
-    //   CUSTOMERS:,
   },
 
   AUTH: {
@@ -72,6 +62,8 @@ export const URL_PATHS = {
   CART: "/cart",
 
   UN_AUTHORIZED: "/unauthorized",
+
+  NOT_FOUND: "/not-found",
 
   USER: {
     ORDERS: {
@@ -128,12 +120,14 @@ export const ADMIN_LINKS = [
 
 export const PUBLICE_PATHS: string[] = [
   URL_PATHS.HOME,
+
   ...getPaths(URL_PATHS.AUTH),
   URL_PATHS.MENU.CATEGORIES,
   URL_PATHS.MENU.HOME_PAGE,
-  URL_PATHS.MENU.CATEGORIY("[id]"),
-  URL_PATHS.MENU.GET_PRODUCT("[categoryId]", "[productId]"),
+  URL_PATHS.MENU.CATEGORIY(""),
+  URL_PATHS.MENU.GET_PRODUCT("", ""),
   URL_PATHS.UN_AUTHORIZED,
+  URL_PATHS.NOT_FOUND,
 ];
 
 export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);

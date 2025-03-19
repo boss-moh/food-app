@@ -22,12 +22,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LogOut, Menu, ShoppingBag, ShoppingCart, User, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
-import { useOrder } from "@/store";
+import { useOrder } from "@/store/order";
 import { useUserInfo } from "@/hooks/useUserInfo";
 
 export default function Header() {
@@ -112,7 +120,6 @@ const NavItems = ({ onClick = () => {} }) => {
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
   const user = useUserInfo();
 
-
   return user ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -139,6 +146,18 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
+        {user.role === "ADMIN" && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.ADMIN.HOME_PAGE}>
+                <LayoutDashboard className="mr-2 h-5 w-5" />
+                <span>Go to Dashborad</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+
         <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
