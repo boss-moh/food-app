@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth";
 import {
-  // ADMIN_PATHS,
   API_PREFIX,
   PROTECTED_PATHS,
   PUBLICE_PATHS,
@@ -35,7 +34,9 @@ export default auth((req) => {
     return;
   }
 
-  return NextResponse.redirect(new URL(URL_PATHS.NOT_FOUND, req.nextUrl));
+  return NextResponse.redirect(
+    new URL(URL_PATHS.NOT_FOUND, req.nextUrl.origin)
+  );
 });
 
 export const config = {
