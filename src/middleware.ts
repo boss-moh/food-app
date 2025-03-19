@@ -27,7 +27,7 @@ export default auth((req) => {
     return;
   }
 
-  const isAdminPath = path.includes("/admin/");
+  const isAdminPath = new RegExp(/admin/gi).test(path);
   const isThemAdmin = req.auth?.user.role === "ADMIN";
 
   if (isAdminPath && isThemAdmin) {
