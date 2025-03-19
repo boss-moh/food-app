@@ -1,3 +1,4 @@
+// import { createProduct } from "@/lib";
 import { productType } from "@/constants";
 import { PrismaClient } from "@prisma/client";
 
@@ -146,7 +147,7 @@ seed().catch((e) => {
   process.exit(1);
 });
 
-const createProduct = async (
+export const createProduct = async (
   foodItem: Omit<productType, "id" | "createdAt" | "updatedAt">
 ) => {
   try {
