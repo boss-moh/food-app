@@ -29,14 +29,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { axios, useMutation } from "@/lib";
-import { toast } from "@/hooks/use-toast";
 import HelperText from "@/components/share/helperText";
 import { GoogleIcon } from "@/components/svg/googleIcon";
 import loginViaGoogle from "../Action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type errors = ErrorResponse<signupType>;
 
 export default function SignUpPage() {
+  const router = useRouter();
   const form = useForm<signupType>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -61,9 +63,8 @@ export default function SignUpPage() {
     },
     onSuccess() {
       form.reset();
-      toast({
-        title: "New Account has been created.",
-      });
+      toast("New Account has been created.");
+      router.push(URL_PATHS.AUTH.SIGN_IN);
     },
   });
 

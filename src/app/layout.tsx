@@ -16,10 +16,9 @@ export default async function RootLayout({ children }: childrenProps) {
   return (
     <html lang="en">
       <body className={font.className}>
-        <ReactQueryProvider>
-          {children}
-          <Toaster />
-        </ReactQueryProvider>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+
+        <Toaster />
       </body>
     </html>
   );

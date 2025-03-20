@@ -33,9 +33,7 @@ export default auth((req) => {
   if (isAdminPath && isThemAdmin) {
     return;
   }
-  return NextResponse.redirect(
-    new URL(URL_PATHS.NOT_FOUND, req.nextUrl.origin)
-  );
+  return;
 });
 
 export const config = {
