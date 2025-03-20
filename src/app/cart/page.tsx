@@ -14,9 +14,23 @@ import { Clock, Minus, Plus, Trash2, Truck } from "lucide-react";
 import Image from "next/image";
 import EmptyCart from "./EmptyCart";
 import { formatPrice } from "@/utils";
+import { OrderConfirmationModal } from "./orderModal";
+import { useState } from "react";
 
 export default function CartPage() {
   const { removeItem, update, items, calcOrder } = useOrder();
+
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const handleConfirmOrder = async () => {
+    // This would typically make an API call to your backend
+    // to process the order, handle payment, etc.
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Clear cart after successful order
+    // setCartItems([])
+    // setPromoCode("")
+    // setIsPromoApplied(false)
+  };
 
   const { subtotal, tax, total } = calcOrder();
 
@@ -131,6 +145,18 @@ export default function CartPage() {
             </CardFooter>
           </Card>
         </div>
+
+        <OrderConfirmationModal
+          isOpen={isOrderModalOpen}
+          onClose={() => setIsOrderModalOpen(false)}
+          items={items}
+          subtotal={subtotal}
+          discount={5}
+          tax={tax}
+          shipping={20}
+          total={total}
+          onConfirmOrder={handleConfirmOrder}
+        />
       </div>
     </div>
   );
