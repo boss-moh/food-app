@@ -1,8 +1,7 @@
 "use client";
 import { categoryType } from "@/constants";
 import { API_END_POINT } from "@/constants/api";
-import { useQuery, axios, mealsType } from "@/lib";
-import { useSearchParams } from "next/navigation";
+import { useQuery, axios } from "@/lib";
 
 export const useCategoriy = () => {
   const {
@@ -22,26 +21,5 @@ export const useCategoriy = () => {
     isLoading,
     isError,
     placeholder,
-  };
-};
-
-export const useMeals = () => {
-  const searchParams = useSearchParams();
-  const categoryId = searchParams.get("categoryId") || "";
-  const queryKey = ["meals", categoryId || "all"];
-  const {
-    data: meals,
-    isPending,
-    isError,
-  } = useQuery<mealsType>({
-    queryKey,
-    queryFn: async () => await axios.get(API_END_POINT.GET_MEALS(categoryId)),
-  });
-
-  return {
-    meals: meals ?? [],
-    isLoading: isPending,
-    isError,
-    queryKey,
   };
 };

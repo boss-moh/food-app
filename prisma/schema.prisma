@@ -1,17 +1,14 @@
-
 generator client {
   provider = "prisma-client-js"
 }
-
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum RoleStatus {
   ADMIN
-  CHEF
   CUSTOMER
 }
 
@@ -25,122 +22,124 @@ enum OrderStatus {
 }
 
 model User {
-  // Base User Fields
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String
-  role         Role
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
 
-  // Role-Specific Relationships
-  admin admin?
-  // chef  chef?
-  customer customer?
+  accounts Account[]
+
+  password String? // <-- add this field to store the hashed password
+  role     RoleStatus @default(CUSTOMER)
+
+  @@map("users")
 }
 
-model admin {
-  id          String     @id @default(cuid())
-  userId      String     @unique
-  user        User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime   @default(now())
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
+
+
 
 model customer {
-  id              String     @id @default(cuid())
-  userId          String     @unique
-  user            User       @relation(fields: [userId], references: [id])
+  id String @id @default(cuid())
 
   address String?
-  phone           String?
+  phone   String?
 
-  orders          Order[]
+  orders Order[]
 
   favoriteItems product[] @relation("Favorites")
 
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Category {
+  id       String @id @default(cuid())
+  name     String
+  imageUrl String
+  count    Int    @default(0)
 
-  id          String     @id @default(cuid())
-  name        String
-  imageUrl    String
-  count       Int     @default(0)
+  menuItems product[]
 
-  menuItems   product[] 
-
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model product {
-  id           String     @id @default(cuid())
-  name         String
-  description  String
-  price        Float
-  imageUrl     String
+  id          String @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  imageUrl    String
 
-  categoryId   String
-  category     Category   @relation(fields: [categoryId], references: [id],onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-
-  rating Float 
+  rating Float
 
   customer customer[] @relation("Favorites")
 
-
   OrderItem OrderItem[]
 
+  prepTime Int
 
-  prepTime  Int
+  ingredients String[]
 
-
-  ingredients String[] 
-
-  nutritionalInfo String[] 
-
+  nutritionalInfo String[]
 }
 
 model Order {
-  id           String      @id @default(cuid())
-  status       OrderStatus @default(PENDING)
-  customer     customer @relation(fields: [customerId], references: [id])
-  customerId   String
+  id         String      @id @default(cuid())
+  status     OrderStatus @default(PENDING)
+  customer   customer    @relation(fields: [customerId], references: [id])
+  customerId String
 
+  items OrderItem[]
 
-  items        OrderItem[]
-  
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  orderedAt    DateTime    @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orderedAt DateTime @default(now())
 
-  acceptedAt   DateTime?
-  preparedAt   DateTime?
-  deliveredAt  DateTime?
+  acceptedAt  DateTime?
+  preparedAt  DateTime?
+  deliveredAt DateTime?
 }
 
 model OrderItem {
+  id String @id @default(cuid())
 
-  id         String    @id @default(cuid())
+  quantity Int @default(1)
 
-  quantity   Int       @default(1)
-
-  menuItem   product  @relation(fields: [menuItemId], references: [id])
+  menuItem   product @relation(fields: [menuItemId], references: [id])
   menuItemId String
 
-  order      Order     @relation(fields: [orderId], references: [id])
-  orderId    String
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
 
-
-  createdAt  DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
-
 
 // model Image {
 //   id        String      @id @default( cuid() ) // Unique ID

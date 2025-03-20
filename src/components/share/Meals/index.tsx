@@ -58,7 +58,7 @@ export const Meals = ({ meals }: { meals: mealsType }) => {
           <CardFooter className="flex gap-2">
             <AddToOrderButton item={{ ...meal, quantity: 1 }} />
             <Button asChild variant={"outline"}>
-              <Link href={URL_PATHS.MENU.GET_DISH(meal.categoryId, meal.id)}>
+              <Link href={URL_PATHS.MENU.GET_PRODUCT(meal.categoryId, meal.id)}>
                 View
               </Link>
             </Button>
