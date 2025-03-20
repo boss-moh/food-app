@@ -1,12 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth";
-import {
-  API_PREFIX,
-  PROTECTED_PATHS,
-  PUBLICE_PATHS,
-  URL_PATHS,
-} from "./constants";
-import { NextResponse } from "next/server";
+import { API_PREFIX, PROTECTED_PATHS, PUBLICE_PATHS } from "./constants";
 
 const { auth } = NextAuth(authConfig);
 
