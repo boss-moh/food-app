@@ -37,6 +37,8 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
+export type signupType = z.infer<typeof signupSchema>;
+
 export const signinSchema = z.object({
   email: RULES.EMAIL,
   password: RULES.PASSWORD,
@@ -55,3 +57,9 @@ export const editCategorySchema = z.object({
 });
 
 export type editCategoryType = z.infer<typeof editCategorySchema>;
+
+export type signinType = z.infer<typeof signinSchema>;
+
+export type ErrorResponse<T> =
+  | Partial<Record<keyof T, string[]>>
+  | Record<string, string[]>;
