@@ -1,7 +1,6 @@
-// import { Inter ,Pacifico} from "next/font/google";
-import { Inter } from "next/font/google";
+import { Inter, Pacifico } from "next/font/google";
 export const font = Inter({ subsets: ["latin"], fallback: [""] });
-export const secondFont = Inter({
+export const secondFont = Pacifico({
   subsets: ["latin"],
   weight: ["400"],
 });
