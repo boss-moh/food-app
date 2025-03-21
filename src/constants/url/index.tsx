@@ -67,7 +67,7 @@ export const URL_PATHS = {
 
   USER: {
     ORDERS: {
-      HOME_PAGE: "/user/orders",
+      HOME_PAGE: "/orders",
     },
   },
 } as const;

@@ -16,23 +16,12 @@ import EmptyCart from "./EmptyCart";
 import { formatPrice } from "@/utils";
 import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
+import Summary from "./Summary";
 
 export default function CartPage() {
-  const { removeItem, update, items, calcOrder } = useOrder();
+  const { removeItem, update, items } = useOrder();
 
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const handleConfirmOrder = async () => {
-    // This would typically make an API call to your backend
-    // to process the order, handle payment, etc.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Clear cart after successful order
-    // setCartItems([])
-    // setPromoCode("")
-    // setIsPromoApplied(false)
-  };
-
-  const { subtotal, tax, total } = calcOrder();
 
   if (items.length === 0) {
     return <EmptyCart />;
@@ -125,37 +114,23 @@ export default function CartPage() {
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>{formatPrice(subtotal)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>{formatPrice(tax)}</span>
-                </div>
-                <div className="flex justify-between font-bold">
-                  <span>Total</span>
-                  <span>{formatPrice(total)}</span>
-                </div>
-              </div>
+              <Summary />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Proceed to Checkout</Button>
+              <Button
+                className="w-full"
+                onClick={() => setIsOrderModalOpen(true)}
+              >
+                Proceed to Checkout
+              </Button>
             </CardFooter>
           </Card>
         </div>
 
         <OrderConfirmationModal
+          items={items}
           isOpen={isOrderModalOpen}
           onClose={() => setIsOrderModalOpen(false)}
-          items={items}
-          subtotal={subtotal}
-          discount={5}
-          tax={tax}
-          shipping={20}
-          total={total}
-          onConfirmOrder={handleConfirmOrder}
         />
       </div>
     </div>

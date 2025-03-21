@@ -51,7 +51,7 @@ export const createCategorySchema = z.object({
 
 export type createCategoryType = z.infer<typeof createCategorySchema>;
 export const editCategorySchema = z.object({
-  id: z.string({message:"It should Has ID"}),
+  id: z.string({ message: "It should Has ID" }),
   name: RULES.NAME,
   imageUrl: z.string().url("Should Be URL"),
 });
@@ -63,3 +63,12 @@ export type signinType = z.infer<typeof signinSchema>;
 export type ErrorResponse<T> =
   | Partial<Record<keyof T, string[]>>
   | Record<string, string[]>;
+
+export const CreateOrder = z.array(
+  z.object({
+    id: z.string(),
+    quantity: z.number().min(1, "it should me great than one "),
+  })
+);
+
+export type CreateOrderType = z.infer<typeof CreateOrder>;

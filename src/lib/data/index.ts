@@ -142,3 +142,24 @@ export const createProduct = async (
     throw error;
   }
 };
+
+export async function fetchOrders(userId: string) {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        customerId: userId,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    return orders;
+  } catch {
+    throw new Error("Faild to fetch orders ");
+  }
+}

@@ -92,6 +92,7 @@ export default function Header() {
 const NavItems = ({ onClick = () => {} }) => {
   const { items } = useOrder();
   const count = items.length;
+  console.log("count", count);
 
   return (
     <>

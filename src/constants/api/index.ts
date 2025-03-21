@@ -7,6 +7,9 @@ export const API_END_POINT = {
   },
   USER: {
     CREATE: "/register",
+    ORDERS: {
+      CREATE: "/orders",
+    },
   },
 
   GET_CATEGORIES: "/categories",

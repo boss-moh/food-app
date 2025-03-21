@@ -1,4 +1,5 @@
 import { productType } from "@/constants";
+import { getCalcInfo } from "@/utils";
 import { create } from "zustand";
 
 export type itemType = productType & { quantity: number };
@@ -41,11 +42,7 @@ export const useOrder = create<useOrderType>((set, get) => ({
   calcOrder: () => {
     const { items } = get();
 
-    const subtotal = items.reduce((a, b) => a + b.price * b.quantity, 0);
-    const tax = subtotal * 0.1; // Assuming 10% tax
-    const total = subtotal + tax;
-
-    return { subtotal, tax, total };
+    return getCalcInfo(items);
   },
 
   checkIsInOrder: (id: string) => {

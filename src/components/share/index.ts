@@ -6,4 +6,4 @@ export * from "./CategoriesSelecter";
 export * from "./Selecter";
 export * from "./HoverCard";
 export * from "./ImageInput";
-export * from "./DeleteAction";
+export * from "./Status";
