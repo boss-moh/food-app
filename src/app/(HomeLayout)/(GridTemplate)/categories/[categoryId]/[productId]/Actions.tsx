@@ -50,7 +50,7 @@ export const ActionsButtons = ({ meal }: { meal: productType }) => {
         </div>
       </div>
       <div className="mt-4">
-        <AddToOrderButton item={{ ...meal, quantity }} />
+        <AddToOrderButton item={{ product: meal, quantity }} />
       </div>
     </>
   );

@@ -1,21 +1,23 @@
-import { productType } from "@/constants";
+import { OrderItemClientType, SummaryType } from "@/constants";
+import { getCalcInfo } from "@/utils";
 import { create } from "zustand";
 
-export type itemType = productType & { quantity: number };
 interface useOrderType {
-  items: itemType[];
-  addItem: (item: itemType) => void;
+  items: OrderItemClientType[];
+  addItem: (item: OrderItemClientType) => void;
   removeItem: (id: string) => void;
   update: (id: string, newQuantity: number) => void;
-  calcOrder: () => { subtotal: number; tax: number; total: number };
+  getOrderDetails: () => SummaryType;
   checkIsInOrder: (id: string) => boolean;
 }
 
 export const useOrder = create<useOrderType>((set, get) => ({
   items: [],
-  addItem: (orderItem: itemType) => {
+  addItem: (orderItem: OrderItemClientType) => {
     set(({ items }) => {
-      const isInOrder = !!items.find((item) => item.id === orderItem.id);
+      const isInOrder = !!items.find(
+        (item) => item.product.id === orderItem.product.id
+      );
       if (isInOrder) return { items };
 
       return { items: [...items, orderItem] };
@@ -23,7 +25,7 @@ export const useOrder = create<useOrderType>((set, get) => ({
   },
   removeItem: (id: string) => {
     set(({ items }) => {
-      const newItems = items.filter((item) => item.id !== id);
+      const newItems = items.filter((item) => item.product.id !== id);
       if (newItems.length === items.length) return { items };
       return { items: newItems };
     });
@@ -32,25 +34,21 @@ export const useOrder = create<useOrderType>((set, get) => ({
   update(id, newQuantity) {
     set(({ items }) => {
       const newItems = items.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
+        item.product.id === id ? { ...item, quantity: newQuantity } : item
       );
 
       return { items: newItems };
     });
   },
-  calcOrder: () => {
+  getOrderDetails: () => {
     const { items } = get();
 
-    const subtotal = items.reduce((a, b) => a + b.price * b.quantity, 0);
-    const tax = subtotal * 0.1; // Assuming 10% tax
-    const total = subtotal + tax;
-
-    return { subtotal, tax, total };
+    return getCalcInfo(items);
   },
 
   checkIsInOrder: (id: string) => {
     const { items } = get();
 
-    return !!items.find((item) => item.id === id);
+    return !!items.find((item) => item.product.id === id);
   },
 }));

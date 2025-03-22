@@ -14,11 +14,14 @@ import { Clock, Minus, Plus, Trash2, Truck } from "lucide-react";
 import Image from "next/image";
 import EmptyCart from "./EmptyCart";
 import { formatPrice } from "@/utils";
+import { OrderConfirmationModal } from "./orderModel";
+import { useState } from "react";
+import { Summary } from "@/components/share";
 
 export default function CartPage() {
-  const { removeItem, update, items, calcOrder } = useOrder();
-
-  const { subtotal, tax, total } = calcOrder();
+  const { removeItem, update, items, getOrderDetails } = useOrder();
+  const summaryDetails = getOrderDetails();
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   if (items.length === 0) {
     return <EmptyCart />;
@@ -29,31 +32,31 @@ export default function CartPage() {
       <h1 className="text-3xl font-bold mb-8">Your Shopping Cart</h1>
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1">
-          {items.map((item) => (
-            <Card key={item.id} className="mb-4">
+          {items.map(({ product, quantity }) => (
+            <Card key={product.id} className="mb-4">
               <CardContent className="flex items-center p-4">
                 <div className="relative w-20 h-20 mr-4">
                   <Image
-                    src={item.imageUrl || "/placeholder.svg"}
-                    alt={item.name}
+                    src={product.imageUrl || "/placeholder.svg"}
+                    alt={product.name}
                     fill
                     className="object-cover rounded-md"
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold">{item.name}</h3>
+                  <h3 className="font-semibold">{product.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {formatPrice(item.price)} each
+                    {formatPrice(product.price)} each
                   </p>
                 </div>
                 <div className="flex items-center">
                   <Button
-                    disabled={item.quantity <= 1}
+                    disabled={quantity <= 1}
                     variant="outline"
                     size="icon"
                     onClick={() => {
-                      if (item.quantity <= 1) return;
-                      update(item.id, item.quantity - 1);
+                      if (quantity <= 1) return;
+                      update(product.id, quantity - 1);
                     }}
                   >
                     <Minus className="h-4 w-4" />
@@ -61,16 +64,16 @@ export default function CartPage() {
                   <Input
                     type="number"
                     min={1}
-                    value={item.quantity}
+                    value={quantity}
                     onChange={(e) =>
-                      update(item.id, Number.parseInt(e.target.value))
+                      update(product.id, Number.parseInt(e.target.value))
                     }
                     className="w-16 mx-2 text-center"
                   />
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => update(item.id, item.quantity + 1)}
+                    onClick={() => update(product.id, quantity + 1)}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -78,7 +81,7 @@ export default function CartPage() {
                     variant="ghost"
                     size="icon"
                     className="ml-4"
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(product.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -111,26 +114,24 @@ export default function CartPage() {
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>{formatPrice(subtotal)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>{formatPrice(tax)}</span>
-                </div>
-                <div className="flex justify-between font-bold">
-                  <span>Total</span>
-                  <span>{formatPrice(total)}</span>
-                </div>
-              </div>
+              <Summary {...summaryDetails} />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Proceed to Checkout</Button>
+              <Button
+                className="w-full"
+                onClick={() => setIsOrderModalOpen(true)}
+              >
+                Proceed to Checkout
+              </Button>
             </CardFooter>
           </Card>
         </div>
+
+        <OrderConfirmationModal
+          items={items}
+          isOpen={isOrderModalOpen}
+          onClose={() => setIsOrderModalOpen(false)}
+        />
       </div>
     </div>
   );

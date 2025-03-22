@@ -46,8 +46,11 @@ export const URL_PATHS = {
       CREATE: "/admin/categories/create",
       EDIT: "/admin/categories/edit",
     },
-    CUSTOMERS: {
-      HOME_PAGE: "/admin/customers",
+    USERS: {
+      HOME_PAGE: "/admin/users",
+      ORDERS: {
+        VIEW: (id: string) => `/admin/users/${id}/orders`,
+      },
     },
     ORDERS: {
       HOME_PAGE: "/admin/orders",
@@ -67,7 +70,7 @@ export const URL_PATHS = {
 
   USER: {
     ORDERS: {
-      HOME_PAGE: "/user/orders",
+      HOME_PAGE: "/orders",
     },
   },
 } as const;
@@ -112,9 +115,9 @@ export const ADMIN_LINKS = [
     href: URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE,
   },
   {
-    label: "Customers",
+    label: "Users",
     icon: Users,
-    href: URL_PATHS.ADMIN.CUSTOMERS.HOME_PAGE,
+    href: URL_PATHS.ADMIN.USERS.HOME_PAGE,
   },
 ] as const;
 
@@ -130,7 +133,7 @@ export const PUBLICE_PATHS: string[] = [
   URL_PATHS.NOT_FOUND,
 ];
 
-export const ADMIN_PATHS: string[] = getPaths(URL_PATHS.ADMIN);
+export const ADMIN_PATHS: string[] = [];
 export const PROTECTED_PATHS: string[] = [];
 
 export const DEFAULT_REDIRECTED = URL_PATHS.HOME;
