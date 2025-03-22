@@ -1,8 +1,9 @@
 import { OrderStatus } from "@prisma/client";
 import { cva, VariantProps } from "class-variance-authority";
+import { AlertCircle, CheckCircle, Clock, Package, Truck } from "lucide-react";
 
 const statusVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 capitalize",
+  "  rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ",
   {
     variants: {
       status: {
@@ -17,17 +18,37 @@ const statusVariants = cva(
   }
 );
 
+const renderStatusIcon = (status: OrderStatus | null | undefined) => {
+  switch (status) {
+    case OrderStatus.PENDING:
+      return <Clock className="h-5 w-5 text-yellow-500" />;
+    case OrderStatus.PREPARING:
+    case OrderStatus.READY:
+      return <Package className="h-5 w-5 text-blue-500" />;
+    case OrderStatus.DONE:
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    case OrderStatus.DELIVERED:
+      return <Truck className="h-5 w-5 text-green-500" />;
+    case OrderStatus.CANCELLED:
+      return <AlertCircle className="h-5 w-5 text-red-500" />;
+    default:
+      return <Clock className="h-5 w-5" />;
+  }
+};
 interface StatusProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof statusVariants> {}
 
 export const Status = ({ status, className, ...rest }: StatusProps) => {
   return (
-    <span
+    <div
       aria-label="Status"
-      className={statusVariants({ status, className })}
+      className="flex gap-2 items-center capitalize"
       {...rest}
-    ></span>
+    >
+      <span>{renderStatusIcon(status)}</span>
+      <span className={statusVariants({ status, className })}>{status}</span>
+    </div>
   );
 };
 

@@ -1,12 +1,8 @@
-"use client";
 import { Separator } from "@/components/ui/separator";
-import { useOrder } from "@/store";
+import { SummaryType } from "@/constants";
 import { formatPrice } from "@/utils";
 
-export const Summary = () => {
-  const { calcOrder } = useOrder();
-
-  const { subtotal, tax, total } = calcOrder();
+export const Summary = ({ subtotal, tax, total }: SummaryType) => {
   return (
     <div className="space-y-2">
       <div className="flex justify-between">

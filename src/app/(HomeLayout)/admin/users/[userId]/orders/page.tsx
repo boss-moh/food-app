@@ -1,13 +1,16 @@
 import { UserOrders } from "@/components/share";
-import { auth } from "@/auth";
+import { DynamicProps } from "@/constants";
 import { Suspense } from "react";
 
-export default async function OrdersPage() {
-  const session = await auth();
-  const userId = session!.user.id;
+export default async function UsersOrdersPage({
+  params,
+}: DynamicProps<"userId">) {
+  const userId = (await params).userId;
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+      <h1 className="text-3xl font-bold mb-8">
+        Orders Made By Uesr - {userId}
+      </h1>
 
       <div className="grid gap-6 lg:grid-cols-2 justify-center">
         <Suspense fallback={<span> Loading ...</span>}>

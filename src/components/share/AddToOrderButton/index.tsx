@@ -1,20 +1,23 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { OrderItemClientType } from "@/constants";
 import { toast } from "@/hooks/use-toast";
-import { itemType, useOrder } from "@/store";
+import { useOrder } from "@/store";
 import { ShoppingBag } from "lucide-react";
 
 type AddToOrderButtonProps = {
-  item: itemType;
+  item: OrderItemClientType;
 };
+
 export const AddToOrderButton = ({ item }: AddToOrderButtonProps) => {
   const { addItem, checkIsInOrder } = useOrder();
-  const isInOrder = checkIsInOrder(item.id);
+  const isInOrder = checkIsInOrder(item.product.id);
+
   const handleOnClick = () => {
     addItem(item);
     toast({
       title: "Added to cart!",
-      description: `${item.name} has been added to your cart.`,
+      description: `${item.product.name} has been added to your cart.`,
     });
   };
   return (

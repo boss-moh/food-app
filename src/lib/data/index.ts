@@ -1,7 +1,7 @@
 // #TODO:create Folder For Get And One For POST
 // #TODO:Server-only
 
-import { CACHCES_KEYS, productType } from "@/constants";
+import { CACHCES_KEYS, productType, RoleStatus } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
 
@@ -161,5 +161,56 @@ export async function fetchOrders(userId: string) {
     return orders;
   } catch {
     throw new Error("Faild to fetch orders ");
+  }
+}
+
+export async function fetchUsers(role: RoleStatus, query: string) {
+  let config = {};
+  if (!!role) config = { ...config, role: role.toUpperCase() as RoleStatus };
+  if (!!query) {
+    config = {
+      ...config,
+      OR: [
+        { name: { contains: query, mode: "insensitive" } },
+        { email: { contains: query, mode: "insensitive" } },
+        { id: { contains: query, mode: "insensitive" } },
+      ],
+    };
+  }
+  try {
+    const users = await prisma.user.findMany({
+      where: config,
+      select: {
+        name: true,
+        email: true,
+        id: true,
+        role: true,
+      },
+    });
+
+    return users;
+  } catch {
+    throw new Error("Faild to fetch users");
+  }
+}
+
+export async function fetchOrdersByUserId(userId: string) {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        customerId: userId,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    return orders;
+  } catch {
+    throw new Error("Faild to fetch user's Orders");
   }
 }

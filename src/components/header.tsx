@@ -92,7 +92,6 @@ export default function Header() {
 const NavItems = ({ onClick = () => {} }) => {
   const { items } = useOrder();
   const count = items.length;
-  console.log("count", count);
 
   return (
     <>
@@ -153,6 +152,12 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
               <Link href={URL_PATHS.ADMIN.HOME_PAGE}>
                 <LayoutDashboard className="mr-2 h-5 w-5" />
                 <span>Go to Dashborad</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.HOME}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to Use&apos;s Home </span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

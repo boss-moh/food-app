@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { Check, CreditCard, Truck, AlertCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,24 +12,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Check, CreditCard, Truck, AlertCircle } from "lucide-react";
-import Summary from "./Summary";
-import { LoadingIcon } from "@/components/svg/loadingIcon";
-import { useOrder } from "@/store";
-import { cn } from "@/lib/utils";
-import { useMutation } from "@/lib/react-query";
-import { axios } from "@/lib";
-import { API_END_POINT, URL_PATHS } from "@/constants";
-import Link from "next/link";
 
-export interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl?: string;
-}
+import { OrderItems, Summary } from "@/components/share";
+import { LoadingIcon } from "@/components/svg/loadingIcon";
+
+import { useOrder } from "@/store";
+import { cn, axios, useMutation } from "@/lib";
+import { API_END_POINT, OrderItemClientType, URL_PATHS } from "@/constants";
 
 const steps = [
   { title: "Review Order", icon: Check },
@@ -38,7 +29,7 @@ const steps = [
 interface OrderConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  items: OrderItem[];
+  items: OrderItemClientType[];
 }
 
 export function OrderConfirmationModal({
@@ -46,10 +37,11 @@ export function OrderConfirmationModal({
   onClose,
 }: OrderConfirmationModalProps) {
   const { items } = useOrder();
+
   const { isPending, isSuccess, mutate } = useMutation({
     mutationFn: async () => {
       const orderItems = items.map((item) => ({
-        id: item.id,
+        id: item.product.id,
         quantity: item.quantity,
       }));
       return await axios.post(API_END_POINT.USER.ORDERS.CREATE, orderItems);
@@ -156,7 +148,9 @@ const ConfirmedStep = () => {
 };
 
 const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
-  const { items } = useOrder();
+  const { items, getOrderDetails } = useOrder();
+  const summaryDetails = getOrderDetails();
+
   return (
     <div key="review">
       <DialogHeader className="px-6 pt-4">
@@ -177,26 +171,9 @@ const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
         </p>
       </div> */}
 
-        <div className="mb-4">
-          <h4 className="mb-2 text-sm font-medium">Order Summary</h4>
-          <ScrollArea className="h-[180px] rounded-md border p-2">
-            <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <div className="flex-1">
-                    <span className="font-medium">{item.name}</span>
-                    <span className="ml-1 text-muted-foreground">
-                      x{item.quantity}
-                    </span>
-                  </div>
-                  <div>${(item.price * item.quantity).toFixed(2)}</div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </div>
+        <OrderItems className="h-[250px]" items={items} />
 
-        <Summary />
+        <Summary {...summaryDetails} />
 
         <div className="flex items-center gap-2 p-3 mt-4 rounded-md bg-amber-50 text-amber-800">
           <AlertCircle className="w-4 h-4" />

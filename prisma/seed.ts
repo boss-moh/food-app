@@ -1,6 +1,7 @@
 // import { createProduct } from "@/lib";
 import { productType } from "@/constants";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -122,21 +123,31 @@ const categories = [
   },
 ];
 
+const admin = {
+  name: "Admin",
+  email: "admin@a2.com",
+  password: await bcrypt.hash("123", 10),
+};
+
 async function seed() {
   // Create categories
   console.log("run seed");
-
+  console.log("create category");
   for (const category of categories) {
     await prisma.category.create({
       data: category,
     });
   }
 
-  // Create food items
-  // for (const foodItem of products) {
-  //   await createProduct(foodItem);
-  // }
+  console.log("create food items");
+
   await Promise.all(products.map((i) => createProduct(i)));
+
+  console.log("create admin count ");
+
+  await prisma.user.create({
+    data: { ...admin, role: "ADMIN" },
+  });
 
   console.log("finsih file");
 }
