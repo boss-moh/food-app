@@ -14,7 +14,13 @@ export type childrenProps = {
 
 export type { product as productType } from "@prisma/client";
 export type { Category as categoryType } from "@prisma/client";
-export type { RoleStatus } from "@prisma/client";
+
+export const RoleStatus = {
+  ADMIN: "ADMIN",
+  CUSTOMER: "CUSTOMER",
+} as const;
+
+export type RoleType = (typeof RoleStatus)[keyof typeof RoleStatus];
 
 export type option = {
   name: string;

@@ -26,5 +26,8 @@ export const API_END_POINT = {
       EDIT: "/categories",
       DELETE: (id: string) => `/categories/${id}`,
     },
+    USERS: {
+      UPDATE_ROLE: (userId: string) => `/users/${userId}/role`,
+    },
   },
 };

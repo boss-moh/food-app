@@ -63,7 +63,7 @@ export default function SignUpPage() {
     },
     onSuccess() {
       form.reset();
-      toast("New Account has been created.");
+      toast.success("New Account has been created.");
       router.push(URL_PATHS.AUTH.SIGN_IN);
     },
   });

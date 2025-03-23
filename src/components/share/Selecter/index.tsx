@@ -6,12 +6,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { option } from "@/constants";
+import { cn } from "@/lib";
 
 type SelecterProps = {
   defaultValue?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
   options: option[];
+  className?: string;
 };
 
 export const Selecter = ({
@@ -19,19 +21,16 @@ export const Selecter = ({
   onChange,
   placeholder,
   options,
+  className,
 }: SelecterProps) => {
   return (
     <Select defaultValue={defaultValue} onValueChange={onChange}>
-      <SelectTrigger className="w-full md:w-[180px]">
+      <SelectTrigger className={cn("w-full md:w-[180px]", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="capitalize">
         {options?.map((option) => (
-          <SelectItem
-            className="capitalize"
-            key={option.value}
-            value={option.value}
-          >
+          <SelectItem key={option.value} value={option.value}>
             {option.name}
           </SelectItem>
         ))}

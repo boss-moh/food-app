@@ -14,6 +14,7 @@ import { RoleStatus } from "@prisma/client";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import SelecterRole from "./SelecterRole";
 
 export const UserTable = ({ role, query }: { role: string; query: string }) => {
   return (
@@ -53,8 +54,7 @@ const TableData = async ({ role, query }: { role: string; query: string }) => {
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
-              {user.role}
-              {/* <Selecter onChange={onChange} options={UesrRoleoptions} defaultValue={user.role.toLowerCase()} /> */}
+              <SelecterRole userId={user.id} role={user.role} />
             </TableCell>
             {/* <TableCell>{user.phone}</TableCell> */}
             {/* <TableCell>{user.totalOrders}</TableCell> */}
