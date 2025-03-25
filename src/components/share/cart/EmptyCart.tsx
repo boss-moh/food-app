@@ -22,30 +22,6 @@ export const EmptyCart = () => {
           </Link>
         </Button>
       </div>
-
-      {/* <div className="mt-16">
-      <h2 className="text-2xl font-semibold mb-6">You might also like</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {recommendedProducts.map((product) => (
-          <Card key={product.id} className="overflow-hidden">
-            <div className="relative aspect-video">
-              <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
-            </div>
-            <CardContent className="pt-6">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold">{product.name}</h3>
-                <span>${product.price.toFixed(2)}</span>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" onClick={() => addToCart(product)}>
-                Add to Cart
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div> */}
     </div>
   );
 };

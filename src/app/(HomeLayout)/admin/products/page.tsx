@@ -35,7 +35,7 @@ export default async function ProductsPage({
         <div className="flex flex-col md:flex-row  w-full gap-4">
           <SearchInput />
           <div className="flex gap-4 flex-shrink-0">
-            <CategoriesSelecter options={options} defaultValue="All" />
+            <CategoriesSelecter options={options} defaultValue="all" />
             <Button asChild>
               <Link href={URL_PATHS.ADMIN.PRODUCT.CREATE}>
                 Add Product

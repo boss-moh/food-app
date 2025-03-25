@@ -8,15 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { useOrder } from "@/store";
-import { Clock, Minus, Plus, Trash2, Truck } from "lucide-react";
-import Image from "next/image";
-import EmptyCart from "./EmptyCart";
-import { formatPrice } from "@/utils";
+import { Clock, Truck } from "lucide-react";
+import EmptyCart from "../../../components/share/cart/EmptyCart";
 import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
 import { Summary } from "@/components/share";
+import { CartItem } from "@/components/share/cart";
 
 export default function CartPage() {
   const { removeItem, update, items, getOrderDetails } = useOrder();
@@ -32,62 +30,13 @@ export default function CartPage() {
       <h1 className="text-3xl font-bold mb-8">Your Shopping Cart</h1>
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1">
-          {items.map(({ product, quantity }) => (
-            <Card key={product.id} className="mb-4">
-              <CardContent className="flex items-center p-4">
-                <div className="relative w-20 h-20 mr-4">
-                  <Image
-                    src={product.imageUrl || "/placeholder.svg"}
-                    alt={product.name}
-                    fill
-                    className="object-cover rounded-md"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold">{product.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {formatPrice(product.price)} each
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <Button
-                    disabled={quantity <= 1}
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      if (quantity <= 1) return;
-                      update(product.id, quantity - 1);
-                    }}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={quantity}
-                    onChange={(e) =>
-                      update(product.id, Number.parseInt(e.target.value))
-                    }
-                    className="w-16 mx-2 text-center"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => update(product.id, quantity + 1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="ml-4"
-                    onClick={() => removeItem(product.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          {items.map((item) => (
+            <CartItem
+              update={update}
+              removeItem={removeItem}
+              {...item}
+              key={item.product.id}
+            />
           ))}
 
           <Card>

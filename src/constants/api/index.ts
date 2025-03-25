@@ -29,5 +29,8 @@ export const API_END_POINT = {
     USERS: {
       UPDATE_ROLE: (userId: string) => `/users/${userId}/role`,
     },
+    ORDERS: {
+      CHANGE_STATUS: "/admin/orders/order",
+    },
   },
 };

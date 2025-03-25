@@ -44,3 +44,5 @@ export type OrderItemClientType = Omit<
   OrderItemType,
   "id" | "createdAt" | "productId" | "orderId"
 >;
+
+export { OrderStatus } from "@prisma/client";

@@ -1,9 +1,10 @@
 // #TODO:create Folder For Get And One For POST
 // #TODO:Server-only
 
-import { CACHCES_KEYS, productType, RoleStatus } from "@/constants";
+import { CACHCES_KEYS, productType, OrderStatus, RoleType } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
+import { cache as reactCache } from "react";
 
 export const fetchCategories = nextCache(
   async () => {
@@ -163,10 +164,9 @@ export async function fetchOrders(userId: string) {
     throw new Error("Faild to fetch orders ");
   }
 }
-
-export async function fetchUsers(role: RoleStatus, query: string) {
+export async function fetchUsers(role: RoleType, query: string) {
   let config = {};
-  if (!!role) config = { ...config, role: role.toUpperCase() as RoleStatus };
+  if (!!role) config = { ...config, role: role.toUpperCase() as RoleType };
   if (!!query) {
     config = {
       ...config,
@@ -199,6 +199,77 @@ export async function fetchOrdersByUserId(userId: string) {
     const orders = await prisma.order.findMany({
       where: {
         customerId: userId,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    return orders;
+  } catch {
+    throw new Error("Faild to fetch user's Orders");
+  }
+}
+export async function fetchAdminOrders(query: string, status: OrderStatus) {
+  let config = {};
+  if (!!status) config = { ...config, status };
+  if (!!query) {
+    config = {
+      ...config,
+      OR: [
+        {
+          id: { contains: query, mode: "insensitive" },
+          customerId: { contains: query, mode: "insensitive" },
+          customer: {
+            name: { contains: query, mode: "insensitive" },
+          },
+        },
+      ],
+    };
+  }
+
+  console.log("fetchAdminOrders run ");
+  try {
+    const orders = await prisma.order.findMany({
+      where: config,
+      include: {
+        customer: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        items: {
+          include: {
+            product: {
+              select: {
+                price: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return orders;
+  } catch {
+    throw new Error("Faild to fetch Orders");
+  }
+}
+
+export const fetchAdminCahce = reactCache(fetchAdminOrders);
+
+export type AdminOrderRowType = Awaited<ReturnType<typeof fetchAdminCahce>>[0];
+
+export async function fetchOrdersById(id: string) {
+  try {
+    const orders = await prisma.order.findUnique({
+      where: {
+        id,
       },
       include: {
         items: {

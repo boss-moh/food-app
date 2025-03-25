@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Check, CreditCard, Truck, AlertCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { LoadingIcon } from "@/components/svg/loadingIcon";
 
 import { useOrder } from "@/store";
 import { cn, axios, useMutation } from "@/lib";
-import { API_END_POINT, OrderItemClientType, URL_PATHS } from "@/constants";
+import { API_END_POINT, OrderItemClientType } from "@/constants";
 
 const steps = [
   { title: "Review Order", icon: Check },
@@ -36,7 +35,7 @@ export function OrderConfirmationModal({
   isOpen,
   onClose,
 }: OrderConfirmationModalProps) {
-  const { items } = useOrder();
+  const { items, clear } = useOrder();
 
   const { isPending, isSuccess, mutate } = useMutation({
     mutationFn: async () => {
@@ -50,9 +49,19 @@ export function OrderConfirmationModal({
 
   const currentStep = isPending ? 1 : isSuccess ? 2 : 0;
 
+  const handleSuccess = () => {
+    if (isSuccess) {
+      clear();
+    }
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onEscapeKeyDown={onClose} className="sm:max-w-[500px] p-0">
+    <Dialog open={isOpen} onOpenChange={handleSuccess}>
+      <DialogContent
+        onEscapeKeyDown={handleSuccess}
+        className="sm:max-w-[500px] p-0"
+      >
         <Header currentStep={currentStep} />
 
         <Separator className="my-2" />
@@ -136,12 +145,7 @@ const ConfirmedStep = () => {
       <h3 className="mt-6 text-lg font-semibold">Order Confirmed!</h3>
       <p className="mt-2 text-sm text-center text-muted-foreground">
         Your order has been successfully placed. You Can See The Status Of Your
-        Order In{" "}
-        <Button asChild variant={"link"}>
-          <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE} className="px-0 py-0">
-            The Orders Page
-          </Link>
-        </Button>
+        Order In The Orders Page
       </p>
     </div>
   );

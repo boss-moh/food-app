@@ -27,7 +27,7 @@ export default async function MealsPage({
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <SearchInput />
-        <CategoriesSelecter defaultValue="All" options={options} />
+        <CategoriesSelecter defaultValue="all" options={options} />
       </div>
       <Meals meals={filterMeals} />
     </div>

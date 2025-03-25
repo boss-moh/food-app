@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RoleStatus } from "../types";
+import { OrderStatus } from "../types";
 
 const RULES = {
   NAME: z.string().min(2, "Name must be at least 2 characters"),
@@ -74,7 +74,7 @@ export const CreateOrder = z.array(
 
 export type CreateOrderType = z.infer<typeof CreateOrder>;
 
-export const RoleSchema = z.enum([RoleStatus.ADMIN, RoleStatus.CUSTOMER]);
 export const ChangeRoleSchema = z.object({
-  role: RoleSchema,
+  status: z.nativeEnum(OrderStatus),
+  id: z.string(),
 });
