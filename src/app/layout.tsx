@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: childrenProps) {
       <body className={font.className}>
         <ReactQueryProvider>{children}</ReactQueryProvider>
 
-        <Toaster />
+        <Toaster richColors />
       </body>
     </html>
   );

@@ -54,6 +54,7 @@ export const URL_PATHS = {
     },
     ORDERS: {
       HOME_PAGE: "/admin/orders",
+      VIEW_ORDER: (id: string) => `/admin/orders/${id}`,
     },
   },
 

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -8,41 +7,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { URL_PATHS } from "@/constants";
+import { URL_PATHS, RoleType } from "@/constants";
 import { fetchUsers } from "@/lib";
-import { RoleStatus } from "@prisma/client";
-import { User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import SelecterRole from "./SelecterRole";
+import { EmptyRows, LoadingRow } from "@/components/share";
 
 export const UserTable = ({ role, query }: { role: string; query: string }) => {
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Users ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            {/* <TableHead>Total Orders</TableHead> */}
-            {/* <TableHead>Total Spent</TableHead> */}
-            {/* <TableHead>Join Date</TableHead> */}
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <Suspense fallback={new Array(5).fill(<LoadingRow />)}>
-            <TableData role={role} query={query} />
-          </Suspense>
-        </TableBody>
-      </Table>
-    </div>
+    <Table className="    bg-white rounded-lg shadow   ">
+      <TableHeader>
+        <TableRow>
+          <TableHead>Users ID</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Role</TableHead>
+          {/* <TableHead>Total Orders</TableHead> */}
+          {/* <TableHead>Total Spent</TableHead> */}
+          {/* <TableHead>Join Date</TableHead> */}
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <Suspense fallback={new Array(5).fill(<LoadingRow />)}>
+          <TableData role={role} query={query} />
+        </Suspense>
+      </TableBody>
+    </Table>
   );
 };
 
 const TableData = async ({ role, query }: { role: string; query: string }) => {
-  const users = await fetchUsers(role as RoleStatus, query);
+  const users = await fetchUsers(role as RoleType, query);
   const hasData = !!users.length;
   return (
     <>
@@ -53,8 +50,7 @@ const TableData = async ({ role, query }: { role: string; query: string }) => {
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
-              {user.role}
-              {/* <Selecter onChange={onChange} options={UesrRoleoptions} defaultValue={user.role.toLowerCase()} /> */}
+              <SelecterRole userId={user.id} role={user.role} />
             </TableCell>
             {/* <TableCell>{user.phone}</TableCell> */}
             {/* <TableCell>{user.totalOrders}</TableCell> */}
@@ -73,45 +69,6 @@ const TableData = async ({ role, query }: { role: string; query: string }) => {
         <EmptyRows />
       )}
     </>
-  );
-};
-
-const EmptyRows = () => {
-  return (
-    <TableRow>
-      <TableCell colSpan={5} className="text-center">
-        No users found
-        <div className="text-center py-8">
-          <User className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-          <h3 className="text-lg font-medium mb-2">No Users found</h3>
-          <p className="text-muted-foreground mb-4">
-            Try adjusting your search or filter criteria
-          </p>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-const LoadingRow = () => {
-  return (
-    <TableRow>
-      <TableCell className="h-[70px]">
-        <Skeleton className="h-[20px]" />
-      </TableCell>
-      <TableCell className="h-[70px]">
-        <Skeleton className="h-[20px]" />
-      </TableCell>
-      <TableCell className="h-[70px]">
-        <Skeleton className="h-[20px]" />
-      </TableCell>
-      <TableCell className="h-[70px]">
-        <Skeleton className="h-[20px]" />
-      </TableCell>
-      <TableCell className="h-[70px]">
-        <Skeleton className="h-[20px]" />
-      </TableCell>
-    </TableRow>
   );
 };
 

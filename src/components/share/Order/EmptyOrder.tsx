@@ -2,7 +2,7 @@ import { ShoppingBag } from "lucide-react";
 
 export const EmptyOrder = () => {
   return (
-    <div>
+    <div className="mx-auto">
       <div className="text-center py-8">
         <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
         <h3 className="text-lg font-medium mb-2">No Orders found</h3>

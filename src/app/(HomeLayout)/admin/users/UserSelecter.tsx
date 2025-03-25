@@ -2,7 +2,17 @@
 
 import { Selecter } from "@/components/share";
 import { useUserSelecter } from "./useUserSelecter";
-import { UesrRoleoptions } from "@/constants";
+import { makeOptions } from "@/utils";
+import { RoleStatus } from "@/constants";
+
+const UesrRoleoptions = makeOptions(
+  Object.values(RoleStatus),
+  (value) => ({
+    value: value.toLowerCase(),
+    name: value,
+  }),
+  true
+);
 
 export const UserSelecter = () => {
   const settings = useUserSelecter();
