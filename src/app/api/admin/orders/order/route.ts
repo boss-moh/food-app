@@ -1,3 +1,4 @@
+import { ChangOrderStatusSchema } from "@/constants";
 import { prisma } from "@/lib";
 import { OrderStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,19 +12,23 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function PUT(req: NextRequest) {
   try {
-    console.log("run  Change Status Just");
     const body = await req.json();
-    const { id, status } = body;
-    console.log(id, status);
 
-    if (!id && !status) {
+    const { success, data, error } = ChangOrderStatusSchema.safeParse(body);
+
+    if (!success) {
       return NextResponse.json(
-        { message: "You Should Provide All Data" },
+        {
+          message: "You Should Provide All Data",
+          errors: error.flatten().fieldErrors,
+        },
         {
           status: 400,
         }
       );
     }
+
+    const { id, status } = data;
 
     const order = await prisma.order.findUnique({ where: { id } });
 

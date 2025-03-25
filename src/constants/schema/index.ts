@@ -74,7 +74,7 @@ export const CreateOrder = z.array(
 
 export type CreateOrderType = z.infer<typeof CreateOrder>;
 
-export const ChangeRoleSchema = z.object({
+export const ChangOrderStatusSchema = z.object({
   status: z.nativeEnum(OrderStatus),
   id: z.string(),
 });
