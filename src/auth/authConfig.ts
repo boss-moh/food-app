@@ -1,4 +1,4 @@
-import { RoleStatus, signinSchema } from "@/constants";
+import { RoleType, signinSchema } from "@/constants";
 import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
 import { CredentialsSignin, NextAuthConfig } from "next-auth";
@@ -79,7 +79,7 @@ export const authConfig: NextAuthConfig = {
 
       if (session.user) {
         session.user.id = userId as string;
-        session.user.role = role as RoleStatus;
+        session.user.role = role as RoleType;
         session.user.provider = (provider as string) || "credential";
       }
 

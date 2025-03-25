@@ -1,6 +1,6 @@
 import { Order, OrderItem } from "@prisma/client";
 import { ReactNode } from "react";
-import { productType } from ".";
+import { productType, RoleStatus } from ".";
 
 export type DynamicProps<T extends string> = {
   params: Promise<Record<T, string>>;
@@ -14,11 +14,7 @@ export type childrenProps = {
 
 export type { product as productType } from "@prisma/client";
 export type { Category as categoryType } from "@prisma/client";
-
-export const RoleStatus = {
-  ADMIN: "ADMIN",
-  CUSTOMER: "CUSTOMER",
-} as const;
+export { RoleStatus } from "@prisma/client";
 
 export type RoleType = (typeof RoleStatus)[keyof typeof RoleStatus];
 
