@@ -9,6 +9,7 @@ interface useOrderType {
   update: (id: string, newQuantity: number) => void;
   getOrderDetails: () => SummaryType;
   checkIsInOrder: (id: string) => boolean;
+  clear: () => void;
 }
 
 export const useOrder = create<useOrderType>((set, get) => ({
@@ -51,4 +52,6 @@ export const useOrder = create<useOrderType>((set, get) => ({
 
     return !!items.find((item) => item.product.id === id);
   },
+
+  clear: () => set((state) => ({ ...state, items: [] })),
 }));

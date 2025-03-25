@@ -12,11 +12,9 @@ export default async function UsersOrdersPage({
         Orders Made By Uesr - {userId}
       </h1>
 
-      <div className="grid gap-6 lg:grid-cols-2 justify-center">
-        <Suspense fallback={<span> Loading ...</span>}>
-          <UserOrders userId={userId} />
-        </Suspense>
-      </div>
+      <Suspense fallback={<span> Loading ...</span>}>
+        <UserOrders userId={userId} />
+      </Suspense>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { RoleStatus } from "@prisma/client";
+import { RoleType } from "@/constants";
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface User {
-    role: RoleStatus;
+    role: RoleType;
     id: string;
     provider?: string;
   }
@@ -20,7 +20,7 @@ declare module "next-auth" {
        * with the new ones defined above. To keep the default session user properties,
        * you need to add them back into the newly declared interface.
        */
-      role: RoleStatus;
+      role: RoleType;
       id: string;
       provider?: string;
     } & DefaultSession["user"];

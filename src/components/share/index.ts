@@ -10,3 +10,4 @@ export * from "./Status";
 export * from "./Summary";
 export * from "./Order";
 export * from "./DeleteAction";
+export * from "./Table";
