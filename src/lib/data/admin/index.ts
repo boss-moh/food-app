@@ -15,11 +15,7 @@ export async function fetchRecentOrders() {
       include: {
         items: {
           include: {
-            product: {
-              select: {
-                price: true,
-              },
-            },
+            product: true,
           },
         },
         customer: {
