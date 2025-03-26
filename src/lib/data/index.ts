@@ -245,11 +245,7 @@ export async function fetchAdminOrders(query: string, status: OrderStatus) {
         },
         items: {
           include: {
-            product: {
-              select: {
-                price: true,
-              },
-            },
+            product: true,
           },
         },
       },
