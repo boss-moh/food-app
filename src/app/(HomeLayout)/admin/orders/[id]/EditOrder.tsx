@@ -1,14 +1,8 @@
 "use client";
-import { OrderDetails, Selecter } from "@/components/share";
-import { Button } from "@/components/ui/button";
-import {
-  API_END_POINT,
-  OrderStatus,
-  getOrderOptions,
-  orderDetailsType,
-} from "@/constants";
-import { axios, useMutation } from "@/lib";
-import { useState } from "react";
+import { LoadingButton, OrderDetails, Selecter } from "@/components/share";
+
+import { OrderStatus, getOrderOptions, orderDetailsType } from "@/constants";
+import { useUpdateStatus } from "@/hooks";
 
 const options = getOrderOptions(false);
 
@@ -17,31 +11,14 @@ interface EditOrderProps {
 }
 
 export const EditOrder = ({ order }: EditOrderProps) => {
-  const [orderDetails, setOrderDetails] = useState(() => order);
-  const defaultStatus = orderDetails.status;
-  const id = order.id;
-
-  const [status, setStatus] = useState<OrderStatus>(defaultStatus);
-
-  const hasChanges = status !== defaultStatus;
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      return await axios.put(API_END_POINT.ADMIN.ORDERS.CHANGE_STATUS, {
-        status,
-        id,
-      });
-    },
-    onSuccess() {
-      setOrderDetails({ ...orderDetails, status });
-    },
-  });
-
-  const handleClick = () => {
-    if (!hasChanges) return;
-    if (isPending) return;
-    mutate();
-  };
+  const {
+    defaultStatus,
+    ChangeStatus,
+    orderDetails,
+    isLoading,
+    hasChanges,
+    onClick,
+  } = useUpdateStatus(order);
   return (
     <>
       <div className="flex items-center justify-between mb-3 gap-4 ">
@@ -50,15 +27,19 @@ export const EditOrder = ({ order }: EditOrderProps) => {
           className="w-[200px]"
           options={options}
           defaultValue={defaultStatus}
-          onChange={(status) => setStatus(status as OrderStatus)}
+          onChange={(status) => ChangeStatus(status as OrderStatus)}
         />
       </div>
-      <OrderDetails order={orderDetails} />
+      <OrderDetails order={orderDetails as orderDetailsType} />
 
       <div className="mt-8 flex justify-end gap-4">
-        <Button onClick={handleClick} disabled={isPending || !hasChanges}>
-          {isPending ? "Loading ..." : "Save"}
-        </Button>
+        <LoadingButton
+          onClick={onClick}
+          isLoading={isLoading}
+          disabled={!hasChanges}
+        >
+          Save
+        </LoadingButton>
       </div>
     </>
   );

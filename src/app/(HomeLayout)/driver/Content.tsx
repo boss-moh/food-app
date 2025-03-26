@@ -1,7 +1,14 @@
 "use client";
 import { getOrderOptions, orderDetailsType, OrderStatus } from "@/constants";
-import OrderList from "../../../components/share/Order/OrderList";
-import { LoadingButton, OrderDetails, Selecter } from "@/components/share";
+
+import {
+  LoadingButton,
+  Location,
+  OrderDetails,
+  OrderList,
+  Selecter,
+  UserInfo,
+} from "@/components/share";
 import { AlertCircle } from "lucide-react";
 import { useUpdateStatus } from "@/hooks";
 import { useEffect, useState } from "react";
@@ -33,7 +40,7 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
     }
   }, [orderDetails]);
   return (
-    <div className="grid justify-center md:justify-between gap-4 md:grid-cols-2 py-4">
+    <div className="grid justify-center md:justify-between gap-8 md:grid-cols-2 py-4">
       <OrderList
         className="order-2"
         onSelect={ChangeOrder}
@@ -42,7 +49,7 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
       />
       <article aria-label="order details " className="order-1 md:order-10">
         {!orderDetails ? (
-          <EmptyOrderFeedBack />
+          <EmptyDeliveryFeedBack />
         ) : (
           <div>
             <div className="flex items-center justify-between mb-3 gap-4 ">
@@ -54,7 +61,12 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
                 onChange={(status) => ChangeStatus(status as OrderStatus)}
               />
             </div>
-            <OrderDetails order={orderDetails} />
+
+            <div className="space-y-3">
+              <UserInfo name="Emily Johnson" phone="+1 (555) 987-6543" />
+              <Location address="123 Main St, Apt 4B, New York, NY 10001" />
+              <OrderDetails order={orderDetails} />
+            </div>
 
             <div className="mt-8 flex justify-end gap-4">
               <LoadingButton
@@ -72,12 +84,12 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
   );
 };
 
-const EmptyOrderFeedBack = () => (
+const EmptyDeliveryFeedBack = () => (
   <div className="text-center py-12">
     <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-    <h3 className="text-lg font-medium">No active order</h3>
+    <h3 className="text-lg font-medium">No active delivery</h3>
     <p className="text-muted-foreground">
-      Select an order from the list to view details
+      Select a delivery from the list to view details
     </p>
   </div>
 );
