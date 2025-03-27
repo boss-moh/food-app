@@ -1,5 +1,5 @@
 "use client";
-import { getOrderOptions, orderDetailsType, OrderStatus } from "@/constants";
+import { getOrderOptions, OrderStatus } from "@/constants";
 
 import {
   LoadingButton,
@@ -12,15 +12,18 @@ import {
 import { AlertCircle } from "lucide-react";
 import { useUpdateStatus } from "@/hooks";
 import { useEffect, useState } from "react";
+import { DriversOrder } from "@/lib/data/driver";
 
 const options = getOrderOptions(false);
 
 interface ClientContentProps {
-  orders: orderDetailsType[];
+  orders: DriversOrder[];
 }
 
 export const ClientContent = ({ orders }: ClientContentProps) => {
-  const [ordersDetails, setOrdersDetails] = useState(() => orders);
+  const [ordersDetails, setOrdersDetails] = useState<DriversOrder[]>(
+    () => orders
+  );
   const {
     defaultStatus,
     ChangeStatus,
@@ -36,7 +39,7 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
       const newOrdersDetails = ordersDetails.map((order) =>
         order.id === orderDetails.id ? orderDetails : order
       );
-      setOrdersDetails(newOrdersDetails);
+      setOrdersDetails(newOrdersDetails as DriversOrder[]);
     }
   }, [orderDetails]);
   return (
@@ -63,8 +66,11 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
             </div>
 
             <div className="space-y-3">
-              <UserInfo name="Emily Johnson" phone="+1 (555) 987-6543" />
-              <Location address="123 Main St, Apt 4B, New York, NY 10001" />
+              <UserInfo
+                name={(orderDetails as DriversOrder).customer.name}
+                phone={(orderDetails as DriversOrder).customer.phone}
+              />
+              <Location address={orderDetails.address} />
               <OrderDetails order={orderDetails} />
             </div>
 

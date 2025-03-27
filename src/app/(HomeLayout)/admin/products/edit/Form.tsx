@@ -16,8 +16,8 @@ import {
   API_END_POINT,
   URL_PATHS,
   option,
-  createProductType,
-  createProductSchema,
+  editProductType,
+  editProductSchema,
 } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
@@ -31,12 +31,12 @@ import ImageInput, { useImageInput } from "@/components/share/ImageInput";
 import { useRouter } from "next/navigation";
 
 type ProductFormProps = {
-  defaultValues?: createProductType;
+  defaultValues: editProductType;
   categories: option[];
 };
 
 const values = {
-  id: null,
+  id: "",
   name: "",
   description: "",
   price: 0,
@@ -48,12 +48,12 @@ const values = {
 };
 
 export default function ProductForm({
-  defaultValues = values,
+  defaultValues,
   categories,
 }: ProductFormProps) {
   const router = useRouter();
-  const form = useForm<createProductType>({
-    resolver: zodResolver(createProductSchema),
+  const form = useForm<editProductType>({
+    resolver: zodResolver(editProductSchema),
     defaultValues,
   });
 
@@ -64,14 +64,14 @@ export default function ProductForm({
 
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () => {
-      return await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues());
+      return await axios.put(API_END_POINT.PRODUCT.EDIT, form.getValues());
     },
     onError() {
       toast.error("there is error happen");
     },
     onSuccess() {
       clear();
-      toast.success("New Dish has been created.");
+      toast.success("The Dish has been Edited.");
     },
   });
 
@@ -312,9 +312,12 @@ export default function ProductForm({
         />
         <Separator className="my-4" />
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
+          <Button variant="outline" type="button" onClick={clear}>
+            Clear
+          </Button>
           <LoadingButton type="submit" isLoading={isLoading}>
-            Create Product
+            Save Changes
           </LoadingButton>
         </div>
       </form>

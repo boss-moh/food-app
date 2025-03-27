@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
+  fetchNotDoneOrderCount,
   fetchOrdersCount,
   fetchRecentOrders,
+  fetchSales,
   fetchUsersCount,
 } from "@/lib/data/admin";
-import { ShoppingBag, Users } from "lucide-react";
+import { DollarSign, Package, ShoppingBag, Users } from "lucide-react";
 import { Suspense } from "react";
 import {
   OrderTable,
@@ -13,6 +15,7 @@ import {
   TableLoading,
 } from "./orders/OrderTable";
 import { OrderRow } from "./orders/OrderRow";
+import { formatPrice } from "@/utils";
 
 export default function AdminDashboard() {
   return (
@@ -41,24 +44,24 @@ export default function AdminDashboard() {
 }
 
 const AdminCards = async () => {
-  const [ordersCount, usersCount] = await Promise.all([
-    fetchOrdersCount(),
-    fetchUsersCount(),
-  ]);
+  const [ordersCount, usersCount, totalSales, NotDoneOrderCount] =
+    await Promise.all([
+      fetchOrdersCount(),
+      fetchUsersCount(),
+      fetchSales(),
+      fetchNotDoneOrderCount(),
+    ]);
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* <Card>
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+          <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">$45,231.89</div>
-          <p className="text-xs text-muted-foreground">
-            +20.1% from last month
-          </p>
+          <div className="text-2xl font-bold">{formatPrice(totalSales)}</div>
         </CardContent>
-      </Card> */}
+      </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Orders</CardTitle>
@@ -66,9 +69,6 @@ const AdminCards = async () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{ordersCount}</div>
-          {/* <p className="text-xs text-muted-foreground">
-        +201 since last hour
-      </p> */}
         </CardContent>
       </Card>
       <Card>
@@ -78,46 +78,19 @@ const AdminCards = async () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{usersCount}</div>
-          {/* <p className="text-xs text-muted-foreground">
-        +180 since last hour
-      </p> */}
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium"> Users</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{usersCount}</div>
-          {/* <p className="text-xs text-muted-foreground">
-        +180 since last hour
-      </p> */}
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium"> Users</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{usersCount}</div>
-          {/* <p className="text-xs text-muted-foreground">
-        +180 since last hour
-      </p> */}
         </CardContent>
       </Card>
 
-      {/* <Card>
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
           <Package className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+12</div>
-          <p className="text-xs text-muted-foreground">Processing now</p>
+          <div className="text-2xl font-bold">{NotDoneOrderCount}</div>
+          {/* <p className="text-xs text-muted-foreground">Processing now</p> */}
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 };

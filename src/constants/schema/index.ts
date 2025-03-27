@@ -9,14 +9,13 @@ const RULES = {
   PRICE: z.number().positive("Price must be greater than zero").finite(),
   RATING: z.number().max(5, "Rating must be between 0 and 5").min(0),
   PERPTIME: z.number().min(0, "Preparation time cannot be negative"),
+  PHONE:z.string().length(10,'the phone number should be saven')
 };
 
-export const createDishSchema = z.object({
-  id: z.string().or(z.null()),
+export const createProductSchema = z.object({
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
   price: RULES.PRICE,
-  rating: RULES.RATING,
   categoryId: z.string().min(1, "Please select a category"),
   prepTime: RULES.PERPTIME,
   ingredients: z.array(z.string()),
@@ -24,7 +23,24 @@ export const createDishSchema = z.object({
   imageUrl: z.string().url("Should Be URL"),
 });
 
-export type createDishType = z.infer<typeof createDishSchema>;
+export type createProductType = z.infer<typeof createProductSchema>;
+
+export const editProductSchema = z.object({
+  id:z.string({
+    required_error:"it Should Has Id"
+  }),
+  name: RULES.NAME,
+  description: RULES.DESCRIPTION,
+  price: RULES.PRICE,
+  categoryId: z.string().min(1, "Please select a category"),
+  prepTime: RULES.PERPTIME,
+  ingredients: z.array(z.string()),
+  nutritionalInfo: z.array(z.string()),
+  imageUrl: z.string().url("Should Be URL"),
+});
+
+export type editProductType = z.infer<typeof editProductSchema>;
+
 
 export const signupSchema = z
   .object({
@@ -32,6 +48,7 @@ export const signupSchema = z
     email: RULES.EMAIL,
     password: RULES.PASSWORD,
     confirmPassword: z.string().nonempty(),
+    phone:RULES.PHONE
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -65,12 +82,27 @@ export type ErrorResponse<T> =
   | Partial<Record<keyof T, string[]>>
   | Record<string, string[]>;
 
-export const CreateOrder = z.array(
-  z.object({
-    id: z.string(),
-    quantity: z.number().min(1, "it should me great than one "),
+
+export const addressSchema =  z.object({
+  address:z.string({
+    required_error:"address requrie"
   })
-);
+})
+
+export type addressType = z.infer<typeof addressSchema>;
+
+
+export const CreateOrder = z.object({
+  orderItems:z.array(
+    z.object({
+      id: z.string(),
+      quantity: z.number().min(1, "it should me great than one "),
+    })
+  ),
+  address:z.string({
+    required_error:"address requrie"
+  })
+})
 
 export type CreateOrderType = z.infer<typeof CreateOrder>;
 

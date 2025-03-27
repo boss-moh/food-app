@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { OrderItemClientType } from "@/constants";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useOrder } from "@/store";
 import { ShoppingBag } from "lucide-react";
 
@@ -12,11 +12,17 @@ type AddToOrderButtonProps = {
 export const AddToOrderButton = ({ item }: AddToOrderButtonProps) => {
   const { addItem, checkIsInOrder } = useOrder();
   const isInOrder = checkIsInOrder(item.product.id);
+  const { isAvailable } = item.product;
 
   const handleOnClick = () => {
+    if (!isAvailable) {
+      toast.error("Faild To Added to cart!", {
+        description: `${item.product.name} is not It available`,
+      });
+      return;
+    }
     addItem(item);
-    toast({
-      title: "Added to cart!",
+    toast.success("Added to cart!", {
       description: `${item.product.name} has been added to your cart.`,
     });
   };

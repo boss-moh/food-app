@@ -1,9 +1,12 @@
 import { API_END_POINT, orderDetailsType, OrderStatus } from "@/constants";
 import { axios } from "@/lib";
+import { DriversOrder } from "@/lib/data/driver";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
-export const useUpdateStatus = (order: orderDetailsType | null) => {
+export const useUpdateStatus = (
+  order: orderDetailsType | null | DriversOrder
+) => {
   const [orderDetails, setOrderDetails] = useState(() => order);
   const defaultStatus = orderDetails?.status;
   const id = orderDetails?.id;

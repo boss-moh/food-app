@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 
 export const Rating = ({ rating = 0 }) => {
   return (
-    <div className="flex items-center mt-2">
+    <div className="flex items-center ">
       {[...Array(5)].map((_, i) => (
         <Star
           key={i}

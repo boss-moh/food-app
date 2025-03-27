@@ -1,7 +1,7 @@
 // #TODO:create Folder For Get And One For POST
 // #TODO:Server-only
 
-import { CACHCES_KEYS, productType, OrderStatus, RoleType } from "@/constants";
+import { CACHCES_KEYS, OrderStatus, RoleType, createProductType } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
 import { cache as reactCache } from "react";
@@ -62,6 +62,15 @@ export async function fetchProductById(id: string) {
             name: true,
           },
         },
+        feedback:{
+          include:{
+            customer:{
+              select:{
+                name:true
+              }
+            }
+          }
+        }
       },
       where: {
         id,
@@ -91,13 +100,13 @@ export async function fetchMenu() {
 
 export type mealsType = Awaited<ReturnType<typeof fetchMenu>>;
 
-type options = keyof productType;
-type selectedOptions = Extract<
-  options,
-  "price" | "createdAt" | "rating" | "prepTime"
->;
 
-export async function fetchDishesBaseOn(baseOn: selectedOptions) {
+
+
+type selectedOptions= 'rating'| 'date'
+
+
+ async function fetchDishesBaseOn(baseOn: selectedOptions) {
   try {
     const products = await prisma.product.findMany({
       include: {
@@ -118,9 +127,13 @@ export async function fetchDishesBaseOn(baseOn: selectedOptions) {
   }
 }
 
-export const createProduct = async (
-  foodItem: Omit<productType, "id" | "createdAt" | "updatedAt">
-) => {
+export async function fetchMostRatingProducts(){
+  return fetchDishesBaseOn('rating')
+}
+export async function fetchMostNewProducts(){
+  return fetchDishesBaseOn('date')
+}
+export const createProduct = async (foodItem: createProductType) => {
   try {
     await prisma.$transaction(async () => {
       await prisma.product.create({

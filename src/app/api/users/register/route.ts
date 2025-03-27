@@ -5,17 +5,17 @@ import { prisma } from "@/lib";
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
+    const body = await request.json();
 
-    const errors = signupSchema.safeParse(data);
-    if (!errors.success) {
+    const {data,error,success} = signupSchema.safeParse(body);
+    if (!success) {
       return NextResponse.json(
-        { errors: errors.error.formErrors.fieldErrors },
+        { errors: error.formErrors.fieldErrors },
         { status: 400 }
       );
     }
 
-    const { email, password, name } = errors.data;
+    const { email, password, name,phone } = data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         email,
         name,
         password: hashedPassword,
-        emailVerified: new Date(), // Auto-verify for simplicity
+        phone
       },
     });
 

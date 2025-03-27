@@ -4,9 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import { DynamicProps } from "@/constants";
 import { ActionsButtons } from "./Actions";
 import { fetchProductById } from "@/lib/data";
-import Rating from "./rating";
 import { Clock, Utensils } from "lucide-react";
 import { formatPrice } from "@/utils";
+import { Rating, Status } from "@/components/share";
+import FeedBacks from "@/components/share/FeedBacks";
 
 export default async function ProductPage({
   params,
@@ -16,16 +17,25 @@ export default async function ProductPage({
   const product = await fetchProductById(productId);
 
   if (!product) return "there is no product";
-  const { imageUrl, name, price, description, rating, nutritionalInfo } =
-    product!;
+  const {
+    imageUrl,
+    name,
+    price,
+    description,
+    rating,
+    nutritionalInfo,
+    feedback,
+    rateCount,
+    isAvailable,
+  } = product!;
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 space-y-6">
       <Card className="overflow-hidden">
         <div className="md:flex">
           <div className="md:w-1/2">
             <Image
-              src={imageUrl || "/placeholder.svg"}
+              src={imageUrl}
               alt={name}
               width={600}
               height={600}
@@ -35,9 +45,15 @@ export default async function ProductPage({
           <div className="md:w-1/2 p-6">
             <CardHeader>
               <CardTitle className="text-3xl font-bold">{name}</CardTitle>
-              <div className="flex justify-between items-center">
-                <Rating rating={rating} />
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div>
+                <div className="flex justify-between items-center gap-4 mb-2">
+                  <Rating rating={rating} />
+                  <Status status={isAvailable ? "DONE" : "REJECTED"}>
+                    {isAvailable ? "" : " not"}
+                    Available
+                  </Status>
+                </div>
+                <div className="flex justify-between items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Utensils className="h-4 w-4" />
                     <span>{product.category.name}</span>
@@ -60,7 +76,7 @@ export default async function ProductPage({
           </div>
         </div>
       </Card>
-      <div className="mt-12 grid md:grid-cols-2 gap-8">
+      <div className=" grid md:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
             <CardTitle>Ingredients</CardTitle>
@@ -86,6 +102,7 @@ export default async function ProductPage({
           </CardContent>
         </Card>
       </div>
+      <FeedBacks feeds={feedback} feedCount={rateCount} />
     </div>
   );
 }

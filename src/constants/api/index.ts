@@ -2,22 +2,22 @@
 export const BASE_URL = "/api";
 
 export const API_END_POINT = {
-  AUTH: {
-    LOGIN: "/login",
-  },
+
   USER: {
-    CREATE: "/register",
+
+    LOGIN: "/users/login",
+    REGISTER: "/users/register",
+    
     ORDERS: {
       CREATE: "/orders",
     },
   },
 
-  GET_CATEGORIES: "/categories",
-  GET_MEALS: (categoryId: string) => `/meals?categoryId=${categoryId}`,
   PRODUCT: {
-    CREATE: "/meals/",
-    EDIT: "/meals/",
-    DELETE: (id: string) => `/meals/${id}`,
+    CREATE: "/products/",
+    EDIT: "/products/",
+    DELETE: (id: string) => `/products/${id}`,
+    CHANGE_AVAILABLE: (id: string) => `/products/${id}`,
   },
 
   ADMIN: {

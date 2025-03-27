@@ -10,31 +10,38 @@ datasource db {
 enum RoleStatus {
   ADMIN
   CUSTOMER
+  CHEF
+  DRIVER
 }
 
 enum OrderStatus {
   PENDING
   PREPARING
-  READY
   DELIVERED
   CANCELLED
   DONE
+  REJECTED
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
+  id    String  @id @default(cuid())
+  name  String
+  email String  @unique
+  // emailVerified DateTime? @map("email_verified")
+  image String?
 
-    orders Order[]
-
+  orders Order[]
 
   accounts Account[]
 
   password String? // <-- add this field to store the hashed password
   role     RoleStatus @default(CUSTOMER)
+
+  favoriteItems product[] @relation("Favorites")
+
+  feedback feedBack[]
+
+  phone String
 
   @@map("users")
 }
@@ -59,22 +66,6 @@ model Account {
   @@map("accounts")
 }
 
-
-
-// model customer {
-//   id String @id @default(cuid())
-
-//   address String?
-//   phone   String?
-
-//   orders Order[]
-
-//   favoriteItems product[] @relation("Favorites")
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
 model Category {
   id       String @id @default(cuid())
   name     String
@@ -83,8 +74,7 @@ model Category {
 
   menuItems product[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  date DateTime @default(now())
 }
 
 model product {
@@ -97,12 +87,9 @@ model product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  date DateTime @default(now())
 
-  rating Float
-
-  // customer customer[] @relation("Favorites")
+  customer User[] @relation("Favorites")
 
   OrderItem OrderItem[]
 
@@ -111,43 +98,55 @@ model product {
   ingredients String[]
 
   nutritionalInfo String[]
+
+  rating      Float      @default(0)
+  rateCount   Int        @default(0)
+  isAvailable Boolean    @default(true)
+  feedback    feedBack[]
+}
+
+model feedBack {
+  id String @id @default(cuid())
+
+  product   product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  customer   User   @relation(fields: [customerId], references: [id])
+  customerId String
+
+  date    DateTime @default(now())
+  rating  Int
+  content String
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  status     OrderStatus @default(PENDING)
-  
-  customer   User?    @relation(fields: [customerId], references: [id])
-  customerId String
+  id String @id @default(cuid())
+
+  status OrderStatus @default(PENDING)
+
+  subTotal Float // Total cost of all items
+  tax      Float // Tax amount
+  total    Float
 
   items OrderItem[]
+  date  DateTime    @default(now())
+  note  String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orderedAt DateTime @default(now())
+  address String
 
-  acceptedAt  DateTime?
-  preparedAt  DateTime?
-  deliveredAt DateTime?
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id])
 }
 
 model OrderItem {
   id String @id @default(cuid())
 
-  quantity Int @default(1)
+  quantity Int   @default(1)
+  price    Float // This will store the price copied from the Product
 
   product   product @relation(fields: [productId], references: [id])
   productId String
 
   order   Order  @relation(fields: [orderId], references: [id])
   orderId String
-
-  createdAt DateTime @default(now())
 }
-
-// model Image {
-//   id        String      @id @default( cuid() ) // Unique ID
-//   url       String   // Cloudinary URL
-//   title     String?  // Optional title or description
-
-// }

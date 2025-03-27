@@ -1,7 +1,7 @@
 import { ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchDishesBaseOn } from "@/lib";
+import { fetchMostNewProducts, fetchMostRatingProducts } from "@/lib";
 import { GridItem, GridTemplate } from "@/components/share";
 import LandingImage from "localImages/newLanding.webp";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,8 @@ import { URL_PATHS } from "@/constants";
 
 export default async function Home() {
   const [topRatings, latestDishes] = await Promise.all([
-    fetchDishesBaseOn("rating"),
-    fetchDishesBaseOn("createdAt"),
+    fetchMostRatingProducts(),
+    fetchMostNewProducts(),
   ]);
 
   return (
@@ -58,12 +58,15 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-8">Top Rating Delicious</h2>
           <GridTemplate>
-            {topRatings.map((dish) => (
+            {topRatings.map((product) => (
               <GridItem
-                key={dish.id}
-                href={URL_PATHS.MENU.GET_PRODUCT(dish.categoryId, dish.id)}
-                {...dish}
-                subText={`Rating : ${dish.rating}`}
+                key={product.id}
+                href={URL_PATHS.MENU.GET_PRODUCT(
+                  product.categoryId,
+                  product.id
+                )}
+                {...product}
+                subText={`Rating : ${product.rating}`}
               />
             ))}
           </GridTemplate>
@@ -75,12 +78,15 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-8">Latest Recipes</h2>
           <GridTemplate>
-            {latestDishes.map((dish) => (
+            {latestDishes.map((product) => (
               <GridItem
-                key={dish.id}
-                href={URL_PATHS.MENU.GET_PRODUCT(dish.categoryId, dish.id)}
-                {...dish}
-                subText={`Rating : ${dish.rating}`}
+                key={product.id}
+                href={URL_PATHS.MENU.GET_PRODUCT(
+                  product.categoryId,
+                  product.id
+                )}
+                {...product}
+                subText={`Rating : ${product.rating}`}
               />
             ))}
           </GridTemplate>

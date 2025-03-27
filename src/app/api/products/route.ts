@@ -1,4 +1,4 @@
-import { createDishSchema, URL_PATHS } from "@/constants";
+import { createProductSchema, editProductSchema, URL_PATHS } from "@/constants";
 import { createProduct, fetchMenu, fetchProductsById, prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
-  const { success, data, error } = createDishSchema.safeParse(body);
+  const { success, data, error } = createProductSchema.safeParse(body);
 
   if (!success) {
     return NextResponse.json(
@@ -40,8 +40,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id: _unused, imageUrl, ...rest } = data;
+  const {  imageUrl, ...rest } = data;
 
   //upload image
 
@@ -62,7 +61,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const body = await request.json();
 
-  const { success, data, error } = createDishSchema.safeParse(body);
+  const { success, data, error } = editProductSchema.safeParse(body);
 
   if (!success) {
     return NextResponse.json(
@@ -76,7 +75,7 @@ export async function PUT(request: NextRequest) {
 
   // Update Product
   const oldProductData = await prisma.product.findUnique({
-    where: { id: data.id! },
+    where: { id: data.id },
   });
   //upload image
 
@@ -100,7 +99,7 @@ export async function PUT(request: NextRequest) {
   revalidatePath(URL_PATHS.HOME);
 
   return NextResponse.json(
-    { success: true, data: { message: "new Product create", data: product } },
+    { success: true, data: { message: "Product Data Has Change", data: product } },
     { status: 201 }
   );
 }

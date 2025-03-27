@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useOrder } from "@/store";
-import { Clock, Truck } from "lucide-react";
 import EmptyCart from "../../../components/share/cart/EmptyCart";
 import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
@@ -38,24 +37,6 @@ export default function CartPage() {
               key={item.product.id}
             />
           ))}
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center">
-                <Truck className="mr-2 h-4 w-4" /> Delivery Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>Estimated delivery time: 30-45 minutes</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Orders over 50 qualify for free delivery. Your order will be
-                carefully packed and delivered to your doorstep.
-              </p>
-            </CardContent>
-          </Card>
         </div>
         <div className="lg:w-1/3">
           <Card>

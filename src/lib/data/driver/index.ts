@@ -16,6 +16,7 @@ export async function fetchDriverOrders() {
           select: {
             id: true,
             name: true,
+            phone:true
           },
         },
       },
@@ -26,3 +27,6 @@ export async function fetchDriverOrders() {
     throw new Error("Faild To Fetch Orders");
   }
 }
+
+
+export type DriversOrder = Awaited<ReturnType<typeof fetchDriverOrders>>[0]

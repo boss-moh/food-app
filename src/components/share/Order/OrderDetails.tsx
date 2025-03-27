@@ -1,15 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Summary, Status, OrderItems } from "@/components/share";
-import { getCalcInfo } from "@/utils";
 import { orderDetailsType } from "@/constants";
+import { getSummary } from "@/utils";
 interface OrderDetailsProps {
   className?: string;
   order: orderDetailsType;
 }
 
 export const OrderDetails = ({ order, className }: OrderDetailsProps) => {
-  const summaryDetails = getCalcInfo(order.items);
+  const summaryDetails = getSummary(order);
   return (
     <Card className={`w-full ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -19,7 +19,7 @@ export const OrderDetails = ({ order, className }: OrderDetailsProps) => {
             <span className="w-40 truncate inline-block"> #{order.id}</span>
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Placed on {order.createdAt.toDateString()}
+            Placed on {order.date.toDateString()}
           </p>
         </div>
         <Status status={order.status} className="text-xs" />
