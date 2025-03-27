@@ -6,22 +6,22 @@ import { Plus } from "lucide-react";
 import { CategoriesSelecter, SearchInput } from "@/components/share";
 import Link from "next/link";
 import { categoryType, searchParamsProps, URL_PATHS } from "@/constants";
-import MealsCards from "./MealsCards";
-import { fetchCategories, fetchProductsById } from "@/lib";
-import { getFilterMeals, makeOptions } from "@/utils";
+
+import { fetchCategories } from "@/lib";
+import { makeOptions } from "@/utils";
+import { Suspense } from "react";
+import { ServerFetching } from "./ServerFetching";
+
+export type ProductsPageProps = searchParamsProps<"categoryId"> &
+  searchParamsProps<"query">;
 
 export default async function ProductsPage({
   searchParams,
-}: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
+}: ProductsPageProps) {
   const categoryId = (await searchParams).categoryId;
   const query = (await searchParams).query;
 
-  const [categories, meals] = await Promise.all([
-    fetchCategories(),
-    fetchProductsById(categoryId),
-  ]);
-
-  const filterMeals = getFilterMeals(meals, query);
+  const categories = await fetchCategories();
 
   const options = makeOptions<categoryType>(categories, (i) => ({
     name: i.name,
@@ -45,17 +45,9 @@ export default async function ProductsPage({
           </div>
         </div>
       </header>
-      {/* {isLoading ? (
-        <GridTemplate>
-          {new Array(8).fill(0).map((_, key) => (
-            <DishCardSkeleton key={key} />
-          ))}
-        </GridTemplate>
-      ) : (
-        <MealsCards meals={filterMeals} Invalidatekey={queryKey} />
-      )} */}
-
-      <MealsCards meals={filterMeals} />
+      <Suspense fallback={"loading ... "}>
+        <ServerFetching categoryId={categoryId} query={query} />
+      </Suspense>
     </section>
   );
 }

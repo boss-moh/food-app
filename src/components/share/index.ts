@@ -14,3 +14,4 @@ export * from "./Table";
 export * from "./LoadingButton";
 export * from "./Location";
 export * from "./UserInfo";
+export * from "./rating";

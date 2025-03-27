@@ -53,7 +53,7 @@ export default function SignInPage() {
     isError,
   } = useMutation<void, { errors: errors }>({
     mutationFn: async () => {
-      await axios.post(API_END_POINT.AUTH.LOGIN, form.getValues());
+      await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
     },
     onError(error) {
       console.log("error", error);

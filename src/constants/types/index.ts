@@ -24,7 +24,7 @@ export type option = {
 };
 
 export type SummaryType = {
-  subtotal: number;
+  subTotal: number;
   tax: number;
   total: number;
 };
@@ -42,3 +42,10 @@ export type OrderItemClientType = Omit<
 >;
 
 export { OrderStatus } from "@prisma/client";
+
+import  type { feedBack } from "@prisma/client"
+export type feedBackType = feedBack & {customer:{name:string}}
+
+export type MessageType = {
+  message: string;
+};

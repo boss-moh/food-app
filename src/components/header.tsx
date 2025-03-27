@@ -1,11 +1,5 @@
 "use client";
 
-//**
-//
-// FIXME:delete Avter
-//
-//  */
-
 import { logout } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -158,6 +152,20 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
               <Link href={URL_PATHS.HOME}>
                 <User className="mr-2 h-5 w-5" />
                 <span>Go to Use&apos;s Home </span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.CHEF}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to CHEF&apos;s Home </span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.DRIVER}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to DRIVER&apos;s Home </span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

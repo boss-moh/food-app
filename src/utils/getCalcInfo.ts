@@ -1,4 +1,4 @@
-import { SummaryType } from "@/constants";
+import { orderDetailsType, SummaryType } from "@/constants";
 
 interface Item {
   quantity: number;
@@ -8,10 +8,15 @@ interface Item {
 }
 
 export const getCalcInfo = (items: Item[]): SummaryType => {
-  const subtotal = items.reduce((a, b) => a + b.product.price * b.quantity, 0);
-  const tax = subtotal * 0.1; // Assuming 10% tax
-  const total = subtotal + tax;
-  return { subtotal, tax, total };
+  const subTotal = items.reduce((a, b) => a + b.product.price * b.quantity, 0);
+  const tax = subTotal * 0.1; // Assuming 10% tax
+  const total = subTotal + tax;
+  return { subTotal, tax, total };
+};
+export const getSummary = (order:orderDetailsType): SummaryType => {
+  const {subTotal, tax, total} = order
+  
+  return { subTotal, tax, total };
 };
 
 export default getCalcInfo;

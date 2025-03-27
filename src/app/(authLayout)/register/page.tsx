@@ -46,6 +46,7 @@ export default function SignUpPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      phone: "",
     },
   });
 
@@ -56,7 +57,7 @@ export default function SignUpPage() {
     isError,
   } = useMutation<void, { errors: errors }>({
     mutationFn: async () => {
-      await axios.post(API_END_POINT.USER.CREATE, form.getValues());
+      await axios.post(API_END_POINT.USER.REGISTER, form.getValues());
     },
     onError(error) {
       console.log("error", error);
@@ -109,6 +110,23 @@ export default function SignUpPage() {
                     <Input
                       placeholder="john@example.com"
                       type="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Your Phone Number"
+                      type="text"
                       {...field}
                     />
                   </FormControl>

@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { axios, useMutation } from "@/lib";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export function DeleteAction({
   url,
@@ -27,16 +27,12 @@ export function DeleteAction({
     mutationFn: async () => {
       return await axios.delete<void, { message: string }>(url);
     },
-    onSuccess: (data) => {
-      toast({
-        title: "Success Delete Data.",
-        description: data.message,
-      });
+    onSuccess() {
+      toast.success("Success Delete Data.");
       onSuccess();
     },
     onError(error) {
-      toast({
-        title: "Fail To  Delete Data.",
+      toast.error("Fail To  Delete Data.", {
         description: error.message,
       });
     },

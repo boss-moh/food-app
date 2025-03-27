@@ -17,8 +17,8 @@ export const LoadingButton = ({
     <Button disabled={isLoading || disabled} {...rest}>
       {isLoading ? (
         <>
+          <span>Loading</span>
           <Loader2 className="h-16 w-16 animate-spin  " />
-          <span>Loading ... </span>
         </>
       ) : (
         children

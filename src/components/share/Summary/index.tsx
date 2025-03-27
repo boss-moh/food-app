@@ -2,12 +2,12 @@ import { Separator } from "@/components/ui/separator";
 import { SummaryType } from "@/constants";
 import { formatPrice } from "@/utils";
 
-export const Summary = ({ subtotal, tax, total }: SummaryType) => {
+export const Summary = ({ subTotal, tax, total }: SummaryType) => {
   return (
     <div className="space-y-2">
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Subtotal</span>
-        <span>{formatPrice(subtotal)}</span>
+        <span className="text-muted-foreground">SubTotal</span>
+        <span>{formatPrice(subTotal)}</span>
       </div>
       <div className="flex justify-between">
         <span className="text-muted-foreground">Tax</span>

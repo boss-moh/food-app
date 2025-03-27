@@ -22,6 +22,8 @@ const getPaths = (obj: NestedPaths): string[] => {
 
 export const URL_PATHS = {
   HOME: "/",
+  CHEF: "/chef",
+  DRIVER: "/driver",
 
   MENU: {
     HOME_PAGE: "/meals",
@@ -38,7 +40,7 @@ export const URL_PATHS = {
     PRODUCT: {
       HOME_PAGE: "/admin/products/",
       CREATE: "/admin/products/create",
-      EDIT: "/admin/products/create",
+      EDIT: "/admin/products/edit",
     },
 
     CATEGORIE: {

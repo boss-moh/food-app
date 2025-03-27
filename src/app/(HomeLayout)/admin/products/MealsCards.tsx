@@ -1,4 +1,4 @@
-import { GridTemplate } from "@/components/share";
+import { GridTemplate, Status } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,18 +13,30 @@ import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteAction from "@/components/share/DeleteAction";
+import ChangeAvaliable from "./ChangeAvaliable";
 
-export const MealsCards = ({ meals }: { meals: mealsType }) => {
+type MealsCardsProps = {
+  meals: mealsType;
+  onDelete: (id: string) => void;
+  onChangeAvaliable: (id: string) => void;
+};
+export const MealsCards = ({
+  meals,
+  onDelete,
+  onChangeAvaliable,
+}: MealsCardsProps) => {
   if (!meals.length)
     return (
       <p className="text-center text-muted-foreground mt-8">
         No meals found. Try adjusting your search or category.
       </p>
     );
+
   return (
     <GridTemplate>
       {meals.map((meal) => {
         const formatData = encodeURIComponent(JSON.stringify(meal));
+
         return (
           <Card key={meal.id} className="overflow-hidden flex flex-col">
             <div className="relative aspect-video">
@@ -54,6 +66,20 @@ export const MealsCards = ({ meals }: { meals: mealsType }) => {
                   {meal.category.name}
                 </span>
               </p>
+              <article
+                aria-label=" Available"
+                className="flex justify-between gap-2"
+              >
+                <Status status={meal.isAvailable ? "DONE" : "REJECTED"}>
+                  {meal.isAvailable ? "" : "not"}
+                  Available
+                </Status>
+                <ChangeAvaliable
+                  onSuccess={onChangeAvaliable}
+                  id={meal.id}
+                  isAvailable={meal.isAvailable}
+                />
+              </article>
             </CardContent>
 
             <CardFooter className="flex gap-2">
@@ -69,7 +95,10 @@ export const MealsCards = ({ meals }: { meals: mealsType }) => {
                   Edit
                 </Link>
               </Button>
-              <DeleteAction url={API_END_POINT.PRODUCT.DELETE(meal.id)} />
+              <DeleteAction
+                url={API_END_POINT.PRODUCT.DELETE(meal.id)}
+                onSuccess={() => onDelete(meal.id)}
+              />
             </CardFooter>
           </Card>
         );

@@ -4,7 +4,15 @@ import { fetchCategories } from "@/lib";
 import { makeOptions } from "@/utils";
 import { categoryType } from "@/constants";
 
-const CreatProductPage = async () => {
+const CreatProductPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ data: string }>;
+}) => {
+  const data = (await searchParams).data ?? null;
+  const values = JSON.parse(decodeURIComponent(data));
+  const haveData = !!values;
+
   const categories = await fetchCategories();
   const options = makeOptions<categoryType>(
     categories,
@@ -16,10 +24,12 @@ const CreatProductPage = async () => {
     <div className="container mx-auto py-10">
       <Card className="max-w-5xl">
         <CardHeader>
-          <CardTitle>Create New Product</CardTitle>
+          <CardTitle>
+            {haveData ? "Edit Info Product" : "Create New Product"}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <ProductForm categories={options} />
+          <ProductForm categories={options} defaultValues={values} />
         </CardContent>
       </Card>
     </div>

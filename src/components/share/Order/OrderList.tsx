@@ -38,7 +38,7 @@ export const OrderList = ({
           </div>
           <div className="flex items-center text-sm text-muted-foreground">
             <Clock className="h-4 w-4 mr-1" />
-            <span>{formatDate(order.createdAt)}</span>
+            <span>{formatDate(order.date)}</span>
             <span className="mx-2">•</span>
             <span>{order.items.length} items</span>
           </div>

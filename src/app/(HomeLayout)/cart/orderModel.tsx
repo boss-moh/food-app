@@ -1,5 +1,5 @@
 "use client";
-import { Check, CreditCard, Truck, AlertCircle } from "lucide-react";
+import { Check, CreditCard, Truck, AlertCircle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,13 +17,40 @@ import { LoadingIcon } from "@/components/svg/loadingIcon";
 
 import { useOrder } from "@/store";
 import { cn, axios, useMutation } from "@/lib";
-import { API_END_POINT, OrderItemClientType } from "@/constants";
+import {
+  addressSchema,
+  addressType,
+  API_END_POINT,
+  MessageType,
+  OrderItemClientType,
+} from "@/constants";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const steps = [
   { title: "Review Order", icon: Check },
   { title: "Processing", icon: CreditCard },
   { title: "Confirmed", icon: Truck },
 ];
+
+const numbers = {
+  summary: 0,
+  submitting: 1,
+  success: 2,
+  error: 2,
+};
 
 interface OrderConfirmationModalProps {
   isOpen: boolean;
@@ -37,40 +64,52 @@ export function OrderConfirmationModal({
 }: OrderConfirmationModalProps) {
   const { items, clear } = useOrder();
 
-  const { isPending, isSuccess, mutate } = useMutation({
-    mutationFn: async () => {
+  const { isPending, isSuccess, mutate, isError, reset } = useMutation({
+    mutationFn: async (data: addressType) => {
       const orderItems = items.map((item) => ({
         id: item.product.id,
         quantity: item.quantity,
       }));
-      return await axios.post(API_END_POINT.USER.ORDERS.CREATE, orderItems);
+      return await axios.post<void, MessageType>(
+        API_END_POINT.USER.ORDERS.CREATE,
+        { orderItems, address: data.address }
+      );
+    },
+    onSuccess(data) {
+      toast.success(data.message);
+      clear();
+    },
+    onError(error) {
+      toast.error(error.message);
     },
   });
 
-  const currentStep = isPending ? 1 : isSuccess ? 2 : 0;
+  const currentStep = isPending
+    ? "submitting"
+    : isSuccess
+    ? "success"
+    : isError
+    ? "error"
+    : "summary";
 
-  const handleSuccess = () => {
-    if (isSuccess) {
-      clear();
-    }
-    onClose();
+  const handleSubmit = async (data: addressType) => {
+    if (isPending) return;
+    mutate(data);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleSuccess}>
-      <DialogContent
-        onEscapeKeyDown={handleSuccess}
-        className="sm:max-w-[500px] p-0"
-      >
-        <Header currentStep={currentStep} />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent onEscapeKeyDown={onClose} className="sm:max-w-[500px] p-0">
+        <Header currentStep={numbers[currentStep]} />
 
         <Separator className="my-2" />
 
-        {currentStep === 0 && (
-          <SummaryStep onClose={onClose} onClick={mutate} />
+        {currentStep === "summary" && (
+          <ConfrimStep onClose={onClose} onSubmit={handleSubmit} />
         )}
-        {currentStep === 1 && <ProcessingStep />}
-        {currentStep === 2 && <ConfirmedStep />}
+        {currentStep === "submitting" && <ProcessingStep />}
+        {currentStep === "success" && <SuccessStep />}
+        {currentStep === "error" && <ErrorStep reset={reset} />}
       </DialogContent>
     </Dialog>
   );
@@ -133,7 +172,7 @@ const ProcessingStep = () => {
     </div>
   );
 };
-const ConfirmedStep = () => {
+const SuccessStep = () => {
   return (
     <div
       key="confirmed"
@@ -151,6 +190,59 @@ const ConfirmedStep = () => {
   );
 };
 
+interface ConfrimStepProps {
+  onClose: () => void;
+  onSubmit: (data: addressType) => void;
+}
+const ConfrimStep = ({ onClose, onSubmit }: ConfrimStepProps) => {
+  const [step, setStep] = useState("summary");
+
+  const form = useForm({
+    resolver: zodResolver(addressSchema),
+  });
+
+  const handleSubmit = form.handleSubmit(onSubmit);
+
+  return (
+    <>
+      {step === "summary" && (
+        <SummaryStep onClose={onClose} onClick={() => setStep("address")} />
+      )}
+      {step === "address" && (
+        <form onSubmit={handleSubmit}>
+          <div className="p-4 space-y-4">
+            <header className="flex items-center gap-2 text-2xl">
+              <Truck className="mr-2 h-6 w-6" />
+              <h3 className=" font-bold">Delivery Information</h3>
+            </header>
+
+            <Form {...form}>
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Delivery address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="address" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is your delivery address{" "}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Form>
+            <div className="flex justify-end ">
+              <Button type="submit">Confirm Order</Button>
+            </div>
+          </div>
+        </form>
+      )}
+    </>
+  );
+};
 const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
   const { items, getOrderDetails } = useOrder();
   const summaryDetails = getOrderDetails();
@@ -194,6 +286,24 @@ const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
         </Button>
         <Button onClick={onClick}>Confirm Order</Button>
       </DialogFooter>
+    </div>
+  );
+};
+const ErrorStep = ({ reset }: { reset: () => void }) => {
+  return (
+    <div
+      key="confirmed"
+      className="flex flex-col items-center justify-center px-6 py-12"
+    >
+      <div className="p-3 bg-red-100 rounded-full">
+        <X className="w-10 h-10 text-destructive" />
+      </div>
+      <h3 className="mt-6 text-lg font-semibold">Order Creation Failed!</h3>
+      <p className="mt-2 text-sm text-center text-destructive-foreground">
+        There was an error processing your order. Please try again or contact
+        customer support if the problem persists.
+      </p>
+      <Button onClick={reset}>Try Again</Button>
     </div>
   );
 };

@@ -8,7 +8,7 @@ import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "TastyLife - Food Delivery",
+  title: "TastyGo - Food Delivery",
   description: "Delicious food delivered to your doorstep",
 };
 
