@@ -1,147 +1,175 @@
 // import { createProduct } from "@/lib";
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient, RoleStatus } from "@prisma/client";
+import {
+  admin,
+  categories,
+  createProductType,
+  feedbackData,
+  feedBackType,
+  productsList,
+} from "./constant";
+import bcrypt, { hash } from "bcryptjs";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// const products = [
-//   {
-//     name: "Mighty Super Cheesecake",
-//     description:
-//       "A creamy and delicious cheesecake topped with fresh berries and a drizzle of berry sauce. This indulgent dessert is perfect for any occasion and will satisfy your sweet tooth cravings.",
-//     price: 8.99,
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741688453/food-app/gnz3xfmfgwjp56u5uq3j.jpg",
-//     categoryId: "category-1",
-//     prepTime: 45,
-//     rating: 5,
-//     ingredients: [
-//       "Cream Cheese",
-//       "Sugar",
-//       "Eggs",
-//       "Vanilla Extract",
-//       "Graham Cracker Crust",
-//       "Fresh Berries",
-//     ],
-//     nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", " protein: 6"],
-//   },
-//   {
-//     name: "Classic Spaghetti Bolognese",
-//     description:
-//       "A savory and hearty spaghetti with rich tomato and meat sauce, topped with grated Parmesan.",
-//     price: 12.99,
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741770931/pexels-photo-1279330_gs70yc.jpg",
-//     categoryId: "category-6",
-//     prepTime: 30,
-//     rating: 3,
-//     ingredients: [
-//       "Spaghetti",
-//       "Ground Beef",
-//       "Tomatoes",
-//       "Garlic",
-//       "Olive Oil",
-//       "Parmesan",
-//     ],
-//     nutritionalInfo: ["calories: 150", "fat: 8", "carbs: 12", "protein: 6"],
-//   },
-//   {
-//     name: "Margherita Pizza",
-//     description:
-//       "Classic pizza topped with fresh tomatoes, mozzarella, and basil.",
-//     price: 8.99,
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741771119/pexels-photo-2147491_rryys6.jpg",
-//     categoryId: "category-4",
-//     prepTime: 15,
-//     rating: 4.7,
-//     ingredients: ["Tomato Sauce", "Mozzarella", "Basil", "Dough"],
-//     nutritionalInfo: [
-//       "calories: 250",
-//       "fat: 10g",
-//       "carbs: 30g",
-//       "protein: 12g",
-//     ],
-//   },
-//   {
-//     name: "Grilled Salmon",
-//     description: "Perfectly grilled salmon with a lemon butter sauce.",
-//     price: 12.99,
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557810/samples/food/fish-vegetables.jpg",
-//     categoryId: "category-4",
-//     prepTime: 20,
-//     rating: 4.8,
-//     ingredients: ["Salmon", "Lemon", "Butter", "Garlic"],
-//     nutritionalInfo: ["calories: 220", "fat: 14g", "carbs: 2g", "protein: 25g"],
-//   },
-//   {
-//     name: "Voicdian Delight",
-//     description: "A mysterious and exquisite dish from the lands of Voicdia.",
-//     price: 15.99,
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557818/samples/breakfast.jpg",
-//     categoryId: "category-5",
-//     prepTime: 25,
-//     rating: 4.9,
-//     ingredients: ["Voicdian Root", "Celestial Herbs", "Moonlit Sauce"],
-//     nutritionalInfo: ["calories: 180", "fat: 5g", "carbs: 20g", "protein: 8g"],
-//   },
-// ];
+async function seed() {
+  // Create categories
+  console.log("run seed");
+  console.log("create category");
+  for (const category of categories) {
+    await prisma.category.create({
+      data: category,
+    });
+  }
 
-// const categories = [
-//   {
-//     id: "category-1",
-//     name: "Desserts",
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741688453/food-app/gnz3xfmfgwjp56u5uq3j.jpg",
-//   },
-//   {
-//     id: "category-3",
-//     name: "Pizzas",
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741771119/pexels-photo-2147491_rryys6.jpg",
-//   },
-//   {
-//     id: "category-4",
-//     name: "Fish and Seafood",
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557810/samples/food/fish-vegetables.jpg",
-//   },
-//   {
-//     id: "category-5",
-//     name: "Vegetables & Fruits",
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1740557818/samples/breakfast.jpg",
-//   },
-//   {
-//     id: "category-6",
-//     name: "Spaghettis",
-//     imageUrl:
-//       "https://res.cloudinary.com/dhfzpgyuz/image/upload/f_auto,q_auto/v1741770931/pexels-photo-1279330_gs70yc.jpg",
-//   },
-// ];
+  console.log("create food items");
 
-// async function seed() {
-//   // Create categories
-//   console.log("run seed");
+  await Promise.all(productsList.map((i) => createProduct(i)));
 
-//   for (const category of categories) {
-//     await prisma.category.create({
-//       data: category,
-//     });
-//   }
+  console.log("create admin count ");
 
-//   // Create food items
-//   // for (const foodItem of products) {
-//   //   await createProduct(foodItem);
-//   // }
-//   await Promise.all(products.map((i) => createProduct(i)));
+  await prisma.user.create({
+    data: { ...admin, role: "ADMIN", password: await bcrypt.hash("admin@a2.com", 10) },
+  });
 
-//   console.log("finsih file");
-// }
+  const usersList = [
+    {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password: await hash("password123", 10),
+      role: RoleStatus.CUSTOMER,
+      phone: "+1234567890",
+      image: "https://randomuser.me/api/portraits/men/1.jpg",
+    },
+    {
+      name: "Jane Smith",
+      email: "jane.smith@example.com",
+      password: await hash("password123", 10),
+      role: RoleStatus.CUSTOMER,
+      phone: "+1987654321",
+      image: "https://randomuser.me/api/portraits/women/2.jpg",
+    },
+    {
+      name: "Robert Johnson",
+      email: "robert.johnson@example.com",
+      password: await hash("password123", 10),
+      role: RoleStatus.CUSTOMER,
+      phone: "+1122334455",
+      image: "https://randomuser.me/api/portraits/men/3.jpg",
+    },
+    {
+      name: "Emily Davis",
+      email: "emily.davis@example.com",
+      password: await hash("password123", 10),
+      role: RoleStatus.CUSTOMER,
+      phone: "+1555666777",
+      image: "https://randomuser.me/api/portraits/women/4.jpg",
+    },
+    {
+      name: "Michael Wilson",
+      email: "michael.wilson@example.com",
+      password: await hash("password123", 10),
+      role: RoleStatus.CHEF,
+      phone: "+1777888999",
+      image: "https://randomuser.me/api/portraits/men/5.jpg",
+    },
+  ];
 
-// // Call the seed function
-// seed().catch((e) => {
-//   console.error(e);
-//   process.exit(1);
-// });
+  console.log("Create the users");
+  // Create the users
+
+  await Promise.all(
+    usersList.map((user) =>
+      prisma.user.create({
+        data: user,
+      })
+    )
+  );
+
+  console.log("Create feedback entries");
+  const products = await prisma.product.findMany();
+  const users = await prisma.user.findMany();
+  // Create the feedback entries
+  for (let i = 0; i < feedbackData.length; i++) {
+    const index = i % products.length;
+    const feedbackItem = feedbackData[i];
+    const customerId = users[index].id;
+    const productId = products[index].id;
+
+    await prisma.feedBack.create({
+      data: { ...feedbackItem, productId, customerId },
+    });
+  }
+
+  console.log("finsih file");
+}
+
+// Call the seed function
+seed()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
+export const createProduct = async (foodItem: createProductType) => {
+  try {
+    await prisma.$transaction(async () => {
+      await prisma.product.create({
+        data: foodItem,
+      });
+      const { categoryId } = foodItem;
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+      });
+      const { count } = category!;
+      await prisma.category.update({
+        where: { id: categoryId },
+        data: {
+          count: count + 1,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
+  }
+};
+
+type createFeedBack = feedBackType & {
+  productId: string;
+  customerId: string;
+};
+export const createFeedBack = async (feedBack: createFeedBack) => {
+  try {
+    await prisma.$transaction(async () => {
+      await prisma.feedBack.create({
+        data: feedBack,
+      });
+
+      const product = await prisma.product.findUnique({
+        where: {
+          id: feedBack.productId,
+        },
+      });
+
+      const { rating, rateCount } = product!;
+      const newRateCount = rateCount + 1;
+      const newRating = (rating * rateCount + feedBack.rating) / newRateCount;
+
+      await prisma.product.update({
+        where: {
+          id: feedBack.productId,
+        },
+        data: {
+          rateCount: newRateCount,
+          rating: newRating,
+        },
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};

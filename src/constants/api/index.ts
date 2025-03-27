@@ -2,18 +2,35 @@
 export const BASE_URL = "/api";
 
 export const API_END_POINT = {
-  GET_CATEGORIES: "/categories",
-  GET_MEALS: (categoryId: string) => `/meals?categoryId=${categoryId}`,
+
+  USER: {
+
+    LOGIN: "/users/login",
+    REGISTER: "/users/register",
+    
+    ORDERS: {
+      CREATE: "/orders",
+    },
+  },
+
   PRODUCT: {
-    CREATE: "/meals/",
-    EDIT: "/meals/",
-    DELETE: (id: string) => `/meals/${id}`,
+    CREATE: "/products/",
+    EDIT: "/products/",
+    DELETE: (id: string) => `/products/${id}`,
+    CHANGE_AVAILABLE: (id: string) => `/products/${id}`,
   },
 
   ADMIN: {
     CATEGORY: {
       CREATE: "/categories",
+      EDIT: "/categories",
       DELETE: (id: string) => `/categories/${id}`,
     },
+    USERS: {
+      UPDATE_ROLE: (userId: string) => `/users/${userId}/role`,
+    },
+  },
+  ORDERS: {
+    CHANGE_STATUS: "/orders/order",
   },
 };

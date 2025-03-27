@@ -1,150 +1,152 @@
-
 generator client {
   provider = "prisma-client-js"
 }
-
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum RoleStatus {
   ADMIN
-  CHEF
   CUSTOMER
+  CHEF
+  DRIVER
 }
 
 enum OrderStatus {
   PENDING
   PREPARING
-  READY
   DELIVERED
   CANCELLED
   DONE
+  REJECTED
 }
 
 model User {
-  // Base User Fields
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String
-  role         Role
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id    String  @id @default(cuid())
+  name  String
+  email String  @unique
+  // emailVerified DateTime? @map("email_verified")
+  image String?
 
-  // Role-Specific Relationships
-  admin admin?
-  // chef  chef?
-  customer customer?
-}
+  orders Order[]
 
-model admin {
-  id          String     @id @default(cuid())
-  userId      String     @unique
-  user        User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime   @default(now())
-}
+  accounts Account[]
 
-model customer {
-  id              String     @id @default(cuid())
-  userId          String     @unique
-  user            User       @relation(fields: [userId], references: [id])
-
-  address String?
-  phone           String?
-
-  orders          Order[]
+  password String? // <-- add this field to store the hashed password
+  role     RoleStatus @default(CUSTOMER)
 
   favoriteItems product[] @relation("Favorites")
 
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  feedback feedBack[]
+
+  phone String
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Category {
+  id       String @id @default(cuid())
+  name     String
+  imageUrl String
+  count    Int    @default(0)
 
-  id          String     @id @default(cuid())
-  name        String
-  imageUrl    String
-  count       Int     @default(0)
+  menuItems product[]
 
-  menuItems   product[] 
-
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  date DateTime @default(now())
 }
 
 model product {
-  id           String     @id @default(cuid())
-  name         String
-  description  String
-  price        Float
-  imageUrl     String
+  id          String @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  imageUrl    String
 
-  categoryId   String
-  category     Category   @relation(fields: [categoryId], references: [id],onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
+  date DateTime @default(now())
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-
-  rating Float 
-
-  customer customer[] @relation("Favorites")
-
+  customer User[] @relation("Favorites")
 
   OrderItem OrderItem[]
 
+  prepTime Int
 
-  prepTime  Int
+  ingredients String[]
 
+  nutritionalInfo String[]
 
-  ingredients String[] 
+  rating      Float      @default(0)
+  rateCount   Int        @default(0)
+  isAvailable Boolean    @default(true)
+  feedback    feedBack[]
+}
 
-  nutritionalInfo String[] 
+model feedBack {
+  id String @id @default(cuid())
 
+  product   product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  customer   User   @relation(fields: [customerId], references: [id])
+  customerId String
+
+  date    DateTime @default(now())
+  rating  Int
+  content String
 }
 
 model Order {
-  id           String      @id @default(cuid())
-  status       OrderStatus @default(PENDING)
-  customer     customer @relation(fields: [customerId], references: [id])
-  customerId   String
+  id String @id @default(cuid())
 
+  status OrderStatus @default(PENDING)
 
-  items        OrderItem[]
-  
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  orderedAt    DateTime    @default(now())
+  subTotal Float // Total cost of all items
+  tax      Float // Tax amount
+  total    Float
 
-  acceptedAt   DateTime?
-  preparedAt   DateTime?
-  deliveredAt  DateTime?
+  items OrderItem[]
+  date  DateTime    @default(now())
+  note  String?
+
+  address String
+
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id])
 }
 
 model OrderItem {
+  id String @id @default(cuid())
 
-  id         String    @id @default(cuid())
+  quantity Int   @default(1)
+  price    Float // This will store the price copied from the Product
 
-  quantity   Int       @default(1)
+  product   product @relation(fields: [productId], references: [id])
+  productId String
 
-  menuItem   product  @relation(fields: [menuItemId], references: [id])
-  menuItemId String
-
-  order      Order     @relation(fields: [orderId], references: [id])
-  orderId    String
-
-
-  createdAt  DateTime  @default(now())
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
 }
-
-
-// model Image {
-//   id        String      @id @default( cuid() ) // Unique ID
-//   url       String   // Cloudinary URL
-//   title     String?  // Optional title or description
-
-// }

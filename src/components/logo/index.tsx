@@ -5,11 +5,11 @@ import Link from "next/link";
 export const Logo = () => {
   return (
     <Link
-      aria-label="Tastelife logo"
+      aria-label="TastyGo logo"
       href={URL_PATHS.HOME}
       className={`${secondFont.className} text-2xl font-bold italic text-primary`}
     >
-      Tastelife
+      TastyGo
     </Link>
   );
 };

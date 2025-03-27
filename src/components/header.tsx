@@ -1,10 +1,13 @@
 "use client";
 
+import { logout } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -13,82 +16,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Search, ShoppingCart, User, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
-import { useOrder } from "@/store";
+import { useOrder } from "@/store/order";
+import { useUserInfo } from "@/hooks/useUserInfo";
 
-const NavItems = ({ mobile = false, onClick = () => {} }) => {
-  const { items } = useOrder();
-  const count = items.length;
-
-  return (
-    <>
-      <Button asChild variant="ghost">
-        <Link href={URL_PATHS.HOME}>Home</Link>
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-1">
-            Menu
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {NAV_LINKS.menu.map((item) => (
-            <DropdownMenuItem key={item.name} asChild>
-              <Link onClick={onClick} href={item.href}>
-                {item.name}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-1">
-            Pages
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {NAV_LINKS.pages.map((item) => (
-            <DropdownMenuItem key={item.name} asChild>
-              <Link onClick={onClick} href={item.href}>
-                {item.name}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <Button asChild variant="ghost" className="relative">
-        <Link href={URL_PATHS.CART}>
-          <ShoppingCart className="h-5 w-5" />
-
-          <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {count}
-          </span>
-        </Link>
-      </Button>
-      {mobile && (
-        <div className="mt-4 flex flex-col gap-4">
-          {/* <Button variant="outline" className="w-full justify-start">
-          <User className="mr-2 h-4 w-4" />
-          Profile
-        </Button> */}
-          <Button variant="outline" className="w-full justify-start">
-            <User className="mr-2 h-4 w-4" />
-            Sign In
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -101,14 +44,6 @@ export default function Header() {
           {/* desktop */}
           <nav className="hidden md:flex items-center gap-8">
             <NavItems />
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon">
-                <Search className="h-5 w-5" />
-              </Button>
-              <Button asChild variant="ghost">
-                <Link href={URL_PATHS.AUTH.SIGN_IN}>Sign In</Link>
-              </Button>
-            </div>
           </nav>
 
           {/* moblie */}
@@ -119,7 +54,10 @@ export default function Header() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent
+              side="right"
+              className="w-[300px] sm:w-[400px] md:hidden"
+            >
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-6">
                   <Logo />
@@ -134,7 +72,7 @@ export default function Header() {
                   </Button>
                 </div>
                 <nav className="flex flex-col gap-4">
-                  <NavItems mobile onClick={() => setIsOpen(false)} />
+                  <NavItems onClick={() => setIsOpen(false)} />
                 </nav>
               </div>
             </SheetContent>
@@ -144,3 +82,105 @@ export default function Header() {
     </header>
   );
 }
+
+const NavItems = ({ onClick = () => {} }) => {
+  const { items } = useOrder();
+  const count = items.length;
+
+  return (
+    <>
+      {NAV_LINKS.map((link) => (
+        <Button onClick={onClick} variant="ghost" asChild key={link.label}>
+          <Link href={link.href}>{link.label}</Link>
+        </Button>
+      ))}
+
+      <Button onClick={onClick} asChild variant="ghost" className="relative">
+        <Link href={URL_PATHS.CART}>
+          <ShoppingCart className="h-5 w-5" />
+          <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {count}
+          </span>
+        </Link>
+      </Button>
+      {<UserDorpDownMenu onClick={onClick} />}
+    </>
+  );
+};
+
+/**
+ * #TODO:Make Switch Veiw
+ */
+const UserDorpDownMenu = ({ onClick = () => {} }) => {
+  const user = useUserInfo();
+
+  return user ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative  md:size-8 md:rounded-full">
+          <User className=" h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
+            <ShoppingBag className="mr-2 h-5 w-5" />
+            <span>My Orders</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+        {user.role === "ADMIN" && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.ADMIN.HOME_PAGE}>
+                <LayoutDashboard className="mr-2 h-5 w-5" />
+                <span>Go to Dashborad</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.HOME}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to Use&apos;s Home </span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.CHEF}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to CHEF&apos;s Home </span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.DRIVER}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Go to DRIVER&apos;s Home </span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+
+        <DropdownMenuItem onClick={logout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <Button onClick={onClick} variant="ghost" asChild>
+      <Link href={URL_PATHS.AUTH.SIGN_IN}>Sign in</Link>
+    </Button>
+  );
+};

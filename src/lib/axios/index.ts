@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/constants";
-import axiosLib from "axios";
+import axiosLib, { AxiosError } from "axios";
 
 // Create a custom axios instance with default configurations
 const axios = axiosLib.create({
@@ -16,8 +16,8 @@ axios.interceptors.request.use(
     // You can add auth tokens or other headers here
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
+  (error: AxiosError) => {
+    return Promise.reject(error.response?.data);
   }
 );
 
@@ -26,7 +26,7 @@ axios.interceptors.response.use(
   (response) => {
     return response.data;
   },
-  (error) => {
+  (error: AxiosError) => {
     // Handle common errors here
     if (error.response) {
       // Server responded with error status
@@ -38,7 +38,7 @@ axios.interceptors.response.use(
       // Something else happened
       console.error("Error:", error.message);
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response?.data);
   }
 );
 

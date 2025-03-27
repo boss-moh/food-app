@@ -11,7 +11,7 @@ export function makeOptions<T>(
     return [
       {
         name: "All",
-        value: "All",
+        value: "all",
       },
       ...options,
     ];
