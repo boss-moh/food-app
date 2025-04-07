@@ -3,18 +3,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DynamicProps } from "@/constants";
 import { ActionsButtons } from "./Actions";
-import { fetchProductById } from "@/lib/data";
+import {
+  fetchCheckFavtroies,
+  fetchProductById,
+  productDetails,
+} from "@/lib/data";
 import { Clock, Utensils } from "lucide-react";
 import { formatPrice } from "@/utils";
 import { Rating, Status } from "@/components/share";
-import FeedBacks from "@/components/share/FeedBacks";
+import FeedBacks from "./FeedBacks";
+import { auth } from "@/auth";
+
+type product = productDetails | null;
 
 export default async function ProductPage({
   params,
 }: DynamicProps<"productId">) {
   const productId = (await params).productId;
-
-  const product = await fetchProductById(productId);
+  const session = await auth();
+  let product: product = null;
+  let isLikeItBefore = false;
+  if (!session) {
+    product = await fetchProductById(productId);
+  } else {
+    [product, isLikeItBefore] = await Promise.all([
+      fetchProductById(productId),
+      fetchCheckFavtroies(session.user.id, productId),
+    ]);
+  }
 
   if (!product) return "there is no product";
   const {
@@ -71,7 +87,7 @@ export default async function ProductPage({
 
               <Separator className="my-6" />
 
-              <ActionsButtons meal={product} />
+              <ActionsButtons meal={product} isLikeItBefore={isLikeItBefore} />
             </CardContent>
           </div>
         </div>

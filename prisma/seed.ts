@@ -96,9 +96,7 @@ async function seed() {
     const customerId = users[index].id;
     const productId = products[index].id;
 
-    await prisma.feedBack.create({
-      data: { ...feedbackItem, productId, customerId },
-    });
+    await createFeedBack({ ...feedbackItem, productId, customerId });
   }
 
   console.log("finsih file");
