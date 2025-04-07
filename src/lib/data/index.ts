@@ -1,7 +1,12 @@
 // #TODO:create Folder For Get And One For POST
 // #TODO:Server-only
 
-import { CACHCES_KEYS, OrderStatus, RoleType, createProductType } from "@/constants";
+import {
+  CACHCES_KEYS,
+  OrderStatus,
+  RoleType,
+  createProductType,
+} from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
 import { cache as reactCache } from "react";
@@ -62,25 +67,30 @@ export async function fetchProductById(id: string) {
             name: true,
           },
         },
-        feedback:{
-          include:{
-            customer:{
-              select:{
-                name:true
-              }
-            }
-          }
-        }
+        feedback: {
+          include: {
+            customer: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+
       },
       where: {
         id,
       },
     });
+    
     return product;
   } catch {
     throw new Error("Faild to fetch product");
   }
 }
+
+export type productDetails = Awaited<ReturnType<typeof fetchProductById>>;
+
 export async function fetchMenu() {
   try {
     const products = await prisma.product.findMany({
@@ -100,13 +110,9 @@ export async function fetchMenu() {
 
 export type mealsType = Awaited<ReturnType<typeof fetchMenu>>;
 
+type selectedOptions = "rating" | "date";
 
-
-
-type selectedOptions= 'rating'| 'date'
-
-
- async function fetchDishesBaseOn(baseOn: selectedOptions) {
+async function fetchDishesBaseOn(baseOn: selectedOptions) {
   try {
     const products = await prisma.product.findMany({
       include: {
@@ -127,11 +133,11 @@ type selectedOptions= 'rating'| 'date'
   }
 }
 
-export async function fetchMostRatingProducts(){
-  return fetchDishesBaseOn('rating')
+export async function fetchMostRatingProducts() {
+  return fetchDishesBaseOn("rating");
 }
-export async function fetchMostNewProducts(){
-  return fetchDishesBaseOn('date')
+export async function fetchMostNewProducts() {
+  return fetchDishesBaseOn("date");
 }
 export const createProduct = async (foodItem: createProductType) => {
   try {
@@ -292,5 +298,48 @@ export async function fetchOrdersById(id: string) {
     return orders;
   } catch {
     throw new Error("Faild to fetch user's Orders");
+  }
+}
+
+export async function fetchUser(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        favoriteItems: true,
+        feedback:true,
+        id:true
+      },
+    });
+    return user;
+  } catch {
+    throw new Error("Faild to fetch user's info");
+  }
+}
+
+
+export async function fetchCheckFavtroies(userId:string,productId:string) {
+
+  try{
+    const user = await prisma.user.findUnique({
+      where:{
+        id:userId
+      },
+      include:{
+        favoriteItems:true
+      }
+    })
+    
+    const didLikeItBefore = user!.favoriteItems.some((item)=>item.id === productId)
+    return didLikeItBefore
+  }
+  catch {
+    throw new Error("Faild to check user's Favorties");
   }
 }

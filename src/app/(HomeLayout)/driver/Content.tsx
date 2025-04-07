@@ -69,6 +69,7 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
               <UserInfo
                 name={(orderDetails as DriversOrder).customer.name}
                 phone={(orderDetails as DriversOrder).customer.phone}
+                id={(orderDetails as DriversOrder).customer.id}
               />
               <Location address={orderDetails.address} />
               <OrderDetails order={orderDetails} />

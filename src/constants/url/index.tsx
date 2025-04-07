@@ -6,14 +6,14 @@ import {
   Users,
 } from "lucide-react";
 
-type PathsObject = Record<string, string>;
-type NestedPaths = Record<string, string | PathsObject>;
+// type PathsObject = Record<string, string>;
+// type NestedPaths = Record<string, string | PathsObject>;
 
-const getPaths = (obj: NestedPaths): string[] => {
-  return Object.values(obj).flatMap((value) =>
-    typeof value === "string" ? value : getPaths(value)
-  );
-};
+// const getPaths = (obj: NestedPaths): string[] => {
+//   return Object.values(obj).flatMap((value) =>
+//     typeof value === "string" ? value : getPaths(value)
+//   );
+// };
 
 /**
  * #BUG: Put All URL To Public And Private
@@ -75,6 +75,7 @@ export const URL_PATHS = {
     ORDERS: {
       HOME_PAGE: "/orders",
     },
+    PROFILE: (id: string) => `/users/${id}`,
   },
 } as const;
 
@@ -126,8 +127,8 @@ export const ADMIN_LINKS = [
 
 export const PUBLICE_PATHS: string[] = [
   URL_PATHS.HOME,
-
-  ...getPaths(URL_PATHS.AUTH),
+  URL_PATHS.AUTH.SIGN_IN,
+  URL_PATHS.AUTH.SIGN_UP,
   URL_PATHS.MENU.CATEGORIES,
   URL_PATHS.MENU.HOME_PAGE,
   URL_PATHS.MENU.CATEGORIY(""),
@@ -136,8 +137,9 @@ export const PUBLICE_PATHS: string[] = [
   URL_PATHS.NOT_FOUND,
 ];
 
-export const ADMIN_PATHS: string[] = [];
-export const PROTECTED_PATHS: string[] = [];
-
+export const isAdminPath = (path: string) => path.startsWith("/admin");
+export const isProtectedPath = (path: string) => path.startsWith("/orders");
+export const isChefPath = (path: string) => path.startsWith("/chef");
+export const isDriverPath = (path: string) => path.startsWith("/driver");
 export const DEFAULT_REDIRECTED = URL_PATHS.HOME;
 export const API_PREFIX = "/api/";

@@ -7,11 +7,11 @@ const RULES = {
   PASSWORD: z.string().min(8, "Password must be at least 8 characters"),
   DESCRIPTION: z.string().min(10, "Description must be at least 10 characters"),
   PRICE: z.number().positive("Price must be greater than zero").finite(),
-  RATING: z.number().max(5, "Rating must be between 0 and 5").min(0),
+  RATING:z.coerce.number().max(5, "Rating must be between 0 and 5").min(0).transform(val => Number(val)),
+
   PERPTIME: z.number().min(0, "Preparation time cannot be negative"),
   PHONE:z.string().length(10,'the phone number should be saven')
 };
-
 export const createProductSchema = z.object({
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
@@ -114,3 +114,13 @@ export const ChangOrderStatusSchema = z.object({
   status: z.nativeEnum(OrderStatus),
   id: z.string(),
 });
+
+
+
+export const addFeedBackSchmea = z.object({
+  rating:RULES.RATING,
+  content:z.string().min(10,"the description should has more 10 letters").max(255,"the description should has less 255 letters")
+})
+
+
+export type addFeedBackType = z.infer<typeof addFeedBackSchmea>

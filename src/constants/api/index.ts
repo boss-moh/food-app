@@ -10,6 +10,9 @@ export const API_END_POINT = {
     
     ORDERS: {
       CREATE: "/orders",
+      ADD_FACD_BACK:(id:string)=>`/products/${id}/feedback`,
+      ADD_TO_FAVORTIES:(id:string)=>`/products/${id}/favorties`,
+      CHECK_FAVORTIES:(id:string)=>`/products/${id}/favorties`
     },
   },
 
