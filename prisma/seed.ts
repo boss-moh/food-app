@@ -8,7 +8,7 @@ import {
   feedBackType,
   productsList,
 } from "./constant";
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -36,7 +36,7 @@ async function seed() {
     {
       name: "John Doe",
       email: "john.doe@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1234567890",
       image: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -44,7 +44,7 @@ async function seed() {
     {
       name: "Jane Smith",
       email: "jane.smith@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1987654321",
       image: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -52,7 +52,7 @@ async function seed() {
     {
       name: "Robert Johnson",
       email: "robert.johnson@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1122334455",
       image: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -60,7 +60,7 @@ async function seed() {
     {
       name: "Emily Davis",
       email: "emily.davis@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1555666777",
       image: "https://randomuser.me/api/portraits/women/4.jpg",
@@ -68,7 +68,7 @@ async function seed() {
     {
       name: "Michael Wilson",
       email: "michael.wilson@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CHEF,
       phone: "+1777888999",
       image: "https://randomuser.me/api/portraits/men/5.jpg",
