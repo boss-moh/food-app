@@ -51,6 +51,7 @@ export default function FeedForm({ onSuccess }: FeedFormProps) {
     onSuccess(data) {
       toast.success(data.message);
       if (onSuccess) onSuccess();
+      form.reset();
     },
     onError(error) {
       toast.error(error.message);

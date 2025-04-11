@@ -51,7 +51,7 @@ export default function CartPage() {
                 className="w-full"
                 onClick={() => setIsOrderModalOpen(true)}
               >
-                Proceed to Checkout
+                Review your order.
               </Button>
             </CardFooter>
           </Card>

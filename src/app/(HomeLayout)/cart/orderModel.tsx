@@ -99,7 +99,10 @@ export function OrderConfirmationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onEscapeKeyDown={onClose} className="sm:max-w-[500px] p-0">
+      <DialogContent
+        onEscapeKeyDown={onClose}
+        className="sm:max-w-[500px] p-0 overflow-y-auto max-h-[80%] "
+      >
         <Header currentStep={numbers[currentStep]} />
 
         <Separator className="my-2" />

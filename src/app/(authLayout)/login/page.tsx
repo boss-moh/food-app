@@ -58,7 +58,7 @@ export default function SignInPage() {
     onError(error) {
       console.log("error", error);
     },
-    async onSuccess() {
+    onSuccess() {
       form.reset();
       router.push(URL_PATHS.HOME);
     },
@@ -138,7 +138,7 @@ export default function SignInPage() {
         </div>
         <div>
           {isError &&
-            Object.values(error.errors).map((error, key) => (
+            Object.values(error?.errors).map((error, key) => (
               <HelperText key={key}>{error}</HelperText>
             ))}
         </div>

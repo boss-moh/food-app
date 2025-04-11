@@ -45,7 +45,8 @@ export const AddToFavorties = ({
       <Heart
         className={cn(
           "group-hover:fill-red-300 group-hover:text-red-400 transition-all size-5",
-          isInsideFavorties && "fill-red-500 text-red-600 "
+          isInsideFavorties && "fill-red-500 text-red-600 ",
+          isPending && "animate-pulse fill-red-500 text-red-600"
         )}
       />
     </Button>
