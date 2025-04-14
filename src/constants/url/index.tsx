@@ -22,7 +22,6 @@ import {
 
 export const URL_PATHS = {
   HOME: "/",
-  CHEF: "/chef",
   DRIVER: "/driver",
 
   MENU: {
@@ -33,6 +32,22 @@ export const URL_PATHS = {
 
     GET_PRODUCT: (categoryId: string, productId: string) =>
       `${URL_PATHS.MENU.CATEGORIY(categoryId)}/${productId}`,
+  },
+
+  CHEF: {
+    HOME_PAGE: "/chef",
+    ORDERS: "/chef/orders",
+    PRODUCT: {
+      HOME_PAGE: "/chef/products/",
+      CREATE: "/chef/products/create",
+      EDIT: "/chef/products/edit",
+    },
+
+    CATEGORIE: {
+      HOME_PAGE: "/chef/categories/",
+      CREATE: "/chef/categories/create",
+      EDIT: "/chef/categories/edit",
+    },
   },
 
   ADMIN: {
@@ -122,6 +137,24 @@ export const ADMIN_LINKS = [
     label: "Users",
     icon: Users,
     href: URL_PATHS.ADMIN.USERS.HOME_PAGE,
+  },
+] as const;
+
+export const CHEF_LINKS = [
+  {
+    label: "Orders",
+    icon: ShoppingBag,
+    href: URL_PATHS.CHEF.ORDERS,
+  },
+  {
+    label: "Products",
+    icon: Coffee,
+    href: URL_PATHS.CHEF.PRODUCT.HOME_PAGE,
+  },
+  {
+    label: "Categories",
+    icon: Package,
+    href: URL_PATHS.CHEF.CATEGORIE.HOME_PAGE,
   },
 ] as const;
 

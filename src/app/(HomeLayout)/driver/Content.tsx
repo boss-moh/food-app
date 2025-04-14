@@ -1,5 +1,5 @@
 "use client";
-import { getOrderOptions, OrderStatus } from "@/constants";
+import { ChangeStatusOptions, OrderStatus } from "@/constants";
 
 import {
   LoadingButton,
@@ -14,7 +14,7 @@ import { useUpdateStatus } from "@/hooks";
 import { useEffect, useState } from "react";
 import { DriversOrder } from "@/lib/data/driver";
 
-const options = getOrderOptions(false);
+const options = ChangeStatusOptions.DRIVER;
 
 interface ClientContentProps {
   orders: DriversOrder[];

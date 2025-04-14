@@ -108,9 +108,6 @@ const NavItems = ({ onClick = () => {} }) => {
   );
 };
 
-/**
- * #TODO:Make Switch Veiw
- */
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
   const user = useUserInfo();
 
@@ -130,41 +127,39 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem asChild>
-          <Link href={URL_PATHS.USER.PROFILE(user.id)}>
-            <User className="mr-2 h-5 w-5" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
-          <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
-            <ShoppingBag className="mr-2 h-5 w-5" />
-            <span>My Orders</span>
-          </Link>
-        </DropdownMenuItem>
-
-        {user.role === "DRIVER" && (
+        {user.role === "CUSTOMER" && (
           <>
             <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.DRIVER}>
+              <Link href={URL_PATHS.USER.PROFILE(user.id)}>
                 <User className="mr-2 h-5 w-5" />
-                <span>Go to DRIVER&apos;s Home </span>
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                <span>My Orders</span>
               </Link>
             </DropdownMenuItem>
           </>
         )}
+
+        {user.role === "DRIVER" && (
+          <DropdownMenuItem asChild>
+            <Link href={URL_PATHS.DRIVER}>
+              <User className="mr-2 h-5 w-5" />
+              <span>Go to DRIVER&apos;s Home </span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         {user.role === "CHEF" && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.CHEF}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to CHEF&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem asChild>
+            <Link href={URL_PATHS.CHEF.HOME_PAGE}>
+              <User className="mr-2 h-5 w-5" />
+              <span>Go to CHEF&apos;s Home </span>
+            </Link>
+          </DropdownMenuItem>
         )}
         {user.role === "ADMIN" && (
           <>
@@ -178,20 +173,6 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
               <Link href={URL_PATHS.HOME}>
                 <User className="mr-2 h-5 w-5" />
                 <span>Go to Use&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.CHEF}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to CHEF&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.DRIVER}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to DRIVER&apos;s Home </span>
               </Link>
             </DropdownMenuItem>
           </>

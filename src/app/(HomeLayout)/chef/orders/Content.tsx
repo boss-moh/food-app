@@ -1,13 +1,20 @@
 "use client";
-import { getOrderOptions, orderDetailsType, OrderStatus } from "@/constants";
-import OrderList from "../../../components/share/Order/OrderList";
-import { LoadingButton, OrderDetails, Selecter } from "@/components/share";
+import {
+  ChangeStatusOptions,
+  orderDetailsType,
+  OrderStatus,
+} from "@/constants";
+import {
+  LoadingButton,
+  OrderDetails,
+  OrderList,
+  Selecter,
+} from "@/components/share";
 import { AlertCircle } from "lucide-react";
 import { useUpdateStatus } from "@/hooks";
 import { useEffect, useState } from "react";
 
-const options = getOrderOptions(false);
-
+const options = ChangeStatusOptions.CHEF;
 interface ClientContentProps {
   orders: orderDetailsType[];
 }

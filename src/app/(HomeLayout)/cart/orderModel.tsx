@@ -99,7 +99,10 @@ export function OrderConfirmationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onEscapeKeyDown={onClose} className="sm:max-w-[500px] p-0">
+      <DialogContent
+        onEscapeKeyDown={onClose}
+        className="sm:max-w-[500px] p-0 overflow-y-auto max-h-[80%] "
+      >
         <Header currentStep={numbers[currentStep]} />
 
         <Separator className="my-2" />
@@ -280,7 +283,7 @@ const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
         </div>
       </div>
 
-      <DialogFooter className="px-6 py-4 bg-muted/30">
+      <DialogFooter className="px-6 py-4 bg-muted/30 gap-2">
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>

@@ -1,20 +1,21 @@
 "use client";
-import { LoadingButton } from "@/components/share";
+import { Status } from "@/components/share";
+import { Switch } from "@/components/ui/switch";
 import { API_END_POINT, MessageType } from "@/constants";
 import { axios, useMutation } from "@/lib";
 import { toast } from "sonner";
 
-type ChangeAvaliableProps = {
+type StatusControlProps = {
   id: string;
   isAvailable: boolean;
   onSuccess: (id: string) => void;
 };
 
-export const ChangeAvaliable = ({
+export const StatusControl = ({
   id,
   isAvailable,
   onSuccess,
-}: ChangeAvaliableProps) => {
+}: StatusControlProps) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () =>
       await axios.put<void, MessageType>(
@@ -38,15 +39,18 @@ export const ChangeAvaliable = ({
   };
 
   return (
-    <LoadingButton
-      onClick={handleClick}
-      size={"sm"}
-      className="text-xs p-2"
-      isLoading={isPending}
+    <article
+      aria-label="Controls For Available"
+      className="flex justify-between gap-2 py-2"
     >
-      Toggle
-    </LoadingButton>
+      <Status
+        status={isPending ? "PENDING" : isAvailable ? "DONE" : "REJECTED"}
+      >
+        {isPending ? "Loading ..." : "Available"}
+      </Status>
+      <Switch defaultChecked={isAvailable} onCheckedChange={handleClick} />
+    </article>
   );
 };
 
-export default ChangeAvaliable;
+export default StatusControl;

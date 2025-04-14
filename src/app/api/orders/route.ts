@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { CreateOrder} from "@/constants";
+import { CreateOrder } from "@/constants";
 import { prisma } from "@/lib";
 import { getCalcInfo } from "@/utils";
 import { NextResponse } from "next/server";
@@ -24,7 +24,6 @@ export async function POST(req: Request) {
     );
 
   const { success, data, error } = CreateOrder.safeParse(body);
-
 
   if (!success) {
     return NextResponse.json(
@@ -58,12 +57,10 @@ export async function POST(req: Request) {
       productId: orderItems[index].id,
     }));
 
+    const { subTotal, tax, total } = getCalcInfo(ordersList);
 
-    const { subTotal, tax, total } = getCalcInfo(ordersList );
-
-    console.log("subTotal, tax, total",{subTotal, tax, total});
-    console.log("before carete order",ordersList);
-
+    console.log("subTotal, tax, total", { subTotal, tax, total });
+    console.log("before carete order", ordersList);
 
     await prisma.order.create({
       data: {
@@ -86,11 +83,10 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: "Order Created Successfully",
     });
-  } catch (e) {
-    console.log(e);
+  } catch {
     return NextResponse.json(
       {
-        message: "Error in Creating Order"
+        message: "Error in Creating Order",
       },
       {
         status: 500,
@@ -98,4 +94,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

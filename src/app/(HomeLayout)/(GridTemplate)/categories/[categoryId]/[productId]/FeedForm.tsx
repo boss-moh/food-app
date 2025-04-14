@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -28,14 +29,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import LoadingButton from "../../../../../../components/share/LoadingButton";
-import { axios, useMutation } from "@/lib";
+import { axios, cn, useMutation } from "@/lib";
 import { useParams } from "next/navigation";
+import { useUserInfo } from "@/hooks";
 
 interface FeedFormProps {
   onSuccess?: () => void;
+  className?: string;
 }
 
-export default function FeedForm({ onSuccess }: FeedFormProps) {
+export default function FeedForm({ onSuccess, className }: FeedFormProps) {
+  const user = useUserInfo();
   const { productId } = useParams<{ productId: string }>();
   const form = useForm<addFeedBackType>({
     resolver: zodResolver(addFeedBackSchmea),
@@ -50,7 +54,11 @@ export default function FeedForm({ onSuccess }: FeedFormProps) {
     },
     onSuccess(data) {
       toast.success(data.message);
-      if (onSuccess) onSuccess();
+      form.reset({
+        rating: 0,
+        content: "",
+      });
+      onSuccess?.();
     },
     onError(error) {
       toast.error(error.message);
@@ -61,8 +69,10 @@ export default function FeedForm({ onSuccess }: FeedFormProps) {
     if (isPending) return;
     mutate();
   };
+
+  if (!user) return;
   return (
-    <>
+    <Card className={cn("md:max-w-md mx-auto", className)}>
       <CardHeader>
         <CardTitle>Feedback Form</CardTitle>
         <CardDescription>
@@ -120,6 +130,6 @@ export default function FeedForm({ onSuccess }: FeedFormProps) {
           </CardFooter>
         </form>
       </Form>
-    </>
+    </Card>
   );
 }

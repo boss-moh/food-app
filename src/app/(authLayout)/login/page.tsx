@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   API_END_POINT,
-  ErrorResponse,
+  // ErrorResponse,
   signinSchema,
   signinType,
   URL_PATHS,
@@ -28,12 +28,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import HelperText from "@/components/share/helperText";
+// import HelperText from "@/components/share/helperText";
 import { useRouter } from "next/navigation";
 import { GoogleIcon } from "@/components/svg/googleIcon";
 import loginViaGoogle from "../Action";
 
-type errors = ErrorResponse<signinType>;
+type errorsType = string[];
 
 export default function SignInPage() {
   const router = useRouter();
@@ -49,16 +49,16 @@ export default function SignInPage() {
   const {
     mutate,
     isPending: isLoading,
-    error,
-    isError,
-  } = useMutation<void, { errors: errors }>({
+    // error,
+    // isError,
+  } = useMutation<void, errorsType>({
     mutationFn: async () => {
-      await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
+      return await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
     },
     onError(error) {
       console.log("error", error);
     },
-    async onSuccess() {
+    onSuccess() {
       form.reset();
       router.push(URL_PATHS.HOME);
     },
@@ -135,12 +135,6 @@ export default function SignInPage() {
           >
             Sign up
           </Link>
-        </div>
-        <div>
-          {isError &&
-            Object.values(error.errors).map((error, key) => (
-              <HelperText key={key}>{error}</HelperText>
-            ))}
         </div>
       </CardFooter>
     </Card>

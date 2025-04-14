@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { API_END_POINT, MessageType } from "@/constants";
+import { useUserInfo } from "@/hooks";
 import { axios, cn, useMutation } from "@/lib";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ export const AddToFavorties = ({
   id: string;
   isLikeItBefore?: boolean;
 }) => {
+  const user = useUserInfo();
   const { mutate, isPending, data } = useMutation({
     mutationFn: async () =>
       await axios.post<void, response>(
@@ -32,6 +34,10 @@ export const AddToFavorties = ({
     data == undefined ? isLikeItBefore : data.isInsideFavorties;
   const handleClick = () => {
     if (isPending) return;
+    if (!user) {
+      toast.info("You Should Be Login");
+      return;
+    }
     mutate();
   };
   return (
@@ -45,7 +51,8 @@ export const AddToFavorties = ({
       <Heart
         className={cn(
           "group-hover:fill-red-300 group-hover:text-red-400 transition-all size-5",
-          isInsideFavorties && "fill-red-500 text-red-600 "
+          isInsideFavorties && "fill-red-500 text-red-600 ",
+          isPending && "animate-pulse fill-red-500 text-red-600"
         )}
       />
     </Button>
