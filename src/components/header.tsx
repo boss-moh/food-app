@@ -119,52 +119,47 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
         {user.role === "CUSTOMER" && (
           <>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.name}</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {user.email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.USER.PROFILE(user.id)}>
+                <User className="mr-2 h-5 w-5" />
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem asChild>
+              <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                <span>My Orders</span>
+              </Link>
+            </DropdownMenuItem>
           </>
         )}
-
-        <DropdownMenuItem asChild>
-          <Link href={URL_PATHS.USER.PROFILE(user.id)}>
-            <User className="mr-2 h-5 w-5" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
-          <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
-            <ShoppingBag className="mr-2 h-5 w-5" />
-            <span>My Orders</span>
-          </Link>
-        </DropdownMenuItem>
 
         {user.role === "DRIVER" && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.DRIVER}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to DRIVER&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem asChild>
+            <Link href={URL_PATHS.DRIVER}>
+              <User className="mr-2 h-5 w-5" />
+              <span>Go to DRIVER&apos;s Home </span>
+            </Link>
+          </DropdownMenuItem>
         )}
         {user.role === "CHEF" && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.CHEF.HOME_PAGE}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to CHEF&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem asChild>
+            <Link href={URL_PATHS.CHEF.HOME_PAGE}>
+              <User className="mr-2 h-5 w-5" />
+              <span>Go to CHEF&apos;s Home </span>
+            </Link>
+          </DropdownMenuItem>
         )}
         {user.role === "ADMIN" && (
           <>

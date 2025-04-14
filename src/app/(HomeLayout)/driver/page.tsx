@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import ServerFetch from "./ServerFetch";
 
+export const dynamic = "force-dynamic";
 const DriverPage = () => {
   return (
     <div className="container mx-auto py-10">

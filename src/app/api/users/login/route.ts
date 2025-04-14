@@ -6,9 +6,10 @@ export async function POST(request: Request) {
   const data = await request.json();
 
   const errors = signinSchema.safeParse(data);
+
   if (!errors.success) {
     return NextResponse.json(
-      { errors: errors.error.formErrors.fieldErrors },
+      { errors: errors.error?.flatten().formErrors },
       { status: 400 }
     );
   }
@@ -22,24 +23,18 @@ export async function POST(request: Request) {
       redirectTo: DEFAULT_REDIRECTED,
     });
 
-    return NextResponse.json(
-      { message: 'success to login' },
-      { status: 200 }
-    )
+    return NextResponse.json({ message: "success to login" }, { status: 200 });
   } catch (e) {
     if (e instanceof CredentialError) {
       switch (e.type) {
         case "CredentialsSignin": {
-          console.log(JSON.stringify(e))
-          return NextResponse.json(
-            { errors: { error: e.code } },
-            { status: 400 }
-          );
+          console.log(JSON.stringify(e));
+          return NextResponse.json({ errors: [e.code] }, { status: 400 });
         }
 
         default: {
           return NextResponse.json(
-            { errors: { error: "Internal server error" } },
+            { errors: ["Internal server error"] },
             { status: 500 }
           );
         }
