@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const {data,error,success} = signupSchema.safeParse(body);
+    const { data, error, success } = signupSchema.safeParse(body);
     if (!success) {
       return NextResponse.json(
         { errors: error.formErrors.fieldErrors },
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { email, password, name,phone } = data;
+    const { email, password, name, phone } = data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -35,14 +35,14 @@ export async function POST(request: Request) {
         email,
         name,
         password: hashedPassword,
-        phone
+        phone,
       },
     });
 
     return NextResponse.json(
       {
         success: true,
-        message: "User created successfully",
+        message: "Success to register",
       },
       { status: 201 }
     );

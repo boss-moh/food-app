@@ -38,13 +38,13 @@ export type OrderItemType = OrderItem & {
 };
 export type OrderItemClientType = Omit<
   OrderItemType,
-  "id" | "createdAt" | "productId" | "orderId" 
+  "id" | "createdAt" | "productId" | "orderId"
 >;
 
 export { OrderStatus } from "@prisma/client";
 
-import  type { feedBack } from "@prisma/client"
-export type feedBackType = feedBack & {customer:{name:string}}
+import type { feedBack } from "@prisma/client";
+export type feedBackType = feedBack & { customer: { name: string } };
 
 export type MessageType = {
   message: string;

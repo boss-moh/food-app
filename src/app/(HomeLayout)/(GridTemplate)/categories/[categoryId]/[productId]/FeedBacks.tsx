@@ -1,5 +1,4 @@
 import FeedItem from "@/components/share/FeedBacks/FeedItem";
-import { Card } from "@/components/ui/card";
 import { feedBackType } from "@/constants";
 import FeedForm from "./FeedForm";
 import EmptyFeedBack from "./EmptyFeedBack";
@@ -28,9 +27,7 @@ export const FeedBacks = ({ feedCount, feeds }: FeedBacksProps) => {
               <FeedItem key={feed.id} feed={feed} />
             ))}
           </div>
-          <Card className="md:max-w-md mx-auto">
-            <FeedForm />
-          </Card>
+          <FeedForm />
         </div>
       )}
     </section>

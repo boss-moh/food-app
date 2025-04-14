@@ -283,7 +283,7 @@ const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
         </div>
       </div>
 
-      <DialogFooter className="px-6 py-4 bg-muted/30">
+      <DialogFooter className="px-6 py-4 bg-muted/30 gap-2">
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>

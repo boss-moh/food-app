@@ -108,9 +108,6 @@ const NavItems = ({ onClick = () => {} }) => {
   );
 };
 
-/**
- * #TODO:Make Switch Veiw
- */
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
   const user = useUserInfo();
 
@@ -122,15 +119,18 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {user.role === "CUSTOMER" && (
+          <>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user.name}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+          </>
+        )}
 
         <DropdownMenuItem asChild>
           <Link href={URL_PATHS.USER.PROFILE(user.id)}>
@@ -159,7 +159,7 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
         {user.role === "CHEF" && (
           <>
             <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.CHEF}>
+              <Link href={URL_PATHS.CHEF.HOME_PAGE}>
                 <User className="mr-2 h-5 w-5" />
                 <span>Go to CHEF&apos;s Home </span>
               </Link>
@@ -178,20 +178,6 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
               <Link href={URL_PATHS.HOME}>
                 <User className="mr-2 h-5 w-5" />
                 <span>Go to Use&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.CHEF}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to CHEF&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.DRIVER}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to DRIVER&apos;s Home </span>
               </Link>
             </DropdownMenuItem>
           </>

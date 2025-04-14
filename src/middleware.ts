@@ -34,10 +34,11 @@ export default auth((req) => {
   const userRole = req.auth?.user.role;
 
   const isThemAdmin = userRole === "ADMIN";
-  if (isThemAdmin) {
-    return;
-  }
+
   if (isAdminPath(path)) {
+    if (isThemAdmin) {
+      return;
+    }
     return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
   }
 

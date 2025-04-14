@@ -4,3 +4,4 @@ export * from "./schema";
 export * from "./api";
 export * from "./cache";
 export * from "./options";
+export * from "./status";
