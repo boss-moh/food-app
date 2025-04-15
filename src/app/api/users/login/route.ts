@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const { email, password } = errors.data;
 
   try {
-    await signIn("credentials", {
+    signIn("credentials", {
       email,
       password,
     });
@@ -39,7 +39,5 @@ export async function POST(request: Request) {
         }
       }
     }
-
-    throw e;
   }
 }
