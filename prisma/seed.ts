@@ -33,15 +33,17 @@ async function seed() {
       ...admin,
       role: "ADMIN",
       password: await bcrypt.hash("admin@a2.com", 10),
+      name:"ali "
     },
   });
   await prisma.user.create({
     data: {
-      name: "Chef",
+      name: "Yasser",
       email: "test@chef.com",
       phone: "00000000",
       role: "CHEF",
       password: await bcrypt.hash("test@chef.com", 10),
+      
     },
   });
   await prisma.user.create({
