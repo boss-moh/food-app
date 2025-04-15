@@ -78,7 +78,7 @@ export const MealsCards = ({
               <Button asChild variant="outline" className="flex-1">
                 <Link
                   href={{
-                    pathname: URL_PATHS.ADMIN.PRODUCT.CREATE,
+                    pathname: URL_PATHS.CHEF.PRODUCT.CREATE,
                     query: {
                       data: formatData,
                     },

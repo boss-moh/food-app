@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: childrenProps) {
       <div className="flex-shrink-0">
         <AdminSidebar />
       </div>
-      <div className=" bg-gray-100 md:px-6 py-12 flex-grow overflow-hidden">
+      <div className=" bg-gray-100 px-2 md:px-6 py-12 flex-grow overflow-hidden">
         {children}
       </div>
     </div>

@@ -29,7 +29,38 @@ async function seed() {
   console.log("create admin count ");
 
   await prisma.user.create({
-    data: { ...admin, role: "ADMIN", password: await bcrypt.hash("admin@a2.com", 10) },
+    data: {
+      ...admin,
+      role: "ADMIN",
+      password: await bcrypt.hash("admin@a2.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "Chef",
+      email: "test@chef.com",
+      phone: "00000000",
+      role: "CHEF",
+      password: await bcrypt.hash("test@chef.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "kareem",
+      email: "test@driver.com",
+      phone: "00000000",
+      role: "DRIVER",
+      password: await bcrypt.hash("test@driver.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "omr",
+      email: "test@customer.com",
+      phone: "00000000",
+      role: "CUSTOMER",
+      password: await bcrypt.hash("test@customer.com", 10),
+    },
   });
 
   const usersList = [

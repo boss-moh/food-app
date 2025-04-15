@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DEFAULT_REDIRECTED, signinSchema } from "@/constants";
+import { signinSchema } from "@/constants";
 import { CredentialError, signIn } from "@/auth";
 
 export async function POST(request: Request) {
@@ -17,11 +17,15 @@ export async function POST(request: Request) {
   const { email, password } = errors.data;
 
   try {
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_REDIRECTED,
+      redirect: false,
     });
+
+    if (result?.error) {
+      return NextResponse.json({ errors: [result.error] }, { status: 400 });
+    }
 
     return NextResponse.json({ message: "success to login" }, { status: 200 });
   } catch (e) {
@@ -40,7 +44,5 @@ export async function POST(request: Request) {
         }
       }
     }
-
-    throw e;
   }
 }

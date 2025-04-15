@@ -24,7 +24,7 @@ export default async function Page() {
           </p>
         </div>
         <Button asChild>
-          <Link href={URL_PATHS.ADMIN.CATEGORIE.CREATE}>Create Category</Link>
+          <Link href={URL_PATHS.CHEF.CATEGORIE.CREATE}>Create Category</Link>
         </Button>
       </CardHeader>
 
@@ -61,7 +61,7 @@ export default async function Page() {
                   <Button asChild variant="outline" className="flex-1">
                     <Link
                       href={{
-                        pathname: URL_PATHS.ADMIN.CATEGORIE.EDIT,
+                        pathname: URL_PATHS.CHEF.CATEGORIE.EDIT,
                         query: {
                           data,
                         },
@@ -71,7 +71,7 @@ export default async function Page() {
                     </Link>
                   </Button>
                   <DeleteAction
-                    url={API_END_POINT.ADMIN.CATEGORY.DELETE(i.id)}
+                    url={API_END_POINT.CHEF.CATEGORY.DELETE(i.id)}
                   />
                 </CardFooter>
               </Card>

@@ -52,17 +52,7 @@ export const URL_PATHS = {
 
   ADMIN: {
     HOME_PAGE: "/admin",
-    PRODUCT: {
-      HOME_PAGE: "/admin/products/",
-      CREATE: "/admin/products/create",
-      EDIT: "/admin/products/edit",
-    },
 
-    CATEGORIE: {
-      HOME_PAGE: "/admin/categories/",
-      CREATE: "/admin/categories/create",
-      EDIT: "/admin/categories/edit",
-    },
     USERS: {
       HOME_PAGE: "/admin/users",
       ORDERS: {
@@ -123,16 +113,7 @@ export const ADMIN_LINKS = [
     icon: ShoppingBag,
     href: URL_PATHS.ADMIN.ORDERS.HOME_PAGE,
   },
-  {
-    label: "Products",
-    icon: Coffee,
-    href: URL_PATHS.ADMIN.PRODUCT.HOME_PAGE,
-  },
-  {
-    label: "Categories",
-    icon: Package,
-    href: URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE,
-  },
+
   {
     label: "Users",
     icon: Users,
