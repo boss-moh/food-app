@@ -14,6 +14,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
   pages: {
     signIn: URL_PATHS.AUTH.SIGN_IN,
+    error:'/error'
   },
   ...authConfig,
 });
