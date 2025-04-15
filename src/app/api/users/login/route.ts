@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DEFAULT_REDIRECTED, signinSchema } from "@/constants";
+import { signinSchema } from "@/constants";
 import { CredentialError, signIn } from "@/auth";
 
 export async function POST(request: Request) {
@@ -20,7 +20,6 @@ export async function POST(request: Request) {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_REDIRECTED,
     });
 
     return NextResponse.json({ message: "success to login" }, { status: 200 });

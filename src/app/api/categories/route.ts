@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         imageUrl: fullURL,
       },
     });
-    revalidatePath(URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE);
+    revalidatePath(URL_PATHS.CHEF.CATEGORIE.HOME_PAGE);
     revalidateTag(CACHCES_KEYS.CATEGORIES);
     return NextResponse.json(category, { status: 200 });
   } catch (error) {

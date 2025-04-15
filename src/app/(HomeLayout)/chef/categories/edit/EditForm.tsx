@@ -43,7 +43,7 @@ const EditForm = () => {
 
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () =>
-      await axios.put(API_END_POINT.ADMIN.CATEGORY.EDIT, form.getValues()),
+      await axios.put(API_END_POINT.CHEF.CATEGORY.EDIT, form.getValues()),
     onSuccess: () => {
       imageProps.reset();
       form.reset({

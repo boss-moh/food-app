@@ -84,7 +84,7 @@ export default function ProductForm({
   }
 
   const clear = () => {
-    router.replace(URL_PATHS.ADMIN.PRODUCT.CREATE);
+    router.replace(URL_PATHS.CHEF.PRODUCT.CREATE);
     form.reset(values);
     imagePorps.reset();
   };
