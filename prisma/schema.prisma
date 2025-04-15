@@ -25,11 +25,11 @@ enum OrderStatus {
 }
 
 model User {
-  id    String  @id @default(cuid())
-  name  String
-  email String  @unique
-  // emailVerified DateTime? @map("email_verified")
-  image String?
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
 
   orders Order[]
 
@@ -42,7 +42,7 @@ model User {
 
   feedback feedBack[]
 
-  phone String
+  phone String @default("12312345")
 
   @@map("users")
 }
