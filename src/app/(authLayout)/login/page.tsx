@@ -54,15 +54,12 @@ export default function SignInPage() {
     mutationFn: async () => {
       return await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
     },
-    onError(error) {
-      console.log("faild");
 
-      console.log("error", error);
-    },
     onSuccess() {
       console.log("success");
       form.reset();
       router.push(URL_PATHS.HOME);
+      router.refresh();
     },
   });
 

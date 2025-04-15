@@ -17,10 +17,15 @@ export async function POST(request: Request) {
   const { email, password } = errors.data;
 
   try {
-    signIn("credentials", {
+    const result = await signIn("credentials", {
       email,
       password,
+      redirect: false,
     });
+
+    if (result?.error) {
+      return NextResponse.json({ errors: [result.error] }, { status: 400 });
+    }
 
     return NextResponse.json({ message: "success to login" }, { status: 200 });
   } catch (e) {
