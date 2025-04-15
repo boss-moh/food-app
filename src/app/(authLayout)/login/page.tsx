@@ -29,15 +29,14 @@ import { axios, useMutation } from "@/lib";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import HelperText from "@/components/share/helperText";
-import { useRouter } from "next/navigation";
 import { GoogleIcon } from "@/components/svg/googleIcon";
 import loginViaGoogle from "../Action";
+import { useRouter } from "next/navigation";
 
-type errors = ErrorResponse<signinType>;
+type errorsType = ErrorResponse<signinType>;
 
 export default function SignInPage() {
   const router = useRouter();
-
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -51,16 +50,16 @@ export default function SignInPage() {
     isPending: isLoading,
     error,
     isError,
-  } = useMutation<void, { errors: errors }>({
+  } = useMutation<void, { errors?: errorsType }>({
     mutationFn: async () => {
-      await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
+      return await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
     },
-    onError(error) {
-      console.log("error", error);
-    },
-    async onSuccess() {
+
+    onSuccess() {
+      console.log("success");
       form.reset();
       router.push(URL_PATHS.HOME);
+      router.refresh();
     },
   });
 
@@ -138,6 +137,7 @@ export default function SignInPage() {
         </div>
         <div>
           {isError &&
+            !!error?.errors &&
             Object.values(error.errors).map((error, key) => (
               <HelperText key={key}>{error}</HelperText>
             ))}

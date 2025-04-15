@@ -1,4 +1,4 @@
-import { GridTemplate, Status } from "@/components/share";
+import { GridTemplate } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +13,7 @@ import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteAction from "@/components/share/DeleteAction";
-import ChangeAvaliable from "./ChangeAvaliable";
+import StatusControl from "./StatusControl";
 
 type MealsCardsProps = {
   meals: mealsType;
@@ -66,27 +66,19 @@ export const MealsCards = ({
                   {meal.category.name}
                 </span>
               </p>
-              <article
-                aria-label=" Available"
-                className="flex justify-between gap-2"
-              >
-                <Status status={meal.isAvailable ? "DONE" : "REJECTED"}>
-                  {meal.isAvailable ? "" : "not"}
-                  Available
-                </Status>
-                <ChangeAvaliable
-                  onSuccess={onChangeAvaliable}
-                  id={meal.id}
-                  isAvailable={meal.isAvailable}
-                />
-              </article>
+
+              <StatusControl
+                onSuccess={onChangeAvaliable}
+                id={meal.id}
+                isAvailable={meal.isAvailable}
+              />
             </CardContent>
 
             <CardFooter className="flex gap-2">
               <Button asChild variant="outline" className="flex-1">
                 <Link
                   href={{
-                    pathname: URL_PATHS.ADMIN.PRODUCT.CREATE,
+                    pathname: URL_PATHS.CHEF.PRODUCT.CREATE,
                     query: {
                       data: formatData,
                     },

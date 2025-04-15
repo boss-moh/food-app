@@ -1,5 +1,5 @@
 "use client";
-import { getOrderOptions, OrderStatus } from "@/constants";
+import { ChangeStatusOptions, OrderStatus } from "@/constants";
 
 import {
   LoadingButton,
@@ -14,7 +14,7 @@ import { useUpdateStatus } from "@/hooks";
 import { useEffect, useState } from "react";
 import { DriversOrder } from "@/lib/data/driver";
 
-const options = getOrderOptions(false);
+const options = ChangeStatusOptions.DRIVER;
 
 interface ClientContentProps {
   orders: DriversOrder[];
@@ -69,6 +69,7 @@ export const ClientContent = ({ orders }: ClientContentProps) => {
               <UserInfo
                 name={(orderDetails as DriversOrder).customer.name}
                 phone={(orderDetails as DriversOrder).customer.phone}
+                id={(orderDetails as DriversOrder).customer.id}
               />
               <Location address={orderDetails.address} />
               <OrderDetails order={orderDetails} />

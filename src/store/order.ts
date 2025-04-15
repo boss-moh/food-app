@@ -1,7 +1,9 @@
-import { OrderItemClientType, SummaryType } from "@/constants";
-import { getCalcInfo } from "@/utils";
 import { create } from "zustand";
 
+import { persist } from "zustand/middleware";
+
+import { OrderItemClientType, SummaryType } from "@/constants";
+import { getCalcInfo } from "@/utils";
 interface useOrderType {
   items: OrderItemClientType[];
   addItem: (item: OrderItemClientType) => void;
@@ -12,46 +14,53 @@ interface useOrderType {
   clear: () => void;
 }
 
-export const useOrder = create<useOrderType>((set, get) => ({
-  items: [],
-  addItem: (orderItem: OrderItemClientType) => {
-    set(({ items }) => {
-      const isInOrder = !!items.find(
-        (item) => item.product.id === orderItem.product.id
-      );
-      if (isInOrder) return { items };
+export const useOrder = create<useOrderType>()(
+  persist<useOrderType>(
+    (set, get) => ({
+      items: [],
+      addItem: (orderItem: OrderItemClientType) => {
+        set(({ items }) => {
+          const isInOrder = !!items.find(
+            (item) => item.product.id === orderItem.product.id
+          );
+          if (isInOrder) return { items };
 
-      return { items: [...items, orderItem] };
-    });
-  },
-  removeItem: (id: string) => {
-    set(({ items }) => {
-      const newItems = items.filter((item) => item.product.id !== id);
-      if (newItems.length === items.length) return { items };
-      return { items: newItems };
-    });
-  },
+          return { items: [...items, orderItem] };
+        });
+      },
+      removeItem: (id: string) => {
+        set(({ items }) => {
+          const newItems = items.filter((item) => item.product.id !== id);
+          if (newItems.length === items.length) return { items };
+          return { items: newItems };
+        });
+      },
 
-  update(id, newQuantity) {
-    set(({ items }) => {
-      const newItems = items.map((item) =>
-        item.product.id === id ? { ...item, quantity: newQuantity } : item
-      );
+      update(id, newQuantity) {
+        set(({ items }) => {
+          const newItems = items.map((item) =>
+            item.product.id === id ? { ...item, quantity: newQuantity } : item
+          );
 
-      return { items: newItems };
-    });
-  },
-  getOrderDetails: () => {
-    const { items } = get();
+          return { items: newItems };
+        });
+      },
+      getOrderDetails: () => {
+        const { items } = get();
 
-    return getCalcInfo(items);
-  },
+        return getCalcInfo(items);
+      },
 
-  checkIsInOrder: (id: string) => {
-    const { items } = get();
+      checkIsInOrder: (id: string) => {
+        const { items } = get();
 
-    return !!items.find((item) => item.product.id === id);
-  },
+        return !!items.find((item) => item.product.id === id);
+      },
 
-  clear: () => set((state) => ({ ...state, items: [] })),
-}));
+      clear: () => set((state) => ({ ...state, items: [] })),
+    }),
+    {
+      name: "cart",
+    }
+  )
+);

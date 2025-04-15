@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import {
   API_END_POINT,
   ErrorResponse,
+  MessageType,
   signupSchema,
   signupType,
   URL_PATHS,
@@ -55,16 +56,16 @@ export default function SignUpPage() {
     isPending: isLoading,
     error,
     isError,
-  } = useMutation<void, { errors: errors }>({
+  } = useMutation<MessageType, { errors?: errors }>({
     mutationFn: async () => {
-      await axios.post(API_END_POINT.USER.REGISTER, form.getValues());
+      return await axios.post(API_END_POINT.USER.REGISTER, form.getValues());
     },
     onError(error) {
       console.log("error", error);
     },
-    onSuccess() {
+    onSuccess(data: MessageType) {
       form.reset();
-      toast.success("New Account has been created.");
+      toast.success(data.message);
       router.push(URL_PATHS.AUTH.SIGN_IN);
     },
   });
@@ -188,6 +189,7 @@ export default function SignUpPage() {
         </div>
         <div>
           {isError &&
+            !!error?.errors &&
             Object.values(error.errors).map((error, key) => (
               <HelperText key={key}>{error}</HelperText>
             ))}

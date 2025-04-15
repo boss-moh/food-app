@@ -12,7 +12,7 @@ type SelecterProps = {
   defaultValue?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  options: option[];
+  options: option[] | string[];
   className?: string;
 };
 
@@ -29,11 +29,20 @@ export const Selecter = ({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="capitalize">
-        {options?.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.name}
-          </SelectItem>
-        ))}
+        {options?.map((option) => {
+          if (typeof option === "string") {
+            return (
+              <SelectItem className="capitalize" key={option} value={option}>
+                {option}
+              </SelectItem>
+            );
+          }
+          return (
+            <SelectItem key={option.value} value={option.value}>
+              {option.name}
+            </SelectItem>
+          );
+        })}
 
         {placeholder && (
           <div className=" w-full  select-none   py-1.5 pl-8 pr-2 text-sm">

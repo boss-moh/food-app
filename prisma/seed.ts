@@ -8,7 +8,7 @@ import {
   feedBackType,
   productsList,
 } from "./constant";
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -29,14 +29,45 @@ async function seed() {
   console.log("create admin count ");
 
   await prisma.user.create({
-    data: { ...admin, role: "ADMIN", password: await bcrypt.hash("admin@a2.com", 10) },
+    data: {
+      ...admin,
+      role: "ADMIN",
+      password: await bcrypt.hash("admin@a2.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "Chef",
+      email: "test@chef.com",
+      phone: "00000000",
+      role: "CHEF",
+      password: await bcrypt.hash("test@chef.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "kareem",
+      email: "test@driver.com",
+      phone: "00000000",
+      role: "DRIVER",
+      password: await bcrypt.hash("test@driver.com", 10),
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "omr",
+      email: "test@customer.com",
+      phone: "00000000",
+      role: "CUSTOMER",
+      password: await bcrypt.hash("test@customer.com", 10),
+    },
   });
 
   const usersList = [
     {
       name: "John Doe",
       email: "john.doe@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1234567890",
       image: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -44,7 +75,7 @@ async function seed() {
     {
       name: "Jane Smith",
       email: "jane.smith@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1987654321",
       image: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -52,7 +83,7 @@ async function seed() {
     {
       name: "Robert Johnson",
       email: "robert.johnson@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1122334455",
       image: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -60,7 +91,7 @@ async function seed() {
     {
       name: "Emily Davis",
       email: "emily.davis@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CUSTOMER,
       phone: "+1555666777",
       image: "https://randomuser.me/api/portraits/women/4.jpg",
@@ -68,7 +99,7 @@ async function seed() {
     {
       name: "Michael Wilson",
       email: "michael.wilson@example.com",
-      password: await hash("password123", 10),
+      password: await bcrypt.hash("password123", 10),
       role: RoleStatus.CHEF,
       phone: "+1777888999",
       image: "https://randomuser.me/api/portraits/men/5.jpg",
@@ -96,9 +127,7 @@ async function seed() {
     const customerId = users[index].id;
     const productId = products[index].id;
 
-    await prisma.feedBack.create({
-      data: { ...feedbackItem, productId, customerId },
-    });
+    await createFeedBack({ ...feedbackItem, productId, customerId });
   }
 
   console.log("finsih file");

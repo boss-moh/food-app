@@ -5,11 +5,12 @@ import {
   CheckCircle,
   Clock,
   CookingPot,
+  Package,
   Truck,
 } from "lucide-react";
 
 const statusVariants = cva(
-  "  rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ",
+  "  rounded-md border px-2.5 py-0.5  text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ",
   {
     variants: {
       status: {
@@ -18,7 +19,8 @@ const statusVariants = cva(
         [OrderStatus.DELIVERED]: "bg-green-100 text-green-800",
         [OrderStatus.CANCELLED]: "bg-red-100 text-red-800",
         [OrderStatus.REJECTED]: "bg-red-100 text-red-800",
-        [OrderStatus.DONE]: "bg--100 text-green-800", // Reuse green for done status
+        [OrderStatus.DONE]: "bg-green-100 text-green-800", // Reuse green for done status
+        [OrderStatus.PICKING]: "bg-violet-100 text-violet-800", // Reuse green for done status
       },
     },
   }
@@ -39,6 +41,8 @@ const renderStatusIcon = (status: OrderStatus | null | undefined) => {
       return <AlertCircle className="h-5 w-5 text-red-500" />;
     case OrderStatus.PREPARING:
       return <CookingPot className="h-5 w-5  text-blue-800" />;
+    case OrderStatus.PICKING:
+      return <Package className="h-5 w-5   text-violet-800" />;
     default:
       return <Clock className="h-5 w-5" />;
   }
@@ -54,7 +58,7 @@ export const Status = ({
   ...rest
 }: StatusProps) => {
   return (
-    <div
+    <span
       aria-label="Status"
       className={"flex gap-2 items-center capitalize"}
       {...rest}
@@ -64,7 +68,7 @@ export const Status = ({
       <span className={statusVariants({ status, className })}>
         {children || status}
       </span>
-    </div>
+    </span>
   );
 };
 

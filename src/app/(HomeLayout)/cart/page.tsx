@@ -14,11 +14,26 @@ import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
 import { Summary } from "@/components/share";
 import { CartItem } from "@/components/share/cart";
+import { useUserInfo } from "@/hooks";
+import { useRouter } from "next/navigation";
+import { URL_PATHS } from "@/constants";
+import { toast } from "sonner";
 
 export default function CartPage() {
+  const user = useUserInfo();
+  const router = useRouter();
   const { removeItem, update, items, getOrderDetails } = useOrder();
   const summaryDetails = getOrderDetails();
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+
+  const handleOrderOpen = () => {
+    if (!user) {
+      router.push(URL_PATHS.AUTH.SIGN_IN);
+      toast.error("Please sign in to place an order.");
+      return;
+    }
+    setIsOrderModalOpen(true);
+  };
 
   if (items.length === 0) {
     return <EmptyCart />;
@@ -47,11 +62,8 @@ export default function CartPage() {
               <Summary {...summaryDetails} />
             </CardContent>
             <CardFooter>
-              <Button
-                className="w-full"
-                onClick={() => setIsOrderModalOpen(true)}
-              >
-                Proceed to Checkout
+              <Button className="w-full" onClick={handleOrderOpen}>
+                Review your order.
               </Button>
             </CardFooter>
           </Card>

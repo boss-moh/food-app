@@ -6,14 +6,14 @@ import {
   Users,
 } from "lucide-react";
 
-type PathsObject = Record<string, string>;
-type NestedPaths = Record<string, string | PathsObject>;
+// type PathsObject = Record<string, string>;
+// type NestedPaths = Record<string, string | PathsObject>;
 
-const getPaths = (obj: NestedPaths): string[] => {
-  return Object.values(obj).flatMap((value) =>
-    typeof value === "string" ? value : getPaths(value)
-  );
-};
+// const getPaths = (obj: NestedPaths): string[] => {
+//   return Object.values(obj).flatMap((value) =>
+//     typeof value === "string" ? value : getPaths(value)
+//   );
+// };
 
 /**
  * #BUG: Put All URL To Public And Private
@@ -22,7 +22,6 @@ const getPaths = (obj: NestedPaths): string[] => {
 
 export const URL_PATHS = {
   HOME: "/",
-  CHEF: "/chef",
   DRIVER: "/driver",
 
   MENU: {
@@ -35,19 +34,25 @@ export const URL_PATHS = {
       `${URL_PATHS.MENU.CATEGORIY(categoryId)}/${productId}`,
   },
 
-  ADMIN: {
-    HOME_PAGE: "/admin",
+  CHEF: {
+    HOME_PAGE: "/chef",
+    ORDERS: "/chef/orders",
     PRODUCT: {
-      HOME_PAGE: "/admin/products/",
-      CREATE: "/admin/products/create",
-      EDIT: "/admin/products/edit",
+      HOME_PAGE: "/chef/products/",
+      CREATE: "/chef/products/create",
+      EDIT: "/chef/products/edit",
     },
 
     CATEGORIE: {
-      HOME_PAGE: "/admin/categories/",
-      CREATE: "/admin/categories/create",
-      EDIT: "/admin/categories/edit",
+      HOME_PAGE: "/chef/categories/",
+      CREATE: "/chef/categories/create",
+      EDIT: "/chef/categories/edit",
     },
+  },
+
+  ADMIN: {
+    HOME_PAGE: "/admin",
+
     USERS: {
       HOME_PAGE: "/admin/users",
       ORDERS: {
@@ -75,6 +80,7 @@ export const URL_PATHS = {
     ORDERS: {
       HOME_PAGE: "/orders",
     },
+    PROFILE: (id: string) => `/users/${id}`,
   },
 } as const;
 
@@ -107,16 +113,7 @@ export const ADMIN_LINKS = [
     icon: ShoppingBag,
     href: URL_PATHS.ADMIN.ORDERS.HOME_PAGE,
   },
-  {
-    label: "Products",
-    icon: Coffee,
-    href: URL_PATHS.ADMIN.PRODUCT.HOME_PAGE,
-  },
-  {
-    label: "Categories",
-    icon: Package,
-    href: URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE,
-  },
+
   {
     label: "Users",
     icon: Users,
@@ -124,10 +121,28 @@ export const ADMIN_LINKS = [
   },
 ] as const;
 
+export const CHEF_LINKS = [
+  {
+    label: "Orders",
+    icon: ShoppingBag,
+    href: URL_PATHS.CHEF.ORDERS,
+  },
+  {
+    label: "Products",
+    icon: Coffee,
+    href: URL_PATHS.CHEF.PRODUCT.HOME_PAGE,
+  },
+  {
+    label: "Categories",
+    icon: Package,
+    href: URL_PATHS.CHEF.CATEGORIE.HOME_PAGE,
+  },
+] as const;
+
 export const PUBLICE_PATHS: string[] = [
   URL_PATHS.HOME,
-
-  ...getPaths(URL_PATHS.AUTH),
+  URL_PATHS.AUTH.SIGN_IN,
+  URL_PATHS.AUTH.SIGN_UP,
   URL_PATHS.MENU.CATEGORIES,
   URL_PATHS.MENU.HOME_PAGE,
   URL_PATHS.MENU.CATEGORIY(""),
@@ -136,8 +151,9 @@ export const PUBLICE_PATHS: string[] = [
   URL_PATHS.NOT_FOUND,
 ];
 
-export const ADMIN_PATHS: string[] = [];
-export const PROTECTED_PATHS: string[] = [];
-
+export const isAdminPath = (path: string) => path.startsWith("/admin");
+export const isProtectedPath = (path: string) => path.startsWith("/orders");
+export const isChefPath = (path: string) => path.startsWith("/chef");
+export const isDriverPath = (path: string) => path.startsWith("/driver");
 export const DEFAULT_REDIRECTED = URL_PATHS.HOME;
 export const API_PREFIX = "/api/";

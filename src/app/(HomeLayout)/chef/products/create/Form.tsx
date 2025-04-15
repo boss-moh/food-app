@@ -16,8 +16,8 @@ import {
   API_END_POINT,
   URL_PATHS,
   option,
-  editProductType,
-  editProductSchema,
+  createProductType,
+  createProductSchema,
 } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios, useMutation } from "@/lib";
@@ -31,12 +31,12 @@ import ImageInput, { useImageInput } from "@/components/share/ImageInput";
 import { useRouter } from "next/navigation";
 
 type ProductFormProps = {
-  defaultValues: editProductType;
+  defaultValues?: createProductType;
   categories: option[];
 };
 
 const values = {
-  id: "",
+  id: null,
   name: "",
   description: "",
   price: 0,
@@ -48,12 +48,12 @@ const values = {
 };
 
 export default function ProductForm({
-  defaultValues,
+  defaultValues = values,
   categories,
 }: ProductFormProps) {
   const router = useRouter();
-  const form = useForm<editProductType>({
-    resolver: zodResolver(editProductSchema),
+  const form = useForm<createProductType>({
+    resolver: zodResolver(createProductSchema),
     defaultValues,
   });
 
@@ -64,14 +64,14 @@ export default function ProductForm({
 
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () => {
-      return await axios.put(API_END_POINT.PRODUCT.EDIT, form.getValues());
+      return await axios.post(API_END_POINT.PRODUCT.CREATE, form.getValues());
     },
     onError() {
       toast.error("there is error happen");
     },
     onSuccess() {
       clear();
-      toast.success("The Dish has been Edited.");
+      toast.success("New Dish has been created.");
     },
   });
 
@@ -84,7 +84,7 @@ export default function ProductForm({
   }
 
   const clear = () => {
-    router.replace(URL_PATHS.ADMIN.PRODUCT.CREATE);
+    router.replace(URL_PATHS.CHEF.PRODUCT.CREATE);
     form.reset(values);
     imagePorps.reset();
   };
@@ -312,12 +312,9 @@ export default function ProductForm({
         />
         <Separator className="my-4" />
 
-        <div className="flex justify-end gap-4">
-          <Button variant="outline" type="button" onClick={clear}>
-            Clear
-          </Button>
+        <div className="flex justify-end">
           <LoadingButton type="submit" isLoading={isLoading}>
-            Save Changes
+            Create Product
           </LoadingButton>
         </div>
       </form>

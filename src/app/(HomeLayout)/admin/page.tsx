@@ -17,6 +17,8 @@ import {
 import { OrderRow } from "./orders/OrderRow";
 import { formatPrice } from "@/utils";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminDashboard() {
   return (
     <div className="space-y-8 p-6">

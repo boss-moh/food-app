@@ -31,7 +31,7 @@ const FormCreate = () => {
 
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async () =>
-      await axios.post(API_END_POINT.ADMIN.CATEGORY.CREATE, form.getValues()),
+      await axios.post(API_END_POINT.CHEF.CATEGORY.CREATE, form.getValues()),
     onSuccess: () => {
       imageProps.reset();
       form.reset();

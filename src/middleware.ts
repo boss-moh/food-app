@@ -1,33 +1,64 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth";
-import { API_PREFIX, PROTECTED_PATHS, PUBLICE_PATHS } from "./constants";
+import {
+  API_PREFIX,
+  isAdminPath,
+  isChefPath,
+  isDriverPath,
+  isProtectedPath,
+  PUBLICE_PATHS,
+  URL_PATHS,
+} from "./constants";
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const path = req.nextUrl.pathname;
-  // console.log("path", path);
-
+  console.log("path", path);
   const isApiRequest = path.startsWith(API_PREFIX);
   if (isApiRequest) return;
 
-  const isPublicPath = PUBLICE_PATHS.includes(path);
+  const isPublicPath = PUBLICE_PATHS.some((item) => item.startsWith(path));
   if (isPublicPath) return;
 
-  const isLoggin = !!req.auth;
-  const isProtecedPath = PROTECTED_PATHS.includes(path);
+  const isThemLoggin = !!req.auth;
 
-  if (isProtecedPath && isLoggin) {
-    return;
+  if (isProtectedPath(path)) {
+    if (isThemLoggin) {
+      return;
+    }
+    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
   }
 
-  const isAdminPath = new RegExp(/admin/gi).test(path);
-  const isThemAdmin = req.auth?.user.role === "ADMIN";
+  const userRole = req.auth?.user.role;
 
-  if (isAdminPath && isThemAdmin) {
-    return;
+  const isThemAdmin = userRole === "ADMIN";
+
+  if (isAdminPath(path)) {
+    if (isThemAdmin) {
+      return;
+    }
+    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
   }
-  return;
+
+  const isThemChef = userRole === "CHEF";
+
+  if (isChefPath(path)) {
+    if (isThemChef) {
+      return;
+    }
+    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
+  }
+
+  const isThemDriver = userRole === "DRIVER";
+
+  if (isDriverPath(path)) {
+    if (isThemDriver) {
+      return;
+    }
+    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
+  }
 });
 
 export const config = {

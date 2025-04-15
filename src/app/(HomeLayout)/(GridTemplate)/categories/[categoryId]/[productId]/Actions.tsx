@@ -6,8 +6,15 @@ import { Label } from "@/components/ui/label";
 import { productType } from "@/constants";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import AddToFavorties from "./AddToFavorties";
 
-export const ActionsButtons = ({ meal }: { meal: productType }) => {
+export const ActionsButtons = ({
+  meal,
+  isLikeItBefore,
+}: {
+  meal: productType;
+  isLikeItBefore?: boolean;
+}) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (amount: number) => {
@@ -16,11 +23,11 @@ export const ActionsButtons = ({ meal }: { meal: productType }) => {
 
   return (
     <>
-      <div className="flex items-center mt-6">
+      <div className="flex items-center mt-6  gap-2 justify-evenly">
         <Label htmlFor="quantity" className="mr-4">
           Quantity
         </Label>
-        <div className="flex items-center">
+        <div className="flex items-center  ">
           <Button
             variant="outline"
             size="icon"
@@ -48,6 +55,7 @@ export const ActionsButtons = ({ meal }: { meal: productType }) => {
             <Plus className="h-4 w-4" />
           </Button>
         </div>
+        <AddToFavorties id={meal.id} isLikeItBefore={isLikeItBefore} />
       </div>
       <div className="mt-4">
         <AddToOrderButton
