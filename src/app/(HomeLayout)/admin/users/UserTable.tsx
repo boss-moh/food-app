@@ -16,7 +16,7 @@ import { EmptyRows, LoadingRow } from "@/components/share";
 
 export const UserTable = ({ role, query }: { role: string; query: string }) => {
   return (
-    <Table className="    bg-white rounded-lg shadow   ">
+    <Table className="    bg-background rounded-lg shadow   ">
       <TableHeader>
         <TableRow>
           <TableHead>Users ID</TableHead>

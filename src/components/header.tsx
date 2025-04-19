@@ -31,12 +31,13 @@ import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
 import { useOrder } from "@/store/order";
 import { useUserInfo } from "@/hooks/useUserInfo";
+import { ThemeToggle } from "./toggle-theme";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="border-b  bg-white ">
+    <header className="border-b  bg-background ">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Logo />
@@ -104,6 +105,7 @@ const NavItems = ({ onClick = () => {} }) => {
         </Link>
       </Button>
       {<UserDorpDownMenu onClick={onClick} />}
+      <ThemeToggle />
     </>
   );
 };

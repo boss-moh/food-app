@@ -21,7 +21,7 @@ const SidebarContent = ({
 }) => {
   const pathname = usePathname();
   return (
-    <div className="space-y-4 py-4 flex flex-col h-full bg-white">
+    <div className="space-y-4 py-4 flex flex-col h-full bg-secondary">
       <div className="px-3 py-2 flex-1">
         <Link href="/admin" className="flex items-center pl-3 mb-14">
           <h1 className="text-xl font-bold">Chef Panel</h1>
@@ -32,10 +32,10 @@ const SidebarContent = ({
               key={route.href}
               href={route.href}
               className={cn(
-                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-gray-100 rounded-lg transition",
+                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-background rounded-lg transition",
                 pathname === route.href
-                  ? "text-primary bg-gray-100"
-                  : "text-gray-600"
+                  ? "text-primary  bg-background"
+                  : " bg-background"
               )}
               onClick={() => setIsMobileOpen(false)}
             >
@@ -56,7 +56,7 @@ export function AdminSidebar() {
 
   return (
     <>
-      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20">
+      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20 bg-secondary">
         <SidebarContent setIsMobileOpen={setIsMobileOpen} />
       </aside>
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
