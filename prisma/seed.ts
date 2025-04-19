@@ -24,8 +24,9 @@ async function seed() {
 
   console.log("create food items");
 
-  await Promise.all(productsList.map((i) => createProduct(i)));
-
+  for (const product of productsList) {
+    await createProduct(product);
+  }
   console.log("create admin count ");
 
   await prisma.user.create({
