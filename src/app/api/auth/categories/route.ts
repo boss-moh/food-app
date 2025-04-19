@@ -2,11 +2,10 @@ import {
   CACHCES_KEYS,
   createCategorySchema,
   editCategorySchema,
-  URL_PATHS,
 } from "@/constants";
 import { fetchCategories, prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
-import { revalidatePath, revalidateTag } from "next/cache";
+import {revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -54,7 +53,6 @@ export async function POST(request: NextRequest) {
         imageUrl: fullURL,
       },
     });
-    revalidatePath(URL_PATHS.ADMIN.CATEGORIE.HOME_PAGE);
     revalidateTag(CACHCES_KEYS.CATEGORIES);
     return NextResponse.json(category, { status: 200 });
   } catch (error) {
