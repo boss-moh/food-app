@@ -20,36 +20,27 @@ export async function POST(req: NextRequest, { params }: DynamicProps<"id">) {
     const userId = session.user.id;
 
     const user = await prisma.user.findUnique({
-      where:{
-        id:userId
+      where: {
+        id: userId,
       },
-      include:{
-        favoriteItems:true
-      }
-    })
-
-    const didLikeItBefore = user?.favoriteItems.some((item)=>item.id === productId)
-
-    if(didLikeItBefore){
-      await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          favoriteItems: {
-            disconnect:{id:productId}
-          },
-        },
-      });
-      
-    return NextResponse.json(
-      {
-        message: "The Product was Deleted from  to user's favorties",
-        isInsideFavorties:false,
+      include: {
+        favoriteItems: true,
       },
-      { status: 200 }
+    });
+
+    const didLikeItBefore = user?.favoriteItems.some(
+      (item) => item.id === productId
     );
-    }else{
+
+    if (didLikeItBefore) {
+      return NextResponse.json(
+        {
+          message: "The Product was Deleted from  to user's favorties",
+          isInsideFavorties: false,
+        },
+        { status: 200 }
+      );
+    } else {
       await prisma.user.update({
         where: {
           id: userId,
@@ -60,19 +51,15 @@ export async function POST(req: NextRequest, { params }: DynamicProps<"id">) {
           },
         },
       });
-      
-    return NextResponse.json(
-      {
-        message: "The Product has added to user's favorties",        
-        isInsideFavorties:true,
 
-      },
-      { status: 200 }
-    );
+      return NextResponse.json(
+        {
+          message: "The Product has added to user's favorties",
+          isInsideFavorties: true,
+        },
+        { status: 200 }
+      );
     }
-
-   
-
   } catch (error) {
     return NextResponse.json(
       {
@@ -82,5 +69,3 @@ export async function POST(req: NextRequest, { params }: DynamicProps<"id">) {
     );
   }
 }
-
-

@@ -3,34 +3,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DynamicProps } from "@/constants";
 import { ActionsButtons } from "./Actions";
-import {
-  fetchCheckFavtroies,
-  fetchProductById,
-  productDetails,
-} from "@/lib/data";
+import { fetchCheckFavtroies, fetchProductById } from "@/lib/data";
 import { Clock, Utensils } from "lucide-react";
 import { formatPrice } from "@/utils";
 import { Rating, Status } from "@/components/share";
 import FeedBacks from "./FeedBacks";
 import { auth } from "@/auth";
 
-type product = productDetails | null;
+const checkFavtroies = async (productId: string) => {
+  const session = await auth();
+  if (!session) return false;
+
+  return fetchCheckFavtroies(session.user.id, productId);
+};
 
 export default async function ProductPage({
   params,
 }: DynamicProps<"productId">) {
   const productId = (await params).productId;
-  const session = await auth();
-  let product: product = null;
-  let isLikeItBefore = false;
-  if (!session) {
-    product = await fetchProductById(productId);
-  } else {
-    [product, isLikeItBefore] = await Promise.all([
-      fetchProductById(productId),
-      fetchCheckFavtroies(session.user.id, productId),
-    ]);
-  }
+
+  const [product, isLikeItBefore] = await Promise.all([
+    fetchProductById(productId),
+    checkFavtroies(productId),
+  ]);
 
   if (!product) return "there is no product";
   const {
@@ -43,7 +38,7 @@ export default async function ProductPage({
     feedback,
     rateCount,
     isAvailable,
-  } = product!;
+  } = product;
 
   return (
     <div className="container mx-auto py-10 space-y-6">
@@ -121,4 +116,16 @@ export default async function ProductPage({
       <FeedBacks feeds={feedback} feedCount={rateCount} />
     </div>
   );
+}
+
+export async function generateMetadata({ params }: DynamicProps<"productId">) {
+  const productId = (await params).productId;
+  const product = await fetchProductById(productId);
+  if (!product) return {};
+
+  const { name, description } = product!;
+  return {
+    title: name,
+    description: description,
+  };
 }

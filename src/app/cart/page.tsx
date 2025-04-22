@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useOrder } from "@/store";
-import EmptyCart from "../../../components/share/cart/EmptyCart";
+import EmptyCart from "../../components/share/cart/EmptyCart";
 import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
 import { Summary } from "@/components/share";
@@ -27,11 +27,11 @@ export default function CartPage() {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   const handleOrderOpen = () => {
-    if (!user) {
-      router.push(URL_PATHS.AUTH.SIGN_IN);
-      toast.error("Please sign in to place an order.");
-      return;
-    }
+    // if (!user) {
+    //   router.push(URL_PATHS.AUTH.SIGN_IN);
+    //   toast.error("Please sign in to place an order.");
+    //   return;
+    // }
     setIsOrderModalOpen(true);
   };
 

@@ -1,7 +1,19 @@
 import { childrenProps } from "@/constants";
 import Image from "next/image";
+import { Metadata } from "next";
 
 import authImage from "localImages/auth.jpeg";
+
+export const metadata: Metadata = {
+  title: "Authentication",
+  description: "Sign in or create an account to access your Account",
+  keywords: ["login", "signup", "authentication", "account"],
+  openGraph: {
+    title: "Authentication",
+    description: "Sign in or create an account to access your Account",
+    type: "website",
+  },
+};
 
 const layout = ({ children }: childrenProps) => {
   return (

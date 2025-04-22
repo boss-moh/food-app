@@ -16,14 +16,8 @@ import { OrderItems, Summary } from "@/components/share";
 import { LoadingIcon } from "@/components/svg/loadingIcon";
 
 import { useOrder } from "@/store";
-import { cn, axios, useMutation } from "@/lib";
-import {
-  addressSchema,
-  addressType,
-  API_END_POINT,
-  MessageType,
-  OrderItemClientType,
-} from "@/constants";
+import { cn } from "@/lib";
+import { addressSchema, addressType, OrderItemClientType } from "@/constants";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -38,6 +32,8 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAction } from "next-safe-action/hooks";
+import { createOrderAction } from "@/actions/orders";
 
 const steps = [
   { title: "Review Order", icon: Check },
@@ -64,23 +60,18 @@ export function OrderConfirmationModal({
 }: OrderConfirmationModalProps) {
   const { items, clear } = useOrder();
 
-  const { isPending, isSuccess, mutate, isError, reset } = useMutation({
-    mutationFn: async (data: addressType) => {
-      const orderItems = items.map((item) => ({
-        id: item.product.id,
-        quantity: item.quantity,
-      }));
-      return await axios.post<void, MessageType>(
-        API_END_POINT.USER.ORDERS.CREATE,
-        { orderItems, address: data.address }
-      );
-    },
-    onSuccess(data) {
-      toast.success(data.message);
+  const {
+    execute,
+    isExecuting: isPending,
+    hasSucceeded: isSuccess,
+    hasErrored: isError,
+    reset,
+  } = useAction(createOrderAction, {
+    onSuccess() {
       clear();
     },
     onError(error) {
-      toast.error(error.message);
+      toast.error(error.error.serverError);
     },
   });
 
@@ -94,7 +85,11 @@ export function OrderConfirmationModal({
 
   const handleSubmit = async (data: addressType) => {
     if (isPending) return;
-    mutate(data);
+    const orderItems = items.map((item) => ({
+      id: item.product.id,
+      quantity: item.quantity,
+    }));
+    execute({ orderItems, ...data });
   };
 
   return (

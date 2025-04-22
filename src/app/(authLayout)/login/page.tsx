@@ -17,49 +17,38 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  API_END_POINT,
-  ErrorResponse,
-  signinSchema,
-  signinType,
-  URL_PATHS,
-} from "@/constants";
+import { signinSchema, signinType, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { axios, useMutation } from "@/lib";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import HelperText from "@/components/share/helperText";
-import { GoogleIcon } from "@/components/svg/googleIcon";
-import loginViaGoogle from "../Action";
 import { useRouter } from "next/navigation";
-
-type errorsType = ErrorResponse<signinType>;
+import { useForm } from "react-hook-form";
+import { GoogleButton } from "../GoogleButton";
+import { signInAction } from "@/actions/auth";
+import ActionErrorUI, { ActionError } from "../ActionErrorUI";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
 
 export default function SignInPage() {
   const router = useRouter();
+  const { update } = useSession();
+
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   });
 
   const {
-    mutate,
-    isPending: isLoading,
-    error,
-    isError,
-  } = useMutation<void, { errors?: errorsType }>({
-    mutationFn: async () => {
-      return await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
-    },
-
-    onSuccess() {
-      console.log("success");
-      form.reset();
-      router.push(URL_PATHS.HOME);
+    executeAsync,
+    isExecuting: isLoading,
+    hasErrored,
+    result,
+  } = useAction(signInAction, {
+    onSuccess: async () => {
+      form.reset(form.getValues());
+      toast.success("Successfully logged in!");
+      await update();
       router.refresh();
+      router.push(URL_PATHS.HOME);
     },
   });
 
@@ -68,8 +57,9 @@ export default function SignInPage() {
       return;
     }
 
-    mutate();
+    await executeAsync(form.getValues());
   }
+
   return (
     <Card className="shadow-2xl border-0 border-t-px">
       <CardHeader>
@@ -112,16 +102,7 @@ export default function SignInPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "loading ..." : "Sign In"}
             </Button>
-            <Button
-              variant={"outline"}
-              type="button"
-              className="w-full"
-              onClick={loginViaGoogle}
-              disabled={isLoading}
-            >
-              <GoogleIcon />
-              <span>Sign In Via Google</span>
-            </Button>
+            <GoogleButton>Sign in with Google</GoogleButton>
           </form>
         </Form>
       </CardContent>
@@ -135,13 +116,7 @@ export default function SignInPage() {
             Sign up
           </Link>
         </div>
-        <div>
-          {isError &&
-            !!error?.errors &&
-            Object.values(error.errors).map((error, key) => (
-              <HelperText key={key}>{error}</HelperText>
-            ))}
-        </div>
+        <ActionErrorUI hasErrored={hasErrored} result={result as ActionError} />
       </CardFooter>
     </Card>
   );

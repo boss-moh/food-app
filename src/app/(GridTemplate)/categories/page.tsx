@@ -2,6 +2,12 @@ import { GridItem, GridTemplate } from "@/components/share";
 import { URL_PATHS } from "@/constants";
 import { fetchCategories } from "@/lib/data";
 
+export const metadata = {
+  title: "Meals Page | TastyGo",
+  description:
+    "Explore our delicious menu with a variety of meals to choose from.",
+};
+
 export default async function CategoriesPage() {
   const categories = await fetchCategories();
 
@@ -21,4 +27,11 @@ export default async function CategoriesPage() {
       </GridTemplate>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const categories = await fetchCategories();
+  return categories.map((category) => ({
+    categoryId: category.id,
+  }));
 }

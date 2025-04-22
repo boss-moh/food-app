@@ -10,7 +10,7 @@ const RULES = {
   RATING:z.coerce.number().max(5, "Rating must be between 0 and 5").min(0).transform(val => Number(val)),
 
   PERPTIME: z.number().min(0, "Preparation time cannot be negative"),
-  PHONE:z.string().length(10,'the phone number should be saven')
+  PHONE: z.string().min(10, "Phone number must be at least 10 digits")
 };
 export const createProductSchema = z.object({
   name: RULES.NAME,
@@ -92,7 +92,7 @@ export const addressSchema =  z.object({
 export type addressType = z.infer<typeof addressSchema>;
 
 
-export const CreateOrder = z.object({
+export const createOrderSchema = z.object({
   orderItems:z.array(
     z.object({
       id: z.string(),
@@ -104,13 +104,13 @@ export const CreateOrder = z.object({
   })
 })
 
-export type CreateOrderType = z.infer<typeof CreateOrder>;
+export type createOrderType = z.infer<typeof createOrderSchema>;
 
-export const ChangeRoleSchema = z.object({
+export const changeRoleSchema = z.object({
   role: z.nativeEnum(RoleStatus),
 });
 
-export const ChangOrderStatusSchema = z.object({
+export const changOrderStatusSchema = z.object({
   status: z.nativeEnum(OrderStatus),
   id: z.string(),
 });

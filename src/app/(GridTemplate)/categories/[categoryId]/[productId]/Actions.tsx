@@ -23,11 +23,11 @@ export const ActionsButtons = ({
 
   return (
     <>
-      <div className="flex items-center mt-6  gap-2 justify-evenly">
+      <div className="flex items-center mt-6  gap-2 justify-between">
         <Label htmlFor="quantity" className="mr-4">
           Quantity
         </Label>
-        <div className="flex items-center  ">
+        <div className="flex items-center   ">
           <Button
             variant="outline"
             size="icon"
@@ -55,12 +55,12 @@ export const ActionsButtons = ({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        <AddToFavorties id={meal.id} isLikeItBefore={isLikeItBefore} />
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex gap-2 ">
         <AddToOrderButton
           item={{ product: meal, quantity, price: meal.price }}
         />
+        <AddToFavorties id={meal.id} isLikeItBefore={isLikeItBefore} />
       </div>
     </>
   );

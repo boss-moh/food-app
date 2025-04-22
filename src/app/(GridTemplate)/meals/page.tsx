@@ -4,11 +4,16 @@ import { fetchCategories, fetchProductsById } from "@/lib";
 import { makeOptions } from "@/utils";
 import { getFilterMeals } from "@/utils/getFilterMeals";
 
+export const metadata = {
+  title: "Meals Page | TastyGo",
+  description:
+    "Explore our delicious menu with a variety of meals to choose from.",
+};
+
 export default async function MealsPage({
   searchParams,
 }: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
-  const categoryId = (await searchParams).categoryId;
-  const query = (await searchParams).query;
+  const { categoryId, query } = await searchParams;
 
   const [categories, meals] = await Promise.all([
     fetchCategories(),

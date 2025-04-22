@@ -12,12 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import {
-  addFeedBackSchmea,
-  addFeedBackType,
-  API_END_POINT,
-  MessageType,
-} from "@/constants";
+import { addFeedBackSchmea, addFeedBackType } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -28,10 +23,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingButton from "../../../../../../components/share/LoadingButton";
-import { axios, cn, useMutation } from "@/lib";
+import { cn } from "@/lib";
 import { useParams } from "next/navigation";
-import { useUserInfo } from "@/hooks";
+import { useAction } from "next-safe-action/hooks";
+import { feedAction } from "@/actions/products";
+import { LoadingButton } from "@/components/share";
 
 interface FeedFormProps {
   onSuccess?: () => void;
@@ -39,38 +35,26 @@ interface FeedFormProps {
 }
 
 export default function FeedForm({ onSuccess, className }: FeedFormProps) {
-  const user = useUserInfo();
   const { productId } = useParams<{ productId: string }>();
   const form = useForm<addFeedBackType>({
     resolver: zodResolver(addFeedBackSchmea),
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      return await axios.post<void, MessageType>(
-        API_END_POINT.USER.ORDERS.ADD_FACD_BACK(productId),
-        form.getValues()
-      );
-    },
-    onSuccess(data) {
-      toast.success(data.message);
-      form.reset({
-        rating: 0,
-        content: "",
-      });
+  const { execute, isPending } = useAction(feedAction, {
+    onSuccess(response) {
+      toast.success(response.data?.message);
+      form.reset(form.getValues());
       onSuccess?.();
     },
-    onError(error) {
-      toast.error(error.message);
+    onError(response) {
+      toast.error(response.error.serverError);
     },
   });
 
   const onSubmit = async () => {
     if (isPending) return;
-    mutate();
+    execute({ ...form.getValues(), productId });
   };
-
-  if (!user) return;
   return (
     <Card className={cn("md:max-w-md mx-auto", className)}>
       <CardHeader>

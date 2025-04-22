@@ -7,26 +7,13 @@ import Link from "next/link";
 
 const page = async ({ params }: DynamicProps<"categoryId">) => {
   const categoryId = (await params).categoryId;
-  const category = await fetchCategoryById(categoryId);
-  const products = await fetchProductsById(categoryId);
 
-  if (!category)
-    return (
-      <div className="container mx-auto py-20 text-center">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold mb-2 ">Category Not Found </h1>
-          <p className="mb-6 text-lg">
-            The category you are looking for does not exist.
-          </p>
-        </header>
-        <Button asChild>
-          <Link href={URL_PATHS.MENU.CATEGORIES}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Categories
-          </Link>
-        </Button>
-      </div>
-    );
+  const [category, products] = await Promise.all([
+    fetchCategoryById(categoryId),
+    fetchProductsById(categoryId),
+  ]);
+
+  if (!category) return <EmptyState />;
 
   const { name, count } = category;
   return (
@@ -72,3 +59,22 @@ const page = async ({ params }: DynamicProps<"categoryId">) => {
 };
 
 export default page;
+
+const EmptyState = () => {
+  return (
+    <div className="container mx-auto py-20 text-center">
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold mb-2 ">Category Not Found </h1>
+        <p className="mb-6 text-lg">
+          The category you are looking for does not exist.
+        </p>
+      </header>
+      <Button asChild>
+        <Link href={URL_PATHS.MENU.CATEGORIES}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Categories
+        </Link>
+      </Button>
+    </div>
+  );
+};

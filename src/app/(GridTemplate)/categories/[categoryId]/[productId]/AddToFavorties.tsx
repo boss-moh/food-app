@@ -1,52 +1,49 @@
 "use client";
 
+import { toggleItemFavorties } from "@/actions/products/favorties";
 import { Button } from "@/components/ui/button";
-import { API_END_POINT, MessageType } from "@/constants";
-import { useUserInfo } from "@/hooks";
-import { axios, cn, useMutation } from "@/lib";
+import { cn } from "@/lib";
 import { Heart } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
-type response = MessageType & { isInsideFavorties: boolean };
+type AddToFavortiesProps = {
+  id: string;
+  isLikeItBefore?: boolean;
+};
 
 export const AddToFavorties = ({
   id,
   isLikeItBefore = false,
-}: {
-  id: string;
-  isLikeItBefore?: boolean;
-}) => {
-  const user = useUserInfo();
-  const { mutate, isPending, data } = useMutation({
-    mutationFn: async () =>
-      await axios.post<void, response>(
-        API_END_POINT.USER.ORDERS.ADD_TO_FAVORTIES(id)
-      ),
-    onSuccess(data) {
-      toast.success(data.message);
+}: AddToFavortiesProps) => {
+  const {
+    execute,
+    isExecuting: isPending,
+    result,
+  } = useAction(toggleItemFavorties, {
+    onSuccess(response) {
+      toast.success(response.data?.message);
     },
     onError(error) {
-      toast.error(error.message);
+      toast.error(error.error.serverError);
     },
   });
 
   const isInsideFavorties =
-    data == undefined ? isLikeItBefore : data.isInsideFavorties;
+    result.data == undefined ? isLikeItBefore : result.data.isInsideFavorties;
+
   const handleClick = () => {
     if (isPending) return;
-    if (!user) {
-      toast.info("You Should Be Login");
-      return;
-    }
-    mutate();
+    execute({ id });
   };
+
   return (
     <Button
       onClick={handleClick}
       variant="secondary"
       size="icon"
       aria-label="Add To Favorties "
-      className="group"
+      className="group flex-shrink-0"
     >
       <Heart
         className={cn(
