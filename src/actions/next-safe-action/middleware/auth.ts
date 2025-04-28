@@ -47,7 +47,10 @@ const userRole = session.user.role
   }
 
   return next({
-    ctx
+    ctx:{
+      ...ctx,
+      user:session.user
+    }
   });
 })
 

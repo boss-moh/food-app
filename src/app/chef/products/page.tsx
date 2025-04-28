@@ -1,5 +1,3 @@
-//# TODO:fetch again after delete
-
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
@@ -18,8 +16,7 @@ export type ProductsPageProps = searchParamsProps<"categoryId"> &
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
-  const categoryId = (await searchParams).categoryId;
-  const query = (await searchParams).query;
+  const { categoryId, query } = await searchParams;
 
   const categories = await fetchCategories();
 

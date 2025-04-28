@@ -1,10 +1,11 @@
 import prisma from "@/lib/prisma";
+import { OrderStatus } from "@prisma/client";
 
 export async function fetchDriverOrders() {
   try {
     const orders = await prisma.order.findMany({
       where: {
-        OR: [{ status: "DELIVERED" }],
+        OR: [{ status: OrderStatus.DELIVERED},{ status: OrderStatus.PICKING}],
       },
       include: {
         items: {

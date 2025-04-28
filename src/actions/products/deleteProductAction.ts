@@ -1,12 +1,13 @@
 import { RoleStatus } from "@prisma/client";
 import { authAction } from "../next-safe-action";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
-import { z } from "zod";
+import { IDSchmea, URL_PATHS } from "@/constants";
 import { prisma } from "@/lib";
+import { revalidatePath } from "next/cache";
 
-export const deleteAction = authAction
+export const deleteProductAction = authAction
   .use(authorizationMiddleware([RoleStatus.CHEF]))
-  .schema(z.object({ id: z.string() }))
+  .schema(IDSchmea)
   .action(async ({ parsedInput }) => {
     const { id } = parsedInput;
 
@@ -15,8 +16,10 @@ export const deleteAction = authAction
         id,
       },
     });
-
+    revalidatePath(URL_PATHS.CHEF.PRODUCT.HOME_PAGE);
     return {
       message: `Deleted meal with ID: ${id}`,
     };
   });
+
+export default deleteProductAction;

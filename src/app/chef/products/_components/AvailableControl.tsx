@@ -1,41 +1,31 @@
 "use client";
+import { toggleAvaliableAction } from "@/actions/products/toggleAvaliable";
 import { Status } from "@/components/share";
 import { Switch } from "@/components/ui/switch";
-import { API_END_POINT, MessageType } from "@/constants";
-import { axios, useMutation } from "@/lib";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
-type StatusControlProps = {
+type AvailableControlProps = {
   id: string;
   isAvailable: boolean;
-  onSuccess: (id: string) => void;
 };
 
-export const StatusControl = ({
+export const AvailableControl = ({
   id,
   isAvailable,
-  onSuccess,
-}: StatusControlProps) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () =>
-      await axios.put<void, MessageType>(
-        API_END_POINT.PRODUCT.CHANGE_AVAILABLE(id),
-        {
-          available: !isAvailable,
-        }
-      ),
-    onSuccess(data) {
-      toast.success(data.message);
-      onSuccess(id);
+}: AvailableControlProps) => {
+  const { isPending, execute } = useAction(toggleAvaliableAction, {
+    onSuccess(response) {
+      toast.success(response.data?.message);
     },
-    onError(error) {
-      toast.error(error.message);
+    onError(response) {
+      toast.error(response.error.serverError);
     },
   });
 
   const handleClick = () => {
     if (isPending) return;
-    mutate();
+    execute({ id, isAvailable: !isAvailable });
   };
 
   return (
@@ -53,4 +43,4 @@ export const StatusControl = ({
   );
 };
 
-export default StatusControl;
+export default AvailableControl;

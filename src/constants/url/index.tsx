@@ -40,7 +40,7 @@ export const URL_PATHS = {
     PRODUCT: {
       HOME_PAGE: "/chef/products/",
       CREATE: "/chef/products/create",
-      EDIT: "/chef/products/edit",
+      EDIT: (id: string) => `/chef/products/edit/${id}`,
     },
 
     CATEGORIE: {
@@ -139,6 +139,11 @@ export const CHEF_LINKS = [
   },
 ] as const;
 
+export type SideLinkRouteType = {
+  label: string;
+  icon: React.ElementType;
+  href: string;
+};
 export const PUBLICE_PATHS: string[] = [
   URL_PATHS.HOME,
   URL_PATHS.AUTH.SIGN_IN,

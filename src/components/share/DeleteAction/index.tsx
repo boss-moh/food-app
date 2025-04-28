@@ -12,35 +12,29 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { axios, useMutation } from "@/lib";
 import { toast } from "sonner";
 
-export function DeleteAction({
-  url,
-  onSuccess = () => {},
-}: {
-  url: string;
-  onSuccess?: () => void;
-}) {
-  const { mutate, isPending } = useMutation({
-    mutationKey: [url],
-    mutationFn: async () => {
-      return await axios.delete<void, { message: string }>(url);
-    },
+import { useAction } from "next-safe-action/hooks";
+import { deleteProductAction } from "@/actions/products/deleteProductAction";
+
+type DeleteActionProps = {
+  id: string;
+};
+
+export function DeleteAction({ id }: DeleteActionProps) {
+  const { execute, isPending } = useAction(deleteProductAction, {
     onSuccess() {
       toast.success("Success Delete Data.");
-      onSuccess();
     },
-    onError(error) {
+    onError(response) {
       toast.error("Fail To  Delete Data.", {
-        description: error.message,
+        description: response.error.serverError,
       });
     },
   });
-
   const handleDelete = () => {
     if (isPending) return;
-    mutate();
+    execute({ id });
   };
   return (
     <AlertDialog>

@@ -12,23 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
-import { OrderItems, Summary } from "@/components/share";
+import { InputWithLabel, OrderItems, Summary } from "@/components/share";
 import { LoadingIcon } from "@/components/svg/loadingIcon";
 
 import { useOrder } from "@/store";
 import { cn } from "@/lib";
 import { addressSchema, addressType, OrderItemClientType } from "@/constants";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -215,21 +206,10 @@ const ConfrimStep = ({ onClose, onSubmit }: ConfrimStepProps) => {
             </header>
 
             <Form {...form}>
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Delivery address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="address" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your delivery address{" "}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <InputWithLabel<addressType>
+                fieldTitle="Delivery address"
+                placeholder="address"
+                nameInSchema={"address"}
               />
             </Form>
             <div className="flex justify-end ">
@@ -255,16 +235,6 @@ const SummaryStep = ({ onClose = () => {}, onClick = () => {} }) => {
       </DialogHeader>
 
       <div className="px-6 py-4">
-        {/* <div className="mb-4">
-        <h4 className="flex items-center mb-2 text-sm font-medium">
-          <MapPin className="w-4 h-4 mr-2 text-muted-foreground" />
-          Delivery Address
-        </h4>
-        <p className="text-sm text-muted-foreground">
-          123 Main Street, Apt 4B, New York, NY 10001
-        </p>
-      </div> */}
-
         <OrderItems className="h-[250px]" items={items} />
 
         <Summary {...summaryDetails} />

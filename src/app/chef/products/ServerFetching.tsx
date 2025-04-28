@@ -1,5 +1,5 @@
 import { fetchProducts } from "@/lib/data/admin";
-import { ClientContent } from "./ClientContent";
+import MealsCards from "./_components/MealsCards";
 
 type ServerFetchingProps = {
   query: string;
@@ -10,5 +10,5 @@ export const ServerFetching = async ({
   categoryId,
 }: ServerFetchingProps) => {
   const meals = await fetchProducts(query, categoryId);
-  return <ClientContent meals={meals} />;
+  return <MealsCards meals={meals} />;
 };

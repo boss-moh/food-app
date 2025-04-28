@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,15 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { signinSchema, signinType, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -24,10 +15,13 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { GoogleButton } from "../GoogleButton";
 import { signInAction } from "@/actions/auth";
-import ActionErrorUI, { ActionError } from "../ActionErrorUI";
+import ActionErrorUI, {
+  ActionError,
+} from "../../../components/share/ActionErrorUI";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
+import { InputWithLabel, LoadingButton } from "@/components/share";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -69,39 +63,26 @@ export default function SignInPage() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signinType>
+              fieldTitle="email"
+              nameInSchema={"email"}
+              placeholder="john@example.com"
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signinType>
+              fieldTitle="password"
+              nameInSchema={"password"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "loading ..." : "Sign In"}
-            </Button>
+
+            <LoadingButton
+              type="submit"
+              className="w-full"
+              isLoading={isLoading}
+            >
+              Sign In{" "}
+            </LoadingButton>
+
             <GoogleButton>Sign in with Google</GoogleButton>
           </form>
         </Form>

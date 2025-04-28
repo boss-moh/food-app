@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import GoogleButton from "../GoogleButton";
 
 import { signupSchema, signupType, URL_PATHS } from "@/constants";
@@ -26,11 +24,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useAction } from "@/lib";
 import { signUpAction } from "@/actions/auth";
 import { useRouter } from "next/navigation";
-import ActionErrorUI, { ActionError } from "../ActionErrorUI";
+import ActionErrorUI, {
+  ActionError,
+} from "../../../components/share/ActionErrorUI";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { useAction } from "next-safe-action/hooks";
+import { InputWithLabel, LoadingButton } from "@/components/share";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -70,36 +71,18 @@ export default function SignUpPage() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signupType>
+              fieldTitle="name"
+              nameInSchema={"name"}
+              placeholder="john@example.com"
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+
+            <InputWithLabel<signupType>
+              fieldTitle="email"
+              nameInSchema={"email"}
+              placeholder="john@example.com"
             />
+
             <FormField
               control={form.control}
               name="phone"
@@ -113,35 +96,27 @@ export default function SignUpPage() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+
+            <InputWithLabel<signupType>
+              fieldTitle="password"
+              nameInSchema={"password"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signupType>
+              fieldTitle="Confirm Password"
+              nameInSchema={"confirmPassword"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "loading ..." : "Sign Up"}
-            </Button>
+
+            <LoadingButton
+              type="submit"
+              className="w-full"
+              isLoading={isLoading}
+            >
+              Sign Up
+            </LoadingButton>
             <GoogleButton>Sign Up with Google</GoogleButton>
           </form>
         </Form>

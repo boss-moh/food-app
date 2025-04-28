@@ -1,24 +1,33 @@
 "use client";
-import { option, createProductType, createProductSchema } from "@/constants";
+import {
+  option,
+  createProductType,
+  editProductSchema,
+  editProductType,
+} from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@/components/share";
 import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
 
 import { useAction } from "next-safe-action/hooks";
-import { createProductAction } from "@/actions/products/createProduct";
 import ActionErrorUI, { ActionError } from "@/components/share/ActionErrorUI";
-import FormInputs from "../_components/FormInputs";
-import { Form } from "@/components/ui/form";
+import FormInputs from "../../_components/FormInputs";
+import { editProductAction } from "@/actions/products/editProductAction";
 
 type ProductFormProps = {
   defaultValues?: createProductType;
   categories: option[];
 };
 
-export default function ProductForm({ categories }: ProductFormProps) {
-  const form = useForm<createProductType>({
-    resolver: zodResolver(createProductSchema),
+export default function ProductForm({
+  categories,
+  defaultValues,
+}: ProductFormProps) {
+  const form = useForm<editProductType>({
+    resolver: zodResolver(editProductSchema),
+    defaultValues,
   });
 
   const {
@@ -26,7 +35,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
     execute,
     isPending: isLoading,
     hasErrored,
-  } = useAction(createProductAction, {
+  } = useAction(editProductAction, {
     onSuccess(response) {
       form.reset({
         categoryId: "",
@@ -36,6 +45,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
         nutritionalInfo: [],
         prepTime: 0,
         price: 0,
+
         // files: [],
       });
 
@@ -61,8 +71,11 @@ export default function ProductForm({ categories }: ProductFormProps) {
           />
 
           <div className="flex justify-end">
-            <LoadingButton type="submit" isLoading={isLoading}>
-              Create Product
+            <LoadingButton
+              type="submit"
+              isLoading={isLoading && form.formState.isDirty}
+            >
+              Save Product
             </LoadingButton>
           </div>
         </FormInputs>

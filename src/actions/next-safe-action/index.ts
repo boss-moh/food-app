@@ -31,7 +31,4 @@ export const safeAction = createSafeActionClient({
   },
 });
 
-
-
-
-export const authAction = safeAction.use(authenticationMiddleware)
+export const authAction = safeAction.use(authenticationMiddleware);
