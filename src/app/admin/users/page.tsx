@@ -13,8 +13,7 @@ import {
 export default async function UsersPage({
   searchParams,
 }: searchParamsProps<"role"> & searchParamsProps<"query">) {
-  const role = (await searchParams).role;
-  const query = (await searchParams).query;
+  const { role, query } = await searchParams;
 
   return (
     <>

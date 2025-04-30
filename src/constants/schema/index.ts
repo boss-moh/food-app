@@ -27,6 +27,7 @@ export const createProductSchema = z.object({
   prepTime: RULES.PERPTIME,
   ingredients: z.array(z.string()),
   nutritionalInfo: z.array(z.string()),
+  imageUrl: z.string().url("Should Be URL"),
   // files: z
   //   .array(z.custom<File>())
   //   .length(1, "Please select at  one file")

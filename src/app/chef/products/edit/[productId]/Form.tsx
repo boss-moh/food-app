@@ -21,6 +21,17 @@ type ProductFormProps = {
   categories: option[];
 };
 
+const emptyValues = {
+  categoryId: "",
+  description: "",
+  ingredients: [],
+  name: "",
+  nutritionalInfo: [],
+  prepTime: 0,
+  price: 0,
+  imageUrl: "",
+};
+
 export default function ProductForm({
   categories,
   defaultValues,
@@ -37,17 +48,7 @@ export default function ProductForm({
     hasErrored,
   } = useAction(editProductAction, {
     onSuccess(response) {
-      form.reset({
-        categoryId: "",
-        description: "",
-        ingredients: [],
-        name: "",
-        nutritionalInfo: [],
-        prepTime: 0,
-        price: 0,
-
-        // files: [],
-      });
+      form.reset(emptyValues);
 
       toast.success(response.data?.message);
     },
@@ -74,6 +75,7 @@ export default function ProductForm({
             <LoadingButton
               type="submit"
               isLoading={isLoading && form.formState.isDirty}
+              disabled={!form.formState.isDirty}
             >
               Save Product
             </LoadingButton>

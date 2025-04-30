@@ -12,12 +12,10 @@ export const createProductAction = authAction
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(createProductSchema)
   .action(async ({ parsedInput }) => {
-    // const { files, ...rest } = parsedInput;
+    const { imageUrl, ...rest } = parsedInput;
 
-    console.log("parsedInput", parsedInput);
-
-    // const optimizedUrl = await uploadImage(files[0]);
-    // createProduct({ imageUrl: optimizedUrl, ...rest });
+    const optimizedUrl = await uploadImage(imageUrl);
+    createProduct({ imageUrl: optimizedUrl, ...rest });
     revalidatePath(URL_PATHS.HOME);
     revalidatePath(URL_PATHS.CHEF.PRODUCT.HOME_PAGE);
 

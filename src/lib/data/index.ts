@@ -76,13 +76,12 @@ export async function fetchProductById(id: string) {
             },
           },
         },
-
       },
       where: {
         id,
       },
     });
-    
+
     return product;
   } catch {
     throw new Error("Faild to fetch product");
@@ -313,8 +312,8 @@ export async function fetchUser(userId: string) {
         phone: true,
         role: true,
         favoriteItems: true,
-        feedback:true,
-        id:true
+        feedback: true,
+        id: true,
       },
     });
     return user;
@@ -323,23 +322,22 @@ export async function fetchUser(userId: string) {
   }
 }
 
-
-export async function fetchCheckFavtroies(userId:string,productId:string) {
-
-  try{
+export async function fetchCheckFavtroies(userId: string, productId: string) {
+  try {
     const user = await prisma.user.findUnique({
-      where:{
-        id:userId
+      where: {
+        id: userId,
       },
-      include:{
-        favoriteItems:true
-      }
-    })
-    
-    const didLikeItBefore = user!.favoriteItems.some((item)=>item.id === productId)
-    return didLikeItBefore
-  }
-  catch {
+      include: {
+        favoriteItems: true,
+      },
+    });
+
+    const didLikeItBefore = user!.favoriteItems.some(
+      (item) => item.id === productId
+    );
+    return didLikeItBefore;
+  } catch {
     throw new Error("Faild to check user's Favorties");
   }
 }

@@ -5,20 +5,17 @@ import { authAction } from "../next-safe-action";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
 import { editProductSchema, URL_PATHS } from "@/constants";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib";
+import { uploadImage } from "@/lib/cloudinary";
 
 export const editProductAction = authAction
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(editProductSchema)
   .action(async ({ parsedInput }) => {
-    // const { files, ...rest } = parsedInput;
-    const { id, ...rest } = parsedInput;
+    const { id, imageUrl, ...rest } = parsedInput;
 
-    /**
-     * change the file image
-     */
+    const optimizedUrl = await handleImageUrlChanged(id, imageUrl);
 
-    // const optimizedUrl = await uploadImage(files[0]);
-    // createProduct({ imageUrl: optimizedUrl, ...rest });
     await prisma.product.update({
       where: {
         id,
@@ -37,3 +34,17 @@ export const editProductAction = authAction
       message: "Product updated successfully",
     };
   });
+
+const handleImageUrlChanged = async (id: string, imageUrl: string) => {
+  const oldProductData = await prisma.product.findUnique({
+    where: { id: id },
+  });
+
+  const isSameImage = oldProductData?.imageUrl === imageUrl;
+
+  if (isSameImage) {
+    return imageUrl;
+  }
+
+  return await uploadImage(imageUrl);
+};

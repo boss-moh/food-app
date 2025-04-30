@@ -1,75 +1,56 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { ADMIN_LINKS } from "@/constants";
 
-const SidebarContent = ({
-  setIsMobileOpen,
-}: {
-  setIsMobileOpen: (isOpen: boolean) => void;
-}) => {
+import { ADMIN_LINKS, URL_PATHS } from "@/constants";
+import { useToggle } from "@/hooks";
+import MobileSideBar from "@/components/share/MoblieSideBar";
+import SideLink from "@/components/share/SideLink";
+
+export function AdminSidebar() {
+  const { isOpen, toggle, setIsOpen } = useToggle(false);
+
+  return (
+    <div className="flex-shrink-0 ">
+      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20">
+        <SidebarContent setIsMobileOpen={setIsOpen} />
+      </aside>
+
+      <MobileSideBar setIsOpen={setIsOpen} isOpen={isOpen}>
+        <SidebarContent setIsMobileOpen={toggle} />
+      </MobileSideBar>
+    </div>
+  );
+}
+
+interface SidebarProps {
+  setIsMobileOpen: ReturnType<typeof useToggle>["setIsOpen"];
+}
+
+const SidebarContent = ({ setIsMobileOpen }: SidebarProps) => {
   const pathname = usePathname();
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-secondary">
       <div className="px-3 py-2 flex-1">
-        <Link href="/admin" className="flex items-center pl-3 mb-14">
+        <Link
+          href={URL_PATHS.ADMIN.HOME_PAGE}
+          className="flex items-center pl-3 mb-14"
+        >
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </Link>
-        <div className="space-y-1">
+
+        <div className="space-y-2 ">
           {ADMIN_LINKS.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className={cn(
-                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-background rounded-lg transition",
-                pathname === route.href
-                  ? "text-primary  bg-background"
-                  : " bg-background"
-              )}
+            <SideLink
+              route={route}
               onClick={() => setIsMobileOpen(false)}
-            >
-              <div className="flex items-center flex-1">
-                <route.icon className={cn("h-5 w-5 mr-3")} />
-                {route.label}
-              </div>
-            </Link>
+              isActive={pathname === route.href}
+              key={route.href}
+            />
           ))}
         </div>
       </div>
     </div>
   );
 };
-
-export function AdminSidebar() {
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  return (
-    <>
-      <aside className="hidden lg:flex h-full w-[17rem] flex-col  z-50 top-20">
-        <SidebarContent setIsMobileOpen={setIsMobileOpen} />
-      </aside>
-      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
-        <SheetTrigger asChild className="lg:hidden fixed left-4 top-24 z-50">
-          <Button variant="outline" size="icon">
-            <Menu className="h-6 w-6" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-64">
-          <SidebarContent setIsMobileOpen={setIsMobileOpen} />
-        </SheetContent>
-      </Sheet>
-    </>
-  );
-}

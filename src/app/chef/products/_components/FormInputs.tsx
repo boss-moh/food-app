@@ -4,6 +4,7 @@ import { SelectWithLabel } from "@/components/share/SelectWithLabel";
 import { Separator } from "@radix-ui/react-select";
 import { createProductType, option } from "@/constants";
 import { PropsWithChildren } from "react";
+import { ImageInputWithLabel } from "@/components/share/form/ImageFiled";
 
 type FormInputsProps = {
   categories: option[];
@@ -11,7 +12,7 @@ type FormInputsProps = {
 
 export const FormInputs = ({
   categories,
-  children
+  children,
 }: PropsWithChildren<FormInputsProps>) => {
   return (
     <>
@@ -51,10 +52,11 @@ export const FormInputs = ({
             data={categories}
           />
         </div>
-        {/* <FileUploadImage<T>
-            nameInSchema="files"
-            fieldTitle="Attachments"
-          /> */}
+
+        <ImageInputWithLabel<createProductType>
+          nameInSchema="imageUrl"
+          fieldTitle="Product Image"
+        />
       </div>
 
       <ArrayFiled<createProductType>

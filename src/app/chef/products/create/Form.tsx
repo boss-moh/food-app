@@ -10,15 +10,29 @@ import { createProductAction } from "@/actions/products/createProduct";
 import ActionErrorUI, { ActionError } from "@/components/share/ActionErrorUI";
 import FormInputs from "../_components/FormInputs";
 import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 
 type ProductFormProps = {
   defaultValues?: createProductType;
   categories: option[];
 };
 
+const emptyValues = {
+  categoryId: "",
+  description: "",
+  ingredients: [""],
+  name: "",
+  nutritionalInfo: [],
+  prepTime: 0,
+  price: 0,
+  imageUrl: "",
+  // files: [],
+};
+
 export default function ProductForm({ categories }: ProductFormProps) {
   const form = useForm<createProductType>({
     resolver: zodResolver(createProductSchema),
+    defaultValues: emptyValues,
   });
 
   const {
@@ -28,16 +42,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
     hasErrored,
   } = useAction(createProductAction, {
     onSuccess(response) {
-      form.reset({
-        categoryId: "",
-        description: "",
-        ingredients: [],
-        name: "",
-        nutritionalInfo: [],
-        prepTime: 0,
-        price: 0,
-        // files: [],
-      });
+      form.reset();
 
       toast.success(response.data?.message);
     },
@@ -60,7 +65,15 @@ export default function ProductForm({ categories }: ProductFormProps) {
             hasErrored={hasErrored}
           />
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button
+              type="reset"
+              variant={"secondary"}
+              onClick={() => form.reset()}
+            >
+              Clear
+            </Button>
+
             <LoadingButton type="submit" isLoading={isLoading}>
               Create Product
             </LoadingButton>
@@ -70,7 +83,3 @@ export default function ProductForm({ categories }: ProductFormProps) {
     </Form>
   );
 }
-
-/**
- *
- */
