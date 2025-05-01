@@ -6,10 +6,9 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
 export class CredentialError extends CredentialsSignin {
-  code = "";
-  constructor(code: string) {
+  constructor(message: string) {
     super("Faild To Login Via Credential");
-    this.code = code;
+    this.message = message;
   }
 }
 
@@ -62,10 +61,8 @@ export const authConfig: NextAuthConfig = {
   ],
   callbacks: {
     jwt: async ({ token, user, account }) => {
-      /** create JWT */
-
       if (account) {
-        token.provider = account.provider; // Store the provider in the token
+        token.provider = account.provider;
       }
 
       if (user) {
@@ -85,5 +82,13 @@ export const authConfig: NextAuthConfig = {
 
       return session;
     },
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  pages: {
+    signIn: "/login",
+    error: "/error",
   },
 };

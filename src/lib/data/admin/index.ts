@@ -8,33 +8,6 @@ export async function fetchOrdersCount() {
   }
 }
 
-export async function fetchRecentOrders() {
-  try {
-    const orders = await prisma.order.findMany({
-      include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
-        customer: {
-          select: {
-            name: true,
-            id: true,
-          },
-        },
-      },
-      orderBy: {
-        date: "desc",
-      },
-      take: 5,
-    });
-    return orders;
-  } catch {
-    throw new Error("Faild To Fetch Orders Count");
-  }
-}
-
 export async function fetchUsersCount() {
   try {
     const count = await prisma.user.count();
@@ -79,31 +52,29 @@ export async function fetchProducts(
   }
 }
 
-
 export async function fetchSales() {
   try {
     const result = await prisma.order.aggregate({
-      _sum:{
-        total:true
-      }
+      _sum: {
+        total: true,
+      },
     });
-    return result._sum.total || 0 ;
+    return result._sum.total || 0;
   } catch {
     throw new Error("Faild To Fetch Sales total");
   }
 }
 
-
 export async function fetchNotDoneOrderCount() {
   try {
     const orders = await prisma.order.count({
-    where:{
-      OR:[
-        {status:{'equals':'PENDING'}},
-        {status:{'equals':'PREPARING'}},
-        {status:{'equals':'DELIVERED'}}
-      ]
-    }
+      where: {
+        OR: [
+          { status: { equals: "PENDING" } },
+          { status: { equals: "PREPARING" } },
+          { status: { equals: "DELIVERED" } },
+        ],
+      },
     });
     return orders;
   } catch {

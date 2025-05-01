@@ -11,7 +11,7 @@ import { URL_PATHS } from "@/constants";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-secondary">
       <Card className="mx-auto max-w-md shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Page Not Found</CardTitle>

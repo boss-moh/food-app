@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,58 +7,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  API_END_POINT,
-  ErrorResponse,
-  signinSchema,
-  signinType,
-  URL_PATHS,
-} from "@/constants";
+import { Form } from "@/components/ui/form";
+import { signinSchema, signinType, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { axios, useMutation } from "@/lib";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import HelperText from "@/components/share/helperText";
-import { GoogleIcon } from "@/components/svg/googleIcon";
-import loginViaGoogle from "../Action";
 import { useRouter } from "next/navigation";
-
-type errorsType = ErrorResponse<signinType>;
+import { useForm } from "react-hook-form";
+import { GoogleButton } from "../GoogleButton";
+import { signInAction } from "@/actions/auth";
+import ActionErrorUI, {
+  ActionError,
+} from "../../../components/share/ActionErrorUI";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
+import { InputWithLabel, LoadingButton } from "@/components/share";
 
 export default function SignInPage() {
   const router = useRouter();
+  const { update } = useSession();
+
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   });
 
   const {
-    mutate,
-    isPending: isLoading,
-    error,
-    isError,
-  } = useMutation<void, { errors?: errorsType }>({
-    mutationFn: async () => {
-      return await axios.post(API_END_POINT.USER.LOGIN, form.getValues());
-    },
+    executeAsync,
+    isExecuting: isLoading,
+    hasErrored,
+    result,
+  } = useAction(signInAction, {
+    onSuccess: async () => {
+      form.reset(form.getValues());
+      toast.success("Successfully logged in!");
 
-    onSuccess() {
-      console.log("success");
-      form.reset();
-      router.push(URL_PATHS.HOME);
+      await update();
       router.refresh();
+      router.push(URL_PATHS.HOME);
     },
   });
 
@@ -68,8 +52,9 @@ export default function SignInPage() {
       return;
     }
 
-    mutate();
+    await executeAsync(form.getValues());
   }
+
   return (
     <Card className="shadow-2xl border-0 border-t-px">
       <CardHeader>
@@ -79,49 +64,27 @@ export default function SignInPage() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signinType>
+              fieldTitle="email"
+              nameInSchema={"email"}
+              placeholder="john@example.com"
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signinType>
+              fieldTitle="password"
+              nameInSchema={"password"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "loading ..." : "Sign In"}
-            </Button>
-            <Button
-              variant={"outline"}
-              type="button"
+
+            <LoadingButton
+              type="submit"
               className="w-full"
-              onClick={loginViaGoogle}
-              disabled={isLoading}
+              isLoading={isLoading}
             >
-              <GoogleIcon />
-              <span>Sign In Via Google</span>
-            </Button>
+              Sign In{" "}
+            </LoadingButton>
+
+            <GoogleButton>Sign in with Google</GoogleButton>
           </form>
         </Form>
       </CardContent>
@@ -135,13 +98,7 @@ export default function SignInPage() {
             Sign up
           </Link>
         </div>
-        <div>
-          {isError &&
-            !!error?.errors &&
-            Object.values(error.errors).map((error, key) => (
-              <HelperText key={key}>{error}</HelperText>
-            ))}
-        </div>
+        <ActionErrorUI hasErrored={hasErrored} result={result as ActionError} />
       </CardFooter>
     </Card>
   );
