@@ -12,10 +12,11 @@ type SideLinkProps = {
 export const SideLink = ({ isActive, route, onClick }: SideLinkProps) => {
   return (
     <Button
+      asChild
       variant={"secondary"}
       className={cn(
-        "justify-start bg-background hover:bg-secondary",
-        isActive && "text-primary bg-secondary"
+        "justify-start   bg-background ",
+        isActive && " bg-secondary text-primary "
       )}
       onClick={() => onClick?.()}
     >

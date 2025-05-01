@@ -1,3 +1,4 @@
+'use server'
 import { RoleStatus } from "@prisma/client";
 import { authAction } from "../next-safe-action";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
@@ -6,6 +7,7 @@ import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const deleteProductAction = authAction
+  .metadata({name:'delete Product'})
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(IDSchmea)
   .action(async ({ parsedInput }) => {

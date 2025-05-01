@@ -6,6 +6,8 @@ import { prisma } from "@/lib";
 import { getCalcInfo } from "@/utils";
 
 export const createOrderAction = authAction
+  .metadata({name:"create order"})
+
   .use(authorizationMiddleware([RoleStatus.CUSTOMER]))
   .schema(createOrderSchema)
   .action(async ({ parsedInput, ctx }) => {
@@ -31,6 +33,7 @@ export const createOrderAction = authAction
       quantity: orderItems[index].quantity,
       productId: orderItems[index].id,
     }));
+
 
     const { subTotal, tax, total } = getCalcInfo(orderListItems);
 

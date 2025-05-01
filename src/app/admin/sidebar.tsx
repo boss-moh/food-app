@@ -31,7 +31,7 @@ interface SidebarProps {
 const SidebarContent = ({ setIsMobileOpen }: SidebarProps) => {
   const pathname = usePathname();
   return (
-    <div className="space-y-4 py-4 flex flex-col h-full bg-secondary">
+    <div className="space-y-4 py-4 flex flex-col h-full ">
       <div className="px-3 py-2 flex-1">
         <Link
           href={URL_PATHS.ADMIN.HOME_PAGE}
@@ -40,7 +40,7 @@ const SidebarContent = ({ setIsMobileOpen }: SidebarProps) => {
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </Link>
 
-        <div className="space-y-2 ">
+        <div className="gap-3 flex flex-col ">
           {ADMIN_LINKS.map((route) => (
             <SideLink
               route={route}

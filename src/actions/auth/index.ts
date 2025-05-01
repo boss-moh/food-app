@@ -1,12 +1,13 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { signIn } from "@/auth";
 import { DEFAULT_REDIRECTED, signinSchema, signupSchema } from "@/constants";
 import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
 import { safeAction } from "../next-safe-action";
 
 export const signUpAction = safeAction
+  .metadata({ name: "sign up" })
   .schema(signupSchema)
   .action(async ({ parsedInput: data }) => {
     const { email, password, name, phone } = data;
@@ -42,17 +43,14 @@ export const signInViaGoogleAction = safeAction.action(async () => {
 });
 
 export const signInAction = safeAction
+  .metadata({ name: "sign in" })
   .schema(signinSchema)
   .action(async ({ parsedInput }) => {
     const { email, password } = parsedInput;
 
-  await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
   });
-
-export const  logoutAction =safeAction.action(async ()=>{
-  return await signOut();
-}) 

@@ -6,15 +6,6 @@ import {
   Users,
 } from "lucide-react";
 
-// type PathsObject = Record<string, string>;
-// type NestedPaths = Record<string, string | PathsObject>;
-
-// const getPaths = (obj: NestedPaths): string[] => {
-//   return Object.values(obj).flatMap((value) =>
-//     typeof value === "string" ? value : getPaths(value)
-//   );
-// };
-
 /**
  * #BUG: Put All URL To Public And Private
  * #BUG: MENU CATEGORY - PRODUCT
@@ -46,7 +37,7 @@ export const URL_PATHS = {
     CATEGORIE: {
       HOME_PAGE: "/chef/categories/",
       CREATE: "/chef/categories/create",
-      EDIT: "/chef/categories/edit",
+      EDIT: (id: string) => `/chef/categories/edit/${id}`,
     },
   },
 

@@ -10,6 +10,8 @@ import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const changeStatusAction = authAction
+  .metadata({name:'change Status'})
+
   .use(authorizationMiddleware([RoleStatus.CHEF, RoleStatus.ADMIN,RoleStatus.DRIVER]))
   .schema(changOrderStatusSchema)
   .action(async ({ parsedInput, ctx }) => {

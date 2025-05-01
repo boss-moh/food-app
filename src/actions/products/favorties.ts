@@ -7,6 +7,8 @@ import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
 import { prisma } from "@/lib";
 
 export const toggleItemFavorties = authAction
+  .metadata({name:'toggle favorties'})
+
   .use(authorizationMiddleware([RoleStatus.CUSTOMER]))
   .schema(z.object({ id: z.string() }))
   .action(async ({ parsedInput, ctx }) => {

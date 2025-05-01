@@ -37,7 +37,7 @@ const SidebarContent = ({ setIsMobileOpen }: SidebarProps) => {
         >
           <h1 className="text-xl font-bold">Chef Panel</h1>
         </Link>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-3 ">
           {CHEF_LINKS.map((route) => (
             <SideLink
               route={route}

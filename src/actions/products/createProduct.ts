@@ -9,6 +9,8 @@ import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const createProductAction = authAction
+  .metadata({name:'Create Product'})
+
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(createProductSchema)
   .action(async ({ parsedInput }) => {

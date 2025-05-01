@@ -19,6 +19,11 @@ const RULES = {
     required_error: "Please provide a valid ID ",
   }),
 };
+
+export const IDSchmea = z.object({
+  id: RULES.id,
+});
+
 export const createProductSchema = z.object({
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
@@ -28,34 +33,11 @@ export const createProductSchema = z.object({
   ingredients: z.array(z.string()),
   nutritionalInfo: z.array(z.string()),
   imageUrl: z.string().url("Should Be URL"),
-  // files: z
-  //   .array(z.custom<File>())
-  //   .length(1, "Please select at  one file")
-  //   .refine((files) => files.every((file) => file.size <= 1 * 1024 * 1024), {
-  //     message: "File size must be less than 1MB",
-  //     path: ["files"],
-  //   }),
 });
 
 export type createProductType = z.infer<typeof createProductSchema>;
 
-export const editProductSchema = createProductSchema.extend({
-  id: RULES.id,
-});
-
-// z.object({
-//   id: z.string({
-//     required_error: "it Should Has Id",
-//   }),
-//   name: RULES.NAME,
-//   description: RULES.DESCRIPTION,
-//   price: RULES.PRICE,
-//   categoryId: z.string().min(1, "Please select a category"),
-//   prepTime: RULES.PERPTIME,
-//   ingredients: z.array(z.string()),
-//   nutritionalInfo: z.array(z.string()),
-//   imageUrl: z.string().url("Should Be URL"),
-// });
+export const editProductSchema = createProductSchema.merge(IDSchmea);
 
 export type editProductType = z.infer<typeof editProductSchema>;
 
@@ -85,11 +67,8 @@ export const createCategorySchema = z.object({
 });
 
 export type createCategoryType = z.infer<typeof createCategorySchema>;
-export const editCategorySchema = z.object({
-  id: z.string({ message: "It should Has ID" }),
-  name: RULES.NAME,
-  imageUrl: z.string().url("Should Be URL"),
-});
+
+export const editCategorySchema = IDSchmea.merge(createCategorySchema);
 
 export type editCategoryType = z.infer<typeof editCategorySchema>;
 
@@ -121,7 +100,7 @@ export const createOrderSchema = z.object({
 
 export type createOrderType = z.infer<typeof createOrderSchema>;
 
-export const changeRoleSchema = z.object({
+export const changeRoleSchema = IDSchmea.extend({
   role: z.nativeEnum(RoleStatus),
 });
 
@@ -139,10 +118,6 @@ export const addFeedBackSchmea = z.object({
 });
 
 export type addFeedBackType = z.infer<typeof addFeedBackSchmea>;
-
-export const IDSchmea = z.object({
-  id: RULES.id,
-});
 
 export const toggleSchema = IDSchmea.extend({
   isAvailable: z.boolean({

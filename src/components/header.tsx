@@ -29,13 +29,8 @@ import { useState } from "react";
 import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
 import { useOrder } from "@/store/order";
-import { useUserInfo } from "@/hooks/useUserInfo";
 import { ThemeToggle } from "./toggle-theme";
-import { logoutAction } from "@/actions/auth";
-import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,20 +110,10 @@ const NavItems = ({ onClick = () => {} }) => {
 };
 
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
-  const { user, status, isLoading } = useUserInfo();
-  const { update } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession();
 
-  const { execute } = useAction(logoutAction, {
-    onSuccess: async () => {
-      toast.success("Successfully log out in!");
-      await update();
-      router.refresh();
-      router.push(URL_PATHS.AUTH.SIGN_IN);
-    },
-  });
-
-  if (isLoading || status === "loading") {
+  const user = session?.user;
+  if (status === "loading") {
     return (
       <Button variant="ghost" disabled>
         Loading...
@@ -203,7 +188,7 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
           </>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => execute()}>
+        <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

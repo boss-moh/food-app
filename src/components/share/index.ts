@@ -8,7 +8,7 @@ export * from "./HoverCard";
 export * from "./Status";
 export * from "./Summary";
 export * from "./Order";
-export * from "./DeleteAction";
+export * from "./DeletePop";
 export * from "./Table";
 export * from "./LoadingButton";
 export * from "./Location";

@@ -9,7 +9,6 @@ import {
 } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
-import { cache as reactCache } from "react";
 
 export const fetchCategories = nextCache(
   async () => {
@@ -197,7 +196,9 @@ export async function fetchUsers(role: RoleType, query: string) {
   }
   try {
     const users = await prisma.user.findMany({
-      where: config,
+      where: {
+        ...config,
+      },
       select: {
         name: true,
         email: true,
@@ -274,10 +275,6 @@ export async function fetchAdminOrders(query: string, status: OrderStatus) {
     throw new Error("Faild to fetch Orders");
   }
 }
-
-export const fetchAdminCahce = reactCache(fetchAdminOrders);
-
-export type AdminOrderRowType = Awaited<ReturnType<typeof fetchAdminCahce>>[0];
 
 export async function fetchOrdersById(id: string) {
   try {

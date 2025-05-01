@@ -1,10 +1,10 @@
 "use client";
 
+import { changeRoleAction } from "@/actions/user/changeRoleAction";
 import { Selecter } from "@/components/share";
-import { API_END_POINT, RoleStatus, RoleType } from "@/constants";
-import { axios } from "@/lib";
+import { RoleStatus, RoleType } from "@/constants";
 import { makeOptions } from "@/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
 interface SelecterRoleProps {
@@ -21,34 +21,23 @@ const UesrRoleoptions = makeOptions(
   false
 );
 
-type ObjMessage = {
-  message: string;
-};
-
 export const SelecterRole = ({ role, userId }: SelecterRoleProps) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (newRole: RoleType) =>
-      await axios.put<void, ObjMessage>(
-        API_END_POINT.ADMIN.USERS.UPDATE_ROLE(userId),
-        {
-          role: newRole,
-        }
-      ),
-    onSuccess(data) {
+  const { execute, isPending } = useAction(changeRoleAction, {
+    onSuccess(response) {
       toast.success("Success", {
-        description: data.message,
+        description: response.data?.message,
       });
     },
-    onError(error) {
+    onError(response) {
       toast.error("Faild", {
-        description: error.message,
+        description: response.error.serverError,
       });
     },
   });
 
   const handleChange = (newRole: RoleType) => {
     if (isPending) return;
-    mutate(newRole);
+    execute({ id: userId, role: newRole });
   };
 
   return (

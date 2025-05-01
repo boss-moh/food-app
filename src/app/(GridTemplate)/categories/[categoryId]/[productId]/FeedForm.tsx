@@ -43,7 +43,10 @@ export default function FeedForm({ onSuccess, className }: FeedFormProps) {
   const { execute, isPending } = useAction(feedAction, {
     onSuccess(response) {
       toast.success(response.data?.message);
-      form.reset(form.getValues());
+      form.reset({
+        content: "",
+        rating: 0,
+      });
       onSuccess?.();
     },
     onError(response) {

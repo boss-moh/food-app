@@ -13,8 +13,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import SelecterRole from "./SelecterRole";
 import { EmptyRows, LoadingRow } from "@/components/share";
+type Props = {
+  role: RoleType;
+  query: string;
+};
 
-export const UserTable = ({ role, query }: { role: string; query: string }) => {
+export const UserTable = ({ role, query }: Props) => {
   return (
     <Table className="    bg-background rounded-lg shadow   ">
       <TableHeader>
@@ -23,9 +27,6 @@ export const UserTable = ({ role, query }: { role: string; query: string }) => {
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
-          {/* <TableHead>Total Orders</TableHead> */}
-          {/* <TableHead>Total Spent</TableHead> */}
-          {/* <TableHead>Join Date</TableHead> */}
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -38,12 +39,14 @@ export const UserTable = ({ role, query }: { role: string; query: string }) => {
   );
 };
 
-const TableData = async ({ role, query }: { role: string; query: string }) => {
-  const users = await fetchUsers(role as RoleType, query);
+const TableData = async ({ role, query }: Props) => {
+  const users = await fetchUsers(role, query);
   const hasData = !!users.length;
   return (
     <>
-      {hasData ? (
+      {!hasData ? (
+        <EmptyRows />
+      ) : (
         users.map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">#{user.id}</TableCell>
@@ -52,10 +55,6 @@ const TableData = async ({ role, query }: { role: string; query: string }) => {
             <TableCell>
               <SelecterRole userId={user.id} role={user.role} />
             </TableCell>
-            {/* <TableCell>{user.phone}</TableCell> */}
-            {/* <TableCell>{user.totalOrders}</TableCell> */}
-            {/* <TableCell>${user.totalSpent.toFixed(2)}</TableCell> */}
-            {/* <TableCell>{user}</TableCell> */}
             <TableCell>
               <Button asChild variant="outline" size="sm">
                 <Link href={URL_PATHS.ADMIN.USERS.ORDERS.VIEW(user.id)}>
@@ -65,8 +64,6 @@ const TableData = async ({ role, query }: { role: string; query: string }) => {
             </TableCell>
           </TableRow>
         ))
-      ) : (
-        <EmptyRows />
       )}
     </>
   );

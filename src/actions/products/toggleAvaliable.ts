@@ -7,6 +7,8 @@ import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const toggleAvaliableAction = authAction
+  .metadata({name:'create avaliable'})
+
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(toggleSchema)
   .action(async ({ parsedInput }) => {

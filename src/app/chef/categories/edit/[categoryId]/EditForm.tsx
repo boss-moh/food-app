@@ -1,21 +1,28 @@
 "use client";
 import { CardContent, CardFooter } from "@/components/ui/card";
-import { createCategorySchema, createCategoryType } from "@/constants";
+import {
+  createCategoryType,
+  editCategorySchema,
+  editCategoryType,
+} from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
-import { createCategoryAction } from "@/actions/category/createCategoryAction";
 import { toast } from "sonner";
 import { InputWithLabel, LoadingButton } from "@/components/share";
 import ImageInputWithLabel from "@/components/share/form/ImageFiled";
 import { Form } from "@/components/ui/form";
+import { editCategoryAction } from "@/actions/category/editCategoryAction";
 
-const FormCreate = () => {
-  const form = useForm<createCategoryType>({
-    resolver: zodResolver(createCategorySchema),
+type FormEditProps = { defaultValues: editCategoryType };
+
+const FormEdit = ({ defaultValues }: FormEditProps) => {
+  const form = useForm<editCategoryType>({
+    resolver: zodResolver(editCategorySchema),
+    defaultValues,
   });
 
-  const { isPending, execute } = useAction(createCategoryAction, {
+  const { isPending, execute } = useAction(editCategoryAction, {
     onSuccess: (response) => {
       form.reset();
       toast.success(response.data?.message);
@@ -29,6 +36,8 @@ const FormCreate = () => {
     if (isPending) return;
     execute(form.getValues());
   };
+
+  const isChanged = !form.formState.isDirty;
 
   return (
     <Form {...form}>
@@ -45,8 +54,12 @@ const FormCreate = () => {
           />
         </CardContent>
         <CardFooter className="flex justify-end">
-          <LoadingButton isLoading={isPending} type="submit">
-            Create
+          <LoadingButton
+            disabled={isChanged}
+            isLoading={isPending}
+            type="submit"
+          >
+            Save
           </LoadingButton>
         </CardFooter>
       </form>
@@ -54,4 +67,4 @@ const FormCreate = () => {
   );
 };
 
-export default FormCreate;
+export default FormEdit;

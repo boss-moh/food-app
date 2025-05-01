@@ -12,8 +12,8 @@ import { mealsType } from "@/lib";
 import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteAction from "@/components/share/DeleteAction";
 import AvailableControl from "./AvailableControl";
+import { DeleteProduct } from "./DeleteProduct";
 
 type MealsCardsProps = {
   meals: mealsType;
@@ -65,7 +65,7 @@ export const MealsCards = ({ meals }: MealsCardsProps) => {
             <Button asChild variant="outline" className="flex-1">
               <Link href={URL_PATHS.CHEF.PRODUCT.EDIT(meal.id)}>Edit</Link>
             </Button>
-            <DeleteAction id={meal.id} />
+            <DeleteProduct id={meal.id} />
           </CardFooter>
         </Card>
       ))}

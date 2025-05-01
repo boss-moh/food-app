@@ -3,19 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   fetchNotDoneOrderCount,
   fetchOrdersCount,
-  fetchRecentOrders,
   fetchSales,
   fetchUsersCount,
 } from "@/lib/data/admin";
 import { DollarSign, Package, ShoppingBag, Users } from "lucide-react";
 import { Suspense } from "react";
-import {
-  OrderTable,
-  OrderTableClasses,
-  TableLoading,
-} from "./orders/OrderTable";
-import { OrderRow } from "./orders/OrderRow";
+import { OrderTable } from "./orders/OrderTable";
 import { formatPrice } from "@/utils";
+import { OrderStatus, searchParamsProps } from "@/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -24,25 +19,28 @@ export const metadata = {
   description: "Overview of admin statistics and recent orders",
 };
 
-export default function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: searchParamsProps<"query"> & searchParamsProps<"status">) {
+  const { query, status } = await searchParams;
   return (
     <div className="space-y-8 p-6">
       <h1 className="text-3xl font-bold ">Admin Dashboard</h1>
-      {/* Stats Overview */}
       <Suspense fallback={"loading ... "}>
         <AdminCards />
       </Suspense>
-      <CardTable />
-      {/* Sales Chart
+
+      {/* Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Sales Overview</CardTitle>
-          <CardDescription>Daily sales performance</CardDescription>
+          <CardTitle className="flex gap-1 items-center">
+            <span>Recent Orders</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent className="pl-2">
-          <BarChart className="h-[350px] w-full text-muted-foreground" />
+        <CardContent>
+          <OrderTable query={query} status={status as OrderStatus} />
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 }
@@ -96,32 +94,5 @@ const AdminCards = async () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
-
-const CardTable = () => {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex gap-1 items-center">
-          <span>Recent Orders</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Suspense fallback={<TableLoading />}>
-          <Table />
-        </Suspense>
-      </CardContent>
-    </Card>
-  );
-};
-const Table = async () => {
-  const orders = await fetchRecentOrders();
-  return (
-    <OrderTable>
-      {orders.map((order) => (
-        <OrderRow classes={OrderTableClasses} order={order} key={order.id} />
-      ))}
-    </OrderTable>
   );
 };

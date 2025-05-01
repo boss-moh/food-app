@@ -9,11 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useOrder } from "@/store";
-import EmptyCart from "../../components/share/cart/EmptyCart";
 import { OrderConfirmationModal } from "./orderModel";
 import { useState } from "react";
 import { Summary } from "@/components/share";
-import { CartItem } from "@/components/share/cart";
+import { CartItem, EmptyCart } from "@/components/share/cart";
 import { useUserInfo } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { URL_PATHS } from "@/constants";

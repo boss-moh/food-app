@@ -40,6 +40,7 @@ export default function SignInPage() {
     onSuccess: async () => {
       form.reset(form.getValues());
       toast.success("Successfully logged in!");
+
       await update();
       router.refresh();
       router.push(URL_PATHS.HOME);

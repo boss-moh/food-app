@@ -1,14 +1,8 @@
 import UserTable from "./UserTable";
 import { SearchInput } from "@/components/share";
 import UserSelecter from "./UserSelecter";
-import { searchParamsProps } from "@/constants";
-import {
-  Card,
-  CardContent,
-  // CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { RoleType, searchParamsProps } from "@/constants";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function UsersPage({
   searchParams,
@@ -30,13 +24,9 @@ export default async function UsersPage({
           <CardTitle className="flex gap-1 items-center">
             <span>Users</span>
           </CardTitle>
-          {/* <CardDescription> */}
-
-          {/* You have 12 orders in progress */}
-          {/* </CardDescription> */}
         </CardHeader>
         <CardContent>
-          <UserTable role={role} query={query} />
+          <UserTable role={role as RoleType} query={query} />
         </CardContent>
       </Card>
     </>
