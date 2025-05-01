@@ -1,6 +1,5 @@
 "use client";
 
-import { logout } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,8 +29,8 @@ import { useState } from "react";
 import Logo from "./logo";
 import { NAV_LINKS, URL_PATHS } from "@/constants";
 import { useOrder } from "@/store/order";
-import { useUserInfo } from "@/hooks/useUserInfo";
 import { ThemeToggle } from "./toggle-theme";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +110,16 @@ const NavItems = ({ onClick = () => {} }) => {
 };
 
 const UserDorpDownMenu = ({ onClick = () => {} }) => {
-  const user = useUserInfo();
+  const { data: session, status } = useSession();
+
+  const user = session?.user;
+  if (status === "loading") {
+    return (
+      <Button variant="ghost" disabled>
+        Loading...
+      </Button>
+    );
+  }
 
   return user ? (
     <DropdownMenu>
@@ -180,7 +188,7 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
           </>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

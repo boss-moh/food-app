@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,56 +16,41 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  API_END_POINT,
-  ErrorResponse,
-  MessageType,
-  signupSchema,
-  signupType,
-  URL_PATHS,
-} from "@/constants";
+import GoogleButton from "../GoogleButton";
+
+import { signupSchema, signupType, URL_PATHS } from "@/constants";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { axios, useMutation } from "@/lib";
-import HelperText from "@/components/share/helperText";
-import { GoogleIcon } from "@/components/svg/googleIcon";
-import loginViaGoogle from "../Action";
 import { toast } from "sonner";
+import { signUpAction } from "@/actions/auth";
 import { useRouter } from "next/navigation";
-
-type errors = ErrorResponse<signupType>;
+import ActionErrorUI, {
+  ActionError,
+} from "../../../components/share/ActionErrorUI";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { useAction } from "next-safe-action/hooks";
+import { InputWithLabel, LoadingButton } from "@/components/share";
 
 export default function SignUpPage() {
   const router = useRouter();
   const form = useForm<signupType>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-    },
   });
 
   const {
-    mutate,
-    isPending: isLoading,
-    error,
-    isError,
-  } = useMutation<MessageType, { errors?: errors }>({
-    mutationFn: async () => {
-      return await axios.post(API_END_POINT.USER.REGISTER, form.getValues());
-    },
-    onError(error) {
-      console.log("error", error);
-    },
-    onSuccess(data: MessageType) {
-      form.reset();
-      toast.success(data.message);
-      router.push(URL_PATHS.AUTH.SIGN_IN);
+    execute,
+    isExecuting: isLoading,
+    hasErrored,
+    result,
+  } = useAction(signUpAction, {
+    onSuccess(response) {
+      if (response.data?.success) {
+        form.reset();
+        toast.success(response.data?.message);
+        router.push(URL_PATHS.AUTH.SIGN_IN);
+      }
     },
   });
 
@@ -74,8 +58,7 @@ export default function SignUpPage() {
     if (isLoading) {
       return;
     }
-
-    mutate();
+    execute(form.getValues());
   }
   return (
     <Card className="shadow-2xl border-0 border-t-px">
@@ -88,36 +71,18 @@ export default function SignUpPage() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signupType>
+              fieldTitle="name"
+              nameInSchema={"name"}
+              placeholder="john@example.com"
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+
+            <InputWithLabel<signupType>
+              fieldTitle="email"
+              nameInSchema={"email"}
+              placeholder="john@example.com"
             />
+
             <FormField
               control={form.control}
               name="phone"
@@ -125,55 +90,34 @@ export default function SignUpPage() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Your Phone Number"
-                      type="text"
-                      {...field}
-                    />
+                    <PhoneInput placeholder="Enter a phone number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+
+            <InputWithLabel<signupType>
+              fieldTitle="password"
+              nameInSchema={"password"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="********" type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputWithLabel<signupType>
+              fieldTitle="Confirm Password"
+              nameInSchema={"confirmPassword"}
+              placeholder="Enter Your Password"
+              type="password"
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "loading ..." : "Sign Up"}
-            </Button>
-            <Button
-              variant={"outline"}
-              type="button"
+
+            <LoadingButton
+              type="submit"
               className="w-full"
-              onClick={loginViaGoogle}
-              disabled={isLoading}
+              isLoading={isLoading}
             >
-              <GoogleIcon />
-              <span>Sign Up Via Google</span>
-            </Button>
+              Sign Up
+            </LoadingButton>
+            <GoogleButton>Sign Up with Google</GoogleButton>
           </form>
         </Form>
       </CardContent>
@@ -187,13 +131,7 @@ export default function SignUpPage() {
             Sign in
           </Link>
         </div>
-        <div>
-          {isError &&
-            !!error?.errors &&
-            Object.values(error.errors).map((error, key) => (
-              <HelperText key={key}>{error}</HelperText>
-            ))}
-        </div>
+        <ActionErrorUI hasErrored={hasErrored} result={result as ActionError} />
       </CardFooter>
     </Card>
   );

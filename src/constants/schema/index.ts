@@ -6,12 +6,24 @@ const RULES = {
   EMAIL: z.string().email("Invalid email address"),
   PASSWORD: z.string().min(8, "Password must be at least 8 characters"),
   DESCRIPTION: z.string().min(10, "Description must be at least 10 characters"),
-  PRICE: z.number().positive("Price must be greater than zero").finite(),
-  RATING:z.coerce.number().max(5, "Rating must be between 0 and 5").min(0).transform(val => Number(val)),
+  PRICE: z.coerce.number().positive("Price must be greater than zero").finite(),
+  RATING: z.coerce
+    .number()
+    .max(5, "Rating must be between 0 and 5")
+    .min(0)
+    .transform((val) => Number(val)),
 
-  PERPTIME: z.number().min(0, "Preparation time cannot be negative"),
-  PHONE:z.string().length(10,'the phone number should be saven')
+  PERPTIME: z.coerce.number().positive("Preparation must be greater than zero"),
+  PHONE: z.string().min(10, "Phone number must be at least 10 digits"),
+  id: z.string({
+    required_error: "Please provide a valid ID ",
+  }),
 };
+
+export const IDSchmea = z.object({
+  id: RULES.id,
+});
+
 export const createProductSchema = z.object({
   name: RULES.NAME,
   description: RULES.DESCRIPTION,
@@ -25,22 +37,9 @@ export const createProductSchema = z.object({
 
 export type createProductType = z.infer<typeof createProductSchema>;
 
-export const editProductSchema = z.object({
-  id:z.string({
-    required_error:"it Should Has Id"
-  }),
-  name: RULES.NAME,
-  description: RULES.DESCRIPTION,
-  price: RULES.PRICE,
-  categoryId: z.string().min(1, "Please select a category"),
-  prepTime: RULES.PERPTIME,
-  ingredients: z.array(z.string()),
-  nutritionalInfo: z.array(z.string()),
-  imageUrl: z.string().url("Should Be URL"),
-});
+export const editProductSchema = createProductSchema.merge(IDSchmea);
 
 export type editProductType = z.infer<typeof editProductSchema>;
-
 
 export const signupSchema = z
   .object({
@@ -48,7 +47,7 @@ export const signupSchema = z
     email: RULES.EMAIL,
     password: RULES.PASSWORD,
     confirmPassword: z.string().nonempty(),
-    phone:RULES.PHONE
+    phone: RULES.PHONE,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -68,11 +67,8 @@ export const createCategorySchema = z.object({
 });
 
 export type createCategoryType = z.infer<typeof createCategorySchema>;
-export const editCategorySchema = z.object({
-  id: z.string({ message: "It should Has ID" }),
-  name: RULES.NAME,
-  imageUrl: z.string().url("Should Be URL"),
-});
+
+export const editCategorySchema = IDSchmea.merge(createCategorySchema);
 
 export type editCategoryType = z.infer<typeof editCategorySchema>;
 
@@ -82,45 +78,49 @@ export type ErrorResponse<T> =
   | Partial<Record<keyof T, string[]>>
   | Record<string, string[]>;
 
-
-export const addressSchema =  z.object({
-  address:z.string({
-    required_error:"address requrie"
-  })
-})
+export const addressSchema = z.object({
+  address: z.string({
+    required_error: "address requrie",
+  }),
+});
 
 export type addressType = z.infer<typeof addressSchema>;
 
-
-export const CreateOrder = z.object({
-  orderItems:z.array(
+export const createOrderSchema = z.object({
+  orderItems: z.array(
     z.object({
       id: z.string(),
       quantity: z.number().min(1, "it should me great than one "),
     })
   ),
-  address:z.string({
-    required_error:"address requrie"
-  })
-})
+  address: z.string({
+    required_error: "address requrie",
+  }),
+});
 
-export type CreateOrderType = z.infer<typeof CreateOrder>;
+export type createOrderType = z.infer<typeof createOrderSchema>;
 
-export const ChangeRoleSchema = z.object({
+export const changeRoleSchema = IDSchmea.extend({
   role: z.nativeEnum(RoleStatus),
 });
 
-export const ChangOrderStatusSchema = z.object({
+export const changOrderStatusSchema = z.object({
   status: z.nativeEnum(OrderStatus),
   id: z.string(),
 });
 
-
-
 export const addFeedBackSchmea = z.object({
-  rating:RULES.RATING,
-  content:z.string().min(10,"the description should has more 10 letters").max(255,"the description should has less 255 letters")
-})
+  rating: RULES.RATING,
+  content: z
+    .string()
+    .min(10, "the description should has more 10 letters")
+    .max(255, "the description should has less 255 letters"),
+});
 
+export type addFeedBackType = z.infer<typeof addFeedBackSchmea>;
 
-export type addFeedBackType = z.infer<typeof addFeedBackSchmea>
+export const toggleSchema = IDSchmea.extend({
+  isAvailable: z.boolean({
+    required_error: "Please provide availability status",
+  }),
+});

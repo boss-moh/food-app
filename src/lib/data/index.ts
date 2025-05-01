@@ -9,7 +9,6 @@ import {
 } from "@/constants";
 import prisma from "../prisma";
 import { unstable_cache as nextCache } from "next/cache";
-import { cache as reactCache } from "react";
 
 export const fetchCategories = nextCache(
   async () => {
@@ -76,13 +75,12 @@ export async function fetchProductById(id: string) {
             },
           },
         },
-
       },
       where: {
         id,
       },
     });
-    
+
     return product;
   } catch {
     throw new Error("Faild to fetch product");
@@ -198,7 +196,9 @@ export async function fetchUsers(role: RoleType, query: string) {
   }
   try {
     const users = await prisma.user.findMany({
-      where: config,
+      where: {
+        ...config,
+      },
       select: {
         name: true,
         email: true,
@@ -276,10 +276,6 @@ export async function fetchAdminOrders(query: string, status: OrderStatus) {
   }
 }
 
-export const fetchAdminCahce = reactCache(fetchAdminOrders);
-
-export type AdminOrderRowType = Awaited<ReturnType<typeof fetchAdminCahce>>[0];
-
 export async function fetchOrdersById(id: string) {
   try {
     const orders = await prisma.order.findUnique({
@@ -313,8 +309,8 @@ export async function fetchUser(userId: string) {
         phone: true,
         role: true,
         favoriteItems: true,
-        feedback:true,
-        id:true
+        feedback: true,
+        id: true,
       },
     });
     return user;
@@ -323,23 +319,22 @@ export async function fetchUser(userId: string) {
   }
 }
 
-
-export async function fetchCheckFavtroies(userId:string,productId:string) {
-
-  try{
+export async function fetchCheckFavtroies(userId: string, productId: string) {
+  try {
     const user = await prisma.user.findUnique({
-      where:{
-        id:userId
+      where: {
+        id: userId,
       },
-      include:{
-        favoriteItems:true
-      }
-    })
-    
-    const didLikeItBefore = user!.favoriteItems.some((item)=>item.id === productId)
-    return didLikeItBefore
-  }
-  catch {
+      include: {
+        favoriteItems: true,
+      },
+    });
+
+    const didLikeItBefore = user!.favoriteItems.some(
+      (item) => item.id === productId
+    );
+    return didLikeItBefore;
+  } catch {
     throw new Error("Faild to check user's Favorties");
   }
 }

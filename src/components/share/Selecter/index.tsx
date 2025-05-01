@@ -29,17 +29,14 @@ export const Selecter = ({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="capitalize">
-        {options?.map((option) => {
-          if (typeof option === "string") {
-            return (
-              <SelectItem className="capitalize" key={option} value={option}>
-                {option}
-              </SelectItem>
-            );
-          }
+        {options.map((option) => {
+          const { value, name } =
+            typeof option === "string"
+              ? { value: option, name: option }
+              : option;
           return (
-            <SelectItem key={option.value} value={option.value}>
-              {option.name}
+            <SelectItem key={value} value={value}>
+              {name}
             </SelectItem>
           );
         })}
