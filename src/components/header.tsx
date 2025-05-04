@@ -50,7 +50,7 @@ export default function Header() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTitle className="sr-only">Drawer&apos;s Links</SheetTitle>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
+              <Button aria-label="Open Drawer" variant="ghost" size="icon">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>

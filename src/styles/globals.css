@@ -17,7 +17,7 @@
     --popover-foreground: 0 0 0;
 
     /* Primary - Red */
-    --primary: 255 102 102;
+    --primary: 244 81 30;
     --primary-foreground: 255 255 255;
 
     /* Secondary - Light Gray */
@@ -67,7 +67,7 @@
     --popover-foreground: 255 255 255;
 
     /* Primary stays vibrant in dark mode */
-    --primary: 255 102 102;
+    --primary: 244 81 30;
     --primary-foreground: 255 255 255;
 
     --secondary: 38 38 38;

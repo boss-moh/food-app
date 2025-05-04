@@ -28,7 +28,7 @@ export default async function Home() {
               priority
             />
           </div>
-          <div className="bg-primary/5 p-8 lg:p-12 rounded-2xl">
+          <div className="bg-secondary p-8 lg:p-12 rounded-2xl">
             <div className="flex items-center gap-2 text-sm mb-4 text-primary">
               <TrendingUp className="h-4 w-4" />
               <span>85% would make this again</span>
@@ -36,7 +36,7 @@ export default async function Home() {
             <h1 className="text-4xl font-bold mb-4 text-foreground">
               Mighty Super Cheesecake
             </h1>
-            <p className="text-muted-foreground text-lg mb-6">
+            <p className="text-foreground  mb-6">
               Look no further for a creamy and ultra smooth classic cheesecake
               recipe! No one can deny its simple decadence.
             </p>

@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { InputWithLabel, LoadingButton } from "@/components/share";
+import { Button } from "@/components/ui/button";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -55,6 +56,23 @@ export default function SignInPage() {
     await executeAsync(form.getValues());
   }
 
+  const chefButton = () => {
+    form.setValue("email", "test@chef.com");
+    form.setValue("password", "test@chef.com");
+  };
+  const customerButton = () => {
+    form.setValue("email", "test@customer.com");
+    form.setValue("password", "test@customer.com");
+  };
+  const driverButton = () => {
+    form.setValue("email", "test@driver.com");
+    form.setValue("password", "test@driver.com");
+  };
+  const adminButton = () => {
+    form.setValue("email", "admin@a2.com");
+    form.setValue("password", "admin@a2.com");
+  };
+
   return (
     <Card className="shadow-2xl border-0 border-t-px">
       <CardHeader>
@@ -85,6 +103,40 @@ export default function SignInPage() {
             </LoadingButton>
 
             <GoogleButton>Sign in with Google</GoogleButton>
+            <div className="grid gap-2 grid-cols-2  justify-between">
+              <Button
+                type="button"
+                variant={"secondary"}
+                onClick={adminButton}
+                className="border"
+              >
+                Admin Demo
+              </Button>
+              <Button
+                type="button"
+                variant={"secondary"}
+                onClick={customerButton}
+                className="border"
+              >
+                Coustmer Demo
+              </Button>
+              <Button
+                type="button"
+                variant={"secondary"}
+                onClick={chefButton}
+                className="border"
+              >
+                Chef Demo
+              </Button>
+              <Button
+                type="button"
+                variant={"secondary"}
+                onClick={driverButton}
+                className="border"
+              >
+                Driver Demo
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
