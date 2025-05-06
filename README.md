@@ -5,7 +5,8 @@
 TastyGo is a comprehensive food delivery platform built with modern web technologies. The application connects customers with restaurants, enabling seamless food ordering, preparation, and delivery tracking. The platform serves multiple user roles including customers, restaurant staff, delivery drivers, and administrators.
 
 [Read me more about the project](./about.md)
-[view the app (Demo) ] ('https://food-app-mu-opal.vercel.app/')
+
+[Demo](https://food-app-mu-opal.vercel.app/)
 
 ## Technologies Used
 
