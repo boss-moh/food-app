@@ -22,6 +22,7 @@ export type option = {
   name: string;
   value: string;
 };
+export type options = option[] | string[];
 
 export type SummaryType = {
   subTotal: number;
@@ -46,6 +47,7 @@ export { OrderStatus } from "@prisma/client";
 import type { feedBack } from "@prisma/client";
 export type feedBackType = feedBack & { customer: { name: string } };
 
-export type MessageType = {
-  message: string;
+export type searchProps = {
+  categoryId?: string;
+  query?: string;
 };

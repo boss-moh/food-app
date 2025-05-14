@@ -1,13 +1,10 @@
-// #TODO:create Folder For Get And One For POST
-// #TODO:Server-only
-
 import {
   CACHCES_KEYS,
   OrderStatus,
   RoleType,
   createProductType,
 } from "@/constants";
-import prisma from "../prisma";
+import prisma from "../lib/prisma";
 import { unstable_cache as nextCache } from "next/cache";
 
 export const fetchCategories = nextCache(

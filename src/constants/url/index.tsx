@@ -6,11 +6,6 @@ import {
   Users,
 } from "lucide-react";
 
-/**
- * #BUG: Put All URL To Public And Private
- * #BUG: MENU CATEGORY - PRODUCT
- */
-
 export const URL_PATHS = {
   HOME: "/",
   DRIVER: "/driver",

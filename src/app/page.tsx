@@ -1,7 +1,7 @@
 import { ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchMostNewProducts, fetchMostRatingProducts } from "@/lib";
+import { fetchMostNewProducts, fetchMostRatingProducts } from "@/data";
 import { GridItem, GridTemplate } from "@/components/share";
 import LandingImage from "localImages/newLanding.webp";
 import { Button } from "@/components/ui/button";

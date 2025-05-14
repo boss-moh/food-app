@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DynamicProps } from "@/constants";
 import { ActionsButtons } from "./Actions";
-import { fetchCheckFavtroies, fetchProductById } from "@/lib/data";
+import { fetchCheckFavtroies, fetchProductById } from "@/data";
 import { Clock, Utensils } from "lucide-react";
 import { formatPrice } from "@/utils";
 import { Rating, Status } from "@/components/share";
