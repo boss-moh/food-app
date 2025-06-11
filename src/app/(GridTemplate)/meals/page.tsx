@@ -21,7 +21,7 @@ export default async function MealsPage({
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <FormControlSearch {...searchProps} />
+        <FormControlSearch defaultValues={{ ...searchProps }} />
       </div>
       <Suspense
         fallback={new Array(10).fill(0).map((_, i) => (
