@@ -1,5 +1,4 @@
 import { URL_PATHS } from "@/constants";
-import { secondFont } from "@/fonts";
 import Link from "next/link";
 
 export const Logo = () => {
@@ -7,7 +6,7 @@ export const Logo = () => {
     <Link
       aria-label="TastyGo logo"
       href={URL_PATHS.HOME}
-      className={`${secondFont.className} text-2xl font-bold italic text-primary`}
+      className={` text-2xl font-bold italic text-primary`}
     >
       TastyGo
     </Link>

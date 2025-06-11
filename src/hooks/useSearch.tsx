@@ -1,22 +1,24 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export const useUserSelecter = () => {
+const useSearch = (key: string = "query") => {
   const router = useRouter();
   const searchParam = useSearchParams();
   const path = usePathname();
 
-  const defaultValue = searchParam.get("role") || "all";
+  const defaultValue = searchParam.get(key) ?? "";
+
   const onChange = (value: string) => {
     const params = new URLSearchParams(searchParam);
-    params.delete("query");
 
-    if (value === "all") {
-      params.delete("role");
+    if (!value.trim()) {
+      params.delete(key);
     } else {
-      params.set("role", value);
+      params.set(key, value);
     }
 
     router.replace(`${path}?${params.toString()}`);
   };
   return { onChange, defaultValue };
 };
+
+export default useSearch;

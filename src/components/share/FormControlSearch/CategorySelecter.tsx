@@ -1,44 +1,33 @@
 import React from "react";
 import Selecter from "../Selecter";
-// import { fetchCategories } from "@/data";
-// import { makeOptions } from "@/utils";
+import { makeOptions } from "@/utils";
+import { categoryType } from "@/constants";
 
 type CategorySelecterProps = {
   defaultValue?: string;
   onChange: (categoryId: string) => void;
+  categories: categoryType[];
 };
 
-const CategorySelecter =  ({
+const CategorySelecter = ({
   defaultValue,
   onChange,
+  categories,
 }: // categories
 CategorySelecterProps) => {
-  // const options = makeOptions(
-  //   category,
-  //   (i) => ({
-  //     name: i.name,
-  //     value: i.id,
-  //   }),
-  //   true
-  // );
+  const options = makeOptions(
+    categories,
+    (i) => ({
+      name: i.name,
+      value: i.id,
+    }),
+    true
+  );
 
   return (
     <Selecter
       name="categoryId"
-      options={[
-        {
-          name: "test",
-          value: "1",
-        },
-        {
-          name: "test2",
-          value: "2",
-        },
-        {
-          name: "test3",
-          value: "3",
-        },
-      ]}
+      options={options}
       onChange={onChange}
       defaultValue={defaultValue}
     />

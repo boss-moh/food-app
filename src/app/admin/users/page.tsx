@@ -1,8 +1,7 @@
 import UserTable from "./UserTable";
-import { SearchInput } from "@/components/share";
-import UserSelecter from "./UserSelecter";
 import { RoleType, searchParamsProps } from "@/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import FilterSection from "./FilterSection";
 
 export default async function UsersPage({
   searchParams,
@@ -13,10 +12,7 @@ export default async function UsersPage({
     <>
       <div className="flex flex-col md:flex-row gap-4 justify-between  md:items-center mb-6">
         <h1 className="text-3xl font-bold">Users Management</h1>
-        <div className="flex items-center gap-4">
-          <SearchInput />
-          <UserSelecter />
-        </div>
+        <FilterSection />
       </div>
 
       <Card>

@@ -12,7 +12,7 @@ export const SearchInput = ({
   defaultValue,
   ...rest
 }: SearchInputProps) => {
-  const [text, setText] = useState<string>(defaultValue);
+  const [text, setText] = useState<string>(defaultValue ?? "");
   useEffect(() => {
     const time = setTimeout(() => {
       onChange(text);

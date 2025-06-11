@@ -16,3 +16,4 @@ export * from "./UserInfo";
 export * from "./rating";
 export * from "./FeedBacks";
 export * from "./InputWithLabel";
+export * from "./FormControlSearch/SearchInput";
