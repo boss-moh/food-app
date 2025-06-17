@@ -10,7 +10,7 @@ const useSearch = (key: string = "query") => {
   const onChange = (value: string) => {
     const params = new URLSearchParams(searchParam);
 
-    if (!value.trim()) {
+    if (!value) {
       params.delete(key);
     } else {
       params.set(key, value);

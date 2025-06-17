@@ -19,14 +19,12 @@ import ActionErrorUI, {
   ActionError,
 } from "../../../components/share/ActionErrorUI";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { InputWithLabel, LoadingButton } from "@/components/share";
 import { Button } from "@/components/ui/button";
 
 export default function SignInPage() {
   const router = useRouter();
-  const { update } = useSession();
 
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
@@ -41,9 +39,6 @@ export default function SignInPage() {
     onSuccess: async () => {
       form.reset(form.getValues());
       toast.success("Successfully logged in!");
-
-      await update();
-      router.refresh();
       router.push(URL_PATHS.HOME);
     },
   });

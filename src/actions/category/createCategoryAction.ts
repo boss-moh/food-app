@@ -1,6 +1,11 @@
 "use server";
 
-import { CACHCES_KEYS, createCategorySchema, RoleStatus, URL_PATHS } from "@/constants";
+import {
+  CACHCES_KEYS,
+  createCategorySchema,
+  RoleStatus,
+  URL_PATHS,
+} from "@/constants";
 import { authAction } from "../next-safe-action";
 import { uploadImage } from "@/lib/cloudinary";
 import { prisma } from "@/lib";
@@ -8,7 +13,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
 
 export const createCategoryAction = authAction
-  .metadata({name:'create category'})
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(createCategorySchema)
   .action(async ({ parsedInput }) => {

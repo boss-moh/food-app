@@ -9,7 +9,6 @@ import { prisma } from "@/lib";
 import { uploadImage } from "@/lib/cloudinary";
 
 export const editProductAction = authAction
-  .metadata({name:'edit Product'})
 
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(editProductSchema)

@@ -1,18 +1,14 @@
 import { Prisma } from "@prisma/client";
 import { createSafeActionClient } from "next-safe-action";
-import { z, ZodError } from "zod";
+import { ZodError } from "zod";
 import { authenticationMiddleware } from "./middleware/auth";
 
- const DEFAULT_SERVER_ERROR_MESSAGE =
+const DEFAULT_SERVER_ERROR_MESSAGE =
   "Something went wrong. Please try again later.";
- const DEFAULT_DATABASE_ERROR_MESSAGE =
+const DEFAULT_DATABASE_ERROR_MESSAGE =
   "Database error. Please try again later.";
- const DEFAULT_VALIDATION_ERROR_MESSAGE =
+const DEFAULT_VALIDATION_ERROR_MESSAGE =
   "Validation error. Please check your input.";
-
-
-
-
 
 export const safeAction = createSafeActionClient({
   handleServerError(e) {
@@ -33,14 +29,6 @@ export const safeAction = createSafeActionClient({
 
     return DEFAULT_SERVER_ERROR_MESSAGE;
   },
-  defineMetadataSchema() {
-      return  z.object(
-        {
-          name: z.string(),
-        })
-  },
 });
 
 export const authAction = safeAction.use(authenticationMiddleware);
-
-

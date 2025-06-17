@@ -1,4 +1,4 @@
-import { FormControlSearch } from "@/components/share";
+import { FormControlSearch, GridTemplate } from "@/components/share";
 import { searchParamsProps } from "@/constants";
 
 import { Suspense } from "react";
@@ -15,24 +15,30 @@ export const metadata = {
 export default async function MealsPage({
   searchParams,
 }: searchParamsProps<"categoryId"> & searchParamsProps<"query">) {
-  const searchProps = await searchParams;
+  const { categoryId = "", query = "" } = await searchParams;
 
   const categories = await fetchCategories();
-
-  console.log("searchProps", searchProps);
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Our Menu</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <FormControlSearch {...searchProps} categories={categories} />
+        <FormControlSearch
+          categoryId={categoryId}
+          query={query}
+          categories={categories}
+        />
       </div>
       <Suspense
-        fallback={new Array(10).fill(0).map((_, i) => (
-          <DishCardSkeleton key={i} />
-        ))}
+        fallback={
+          <GridTemplate>
+            {new Array(10).fill(0).map((_, i) => (
+              <DishCardSkeleton key={i} />
+            ))}
+          </GridTemplate>
+        }
       >
-        <ServerFetch {...searchProps} />
+        <ServerFetch categoryId={categoryId} query={query} />
       </Suspense>
     </div>
   );
