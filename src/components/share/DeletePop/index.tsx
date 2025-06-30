@@ -47,7 +47,7 @@ export function DeletePop({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onClickAction}>
-            Continue
+            Yes , I sure
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

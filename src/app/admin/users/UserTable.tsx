@@ -23,7 +23,6 @@ export const UserTable = ({ role, query }: Props) => {
     <Table className="    bg-background rounded-lg shadow   ">
       <TableHeader>
         <TableRow>
-          <TableHead>Users ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
@@ -31,7 +30,7 @@ export const UserTable = ({ role, query }: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <Suspense fallback={new Array(5).fill(<LoadingRow />)}>
+        <Suspense fallback={new Array(4).fill(<LoadingRow />)}>
           <TableData role={role} query={query} />
         </Suspense>
       </TableBody>
@@ -49,7 +48,6 @@ const TableData = async ({ role, query }: Props) => {
       ) : (
         users.map((user) => (
           <TableRow key={user.id}>
-            <TableCell className="font-medium">#{user.id}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>

@@ -21,7 +21,7 @@ export const URL_PATHS = {
   },
 
   CHEF: {
-    HOME_PAGE: "/chef",
+    HOME_PAGE: "/chef/orders",
     ORDERS: "/chef/orders",
     PRODUCT: {
       HOME_PAGE: "/chef/products/",
@@ -64,7 +64,7 @@ export const URL_PATHS = {
 
   USER: {
     ORDERS: {
-      HOME_PAGE: "/orders",
+      HOME_PAGE: "/users/orders",
     },
     PROFILE: (id: string) => `/users/${id}`,
   },
@@ -131,20 +131,28 @@ export type SideLinkRouteType = {
   href: string;
 };
 export const PUBLICE_PATHS: string[] = [
-  URL_PATHS.HOME,
+  URL_PATHS.CART,
   URL_PATHS.AUTH.SIGN_IN,
   URL_PATHS.AUTH.SIGN_UP,
   URL_PATHS.MENU.CATEGORIES,
   URL_PATHS.MENU.HOME_PAGE,
   URL_PATHS.MENU.CATEGORIY(""),
   URL_PATHS.MENU.GET_PRODUCT("", ""),
-  URL_PATHS.UN_AUTHORIZED,
-  URL_PATHS.NOT_FOUND,
 ];
 
+export const isPublicPath = (path: string) => {
+  if (URL_PATHS.HOME === path) return true;
+  return PUBLICE_PATHS.some((item) => path.startsWith(item));
+};
 export const isAdminPath = (path: string) => path.startsWith("/admin");
-export const isProtectedPath = (path: string) => path.startsWith("/orders");
 export const isChefPath = (path: string) => path.startsWith("/chef");
 export const isDriverPath = (path: string) => path.startsWith("/driver");
+export const isCustomerPath = (path: string) => path.startsWith("/user");
 export const DEFAULT_REDIRECTED = URL_PATHS.HOME;
 export const API_PREFIX = "/api/";
+
+export const IGNORET_PATHS: string[] = [
+  URL_PATHS.UN_AUTHORIZED,
+  URL_PATHS.NOT_FOUND,
+  API_PREFIX,
+];

@@ -13,7 +13,7 @@ import { URL_PATHS } from "@/constants";
 
 export default function Unauthorized() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
+    <div className="flex min-h-screen items-center justify-center p-4 ">
       <Card className="mx-auto max-w-md shadow-lg">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">

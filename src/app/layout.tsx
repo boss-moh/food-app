@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-// import { font } from "@/fonts";
+import { font } from "@/fonts";
 import { childrenProps } from "@/constants";
 import "@/styles/globals.css";
 import Header from "@/components/header";
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: childrenProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={font.className}>
         <Providers>
           <Header />
           <main className="min-h-screen bg-background">{children}</main>

@@ -11,7 +11,6 @@ import { Form } from "@/components/ui/form";
 import { signinSchema, signinType, URL_PATHS } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { GoogleButton } from "../GoogleButton";
 import { signInAction } from "@/actions/auth";
@@ -22,9 +21,10 @@ import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { InputWithLabel, LoadingButton } from "@/components/share";
 import { Button } from "@/components/ui/button";
+import useRedirectAfterUpdate from "@/hooks/useRedirectAfterUpdate";
 
 export default function SignInPage() {
-  const router = useRouter();
+  const { redirectAfterUpdate } = useRedirectAfterUpdate();
 
   const form = useForm<signinType>({
     resolver: zodResolver(signinSchema),
@@ -39,7 +39,7 @@ export default function SignInPage() {
     onSuccess: async () => {
       form.reset(form.getValues());
       toast.success("Successfully logged in!");
-      router.push(URL_PATHS.HOME);
+      await redirectAfterUpdate();
     },
   });
 

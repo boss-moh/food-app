@@ -53,9 +53,7 @@ export const MealsCards = ({ meals }: MealsCardsProps) => {
             </p>
             <p className="text-sm text-muted-foreground ">
               category:
-              <span className="text-sm font-medium text-black">
-                {meal.category.name}
-              </span>
+              <span className="text-sm font-medium ">{meal.category.name}</span>
             </p>
 
             <AvailableControl id={meal.id} isAvailable={meal.isAvailable} />
