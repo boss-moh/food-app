@@ -1,4 +1,4 @@
-import { fetchChefOrders } from "@/lib/data/chef";
+import { fetchChefOrders } from "@/data/chef";
 import ClientContent from "./Content";
 import { EmptyOrder } from "@/components/share";
 

@@ -1,4 +1,4 @@
-import { RoleType, signinSchema } from "@/constants";
+import { RoleType, signinSchema, URL_PATHS } from "@/constants";
 import { prisma } from "@/lib";
 import bcrypt from "bcryptjs";
 import { CredentialsSignin, NextAuthConfig } from "next-auth";
@@ -88,7 +88,7 @@ export const authConfig: NextAuthConfig = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
-    signIn: "/login",
+    signIn: URL_PATHS.AUTH.SIGN_IN,
     error: "/error",
   },
 };

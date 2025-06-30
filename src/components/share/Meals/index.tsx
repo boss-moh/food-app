@@ -46,7 +46,7 @@ export const Meals = ({ meals }: { meals: mealsType }) => {
             </p>
             <div className="flex justify-between gap-2">
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <p className="flex items-center gap-1">
+                <p className="flex items-center gap-2 text-muted-foreground">
                   <Utensils className="h-4 w-4" />
                   <span>{meal.category.name}</span>
                 </p>
@@ -56,7 +56,7 @@ export const Meals = ({ meals }: { meals: mealsType }) => {
                 </p>
               </div>
               <Status status={meal.isAvailable ? "DONE" : "REJECTED"}>
-                Available
+                {meal.isAvailable ? "Available" : "Not Available"}
               </Status>
             </div>
           </CardContent>

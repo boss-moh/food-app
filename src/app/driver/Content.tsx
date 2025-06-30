@@ -10,7 +10,7 @@ import {
   UserInfo,
 } from "@/components/share";
 import { useState } from "react";
-import { DriversOrder } from "@/lib/data/driver";
+import { DriversOrder } from "@/data/driver";
 
 const options = ChangeStatusOptions.DRIVER;
 

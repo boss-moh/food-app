@@ -13,7 +13,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
 
 export const editCategoryAction = authAction
-  .metadata({name:'Edit category'})
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(editCategorySchema)
   .action(async ({ parsedInput }) => {

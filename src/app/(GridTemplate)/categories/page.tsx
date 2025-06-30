@@ -1,6 +1,6 @@
 import { GridItem, GridTemplate } from "@/components/share";
 import { URL_PATHS } from "@/constants";
-import { fetchCategories } from "@/lib/data";
+import { fetchCategories } from "@/data";
 
 export const metadata = {
   title: "Meals Page | TastyGo",

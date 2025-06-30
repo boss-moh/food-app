@@ -7,7 +7,6 @@ import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const toggleAvaliableAction = authAction
-  .metadata({name:'create avaliable'})
 
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(toggleSchema)
@@ -23,8 +22,7 @@ export const toggleAvaliableAction = authAction
       },
     });
 
-
-    revalidatePath(URL_PATHS.CHEF.PRODUCT.HOME_PAGE)
+    revalidatePath(URL_PATHS.CHEF.PRODUCT.HOME_PAGE);
     return {
       message: `Successfully ${
         isAvailable ? "enabled" : "disabled"

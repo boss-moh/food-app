@@ -2,17 +2,19 @@
 import { OrderStatus, RoleStatus } from "@prisma/client";
 import { authAction } from "../next-safe-action";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
-import {
-  changOrderStatusSchema,
-  URL_PATHS,
-} from "@/constants";
+import { changOrderStatusSchema, URL_PATHS } from "@/constants";
 import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 
 export const changeStatusAction = authAction
-  .metadata({name:'change Status'})
 
-  .use(authorizationMiddleware([RoleStatus.CHEF, RoleStatus.ADMIN,RoleStatus.DRIVER]))
+  .use(
+    authorizationMiddleware([
+      RoleStatus.CHEF,
+      RoleStatus.ADMIN,
+      RoleStatus.DRIVER,
+    ])
+  )
   .schema(changOrderStatusSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { id, status } = parsedInput;
@@ -46,6 +48,11 @@ const revalidatePaths = (userRole: RoleStatus) => {
 
     case RoleStatus.DRIVER:
       revalidatePath(URL_PATHS.DRIVER);
+
+      break;
+
+    case RoleStatus.ADMIN:
+      revalidatePath(URL_PATHS.ADMIN.ORDERS.HOME_PAGE, "layout");
 
       break;
   }

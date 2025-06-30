@@ -1,4 +1,4 @@
-import { fetchProducts } from "@/lib/data/admin";
+import { fetchProducts } from "@/data/admin";
 import MealsCards from "./_components/MealsCards";
 
 type ServerFetchingProps = {

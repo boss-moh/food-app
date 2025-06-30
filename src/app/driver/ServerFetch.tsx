@@ -1,4 +1,4 @@
-import { fetchDriverOrders } from "@/lib/data/driver";
+import { fetchDriverOrders } from "@/data/driver";
 import ClientContent from "./Content";
 import { EmptyOrder } from "@/components/share";
 

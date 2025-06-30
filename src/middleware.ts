@@ -1,64 +1,60 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth";
 import {
-  API_PREFIX,
-  isAdminPath,
-  isChefPath,
-  isDriverPath,
-  isProtectedPath,
-  PUBLICE_PATHS,
+  IGNORET_PATHS,
+  isPublicPath as checkIsPublicPath,
   URL_PATHS,
+  RoleStatus,
 } from "./constants";
 import { NextResponse } from "next/server";
+import {
+  getURLRedirectBaseOnRole,
+  isPathForOtherRole,
+  isPathForThisRole,
+} from "./utils/getRedirectURL";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const path = req.nextUrl.pathname;
   console.log("path", path);
-  const isApiRequest = path.startsWith(API_PREFIX);
-  if (isApiRequest) return;
 
-  const isPublicPath = PUBLICE_PATHS.some((item) => item.startsWith(path));
-  if (isPublicPath) return;
+  const isIGNORETPath = IGNORET_PATHS.some((item) => path.startsWith(item));
+
+  if (isIGNORETPath) return;
+
+  const isPublicPath = checkIsPublicPath(path);
 
   const isThemLoggin = !!req.auth;
 
-  if (isProtectedPath(path)) {
-    if (isThemLoggin) {
-      return;
-    }
+  if (!isThemLoggin && isPublicPath) return;
+  if (!isThemLoggin && !isPublicPath) {
+    // check the url is exits
     return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
   }
 
   const userRole = req.auth?.user.role;
 
-  const isThemAdmin = userRole === "ADMIN";
+  console.log("userRole", userRole);
 
-  if (isAdminPath(path)) {
-    if (isThemAdmin) {
-      return;
-    }
+  // customer should able to visit public page
+  if (isPublicPath && userRole !== RoleStatus.CUSTOMER) {
+    return NextResponse.redirect(
+      new URL(getURLRedirectBaseOnRole(userRole!), req.url)
+    );
+  }
+  if (isPathForThisRole(userRole!, path)) {
+    return;
+  }
+
+  // if false may there are no path or not
+  // check there are path for other actores
+
+  if (isPathForOtherRole(userRole!, path)) {
     return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
   }
 
-  const isThemChef = userRole === "CHEF";
-
-  if (isChefPath(path)) {
-    if (isThemChef) {
-      return;
-    }
-    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
-  }
-
-  const isThemDriver = userRole === "DRIVER";
-
-  if (isDriverPath(path)) {
-    if (isThemDriver) {
-      return;
-    }
-    return NextResponse.redirect(new URL(URL_PATHS.UN_AUTHORIZED, req.url));
-  }
+  return NextResponse.redirect(new URL(URL_PATHS.NOT_FOUND, req.url));
 });
 
 export const config = {

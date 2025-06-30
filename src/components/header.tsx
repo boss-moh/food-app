@@ -15,22 +15,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  ShoppingBag,
-  ShoppingCart,
-  User,
-  X,
-} from "lucide-react";
+import { LogOut, Menu, ShoppingBag, ShoppingCart, User, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "./logo";
-import { NAV_LINKS, URL_PATHS } from "@/constants";
+import {
+  DEFAULT_REDIRECTED,
+  NAV_LINKS,
+  RoleStatus,
+  URL_PATHS,
+} from "@/constants";
 import { useOrder } from "@/store/order";
 import { ThemeToggle } from "./toggle-theme";
 import { signOut, useSession } from "next-auth/react";
+import WhoCanSee from "./WhoCanSee";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,25 +83,30 @@ export default function Header() {
 
 const NavItems = ({ onClick = () => {} }) => {
   const { items } = useOrder();
+
   const count = items.length;
 
   return (
     <>
-      {NAV_LINKS.map((link) => (
-        <Button onClick={onClick} variant="ghost" asChild key={link.label}>
-          <Link href={link.href}>{link.label}</Link>
-        </Button>
-      ))}
+      <WhoCanSee roles={[RoleStatus.CUSTOMER, "non-login"]}>
+        {NAV_LINKS.map((link) => (
+          <Button onClick={onClick} variant="ghost" asChild key={link.label}>
+            <Link href={link.href}>{link.label}</Link>
+          </Button>
+        ))}
 
-      <Button onClick={onClick} asChild variant="ghost" className="relative">
-        <Link href={URL_PATHS.CART}>
-          <ShoppingCart className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {count}
-          </span>
-        </Link>
-      </Button>
-      {<UserDorpDownMenu onClick={onClick} />}
+        <Button onClick={onClick} asChild variant="ghost">
+          <Link href={URL_PATHS.CART}>
+            <span className="relative ">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute -top-4 -right-4 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {count}
+              </span>
+            </span>
+          </Link>
+        </Button>
+      </WhoCanSee>
+      <UserDorpDownMenu onClick={onClick} />
       <ThemeToggle />
     </>
   );
@@ -137,58 +140,32 @@ const UserDorpDownMenu = ({ onClick = () => {} }) => {
             </p>
           </div>
         </DropdownMenuLabel>
-        {user.role === "CUSTOMER" && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.USER.PROFILE(user.id)}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Profile</span>
-              </Link>
-            </DropdownMenuItem>
 
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
-                <ShoppingBag className="mr-2 h-5 w-5" />
-                <span>My Orders</span>
-              </Link>
-            </DropdownMenuItem>
-          </>
-        )}
-
-        {user.role === "DRIVER" && (
+        <WhoCanSee roles={["CUSTOMER"]}>
           <DropdownMenuItem asChild>
-            <Link href={URL_PATHS.DRIVER}>
+            <Link href={URL_PATHS.USER.PROFILE(user.id)}>
               <User className="mr-2 h-5 w-5" />
-              <span>Go to DRIVER&apos;s Home </span>
+              <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-        )}
-        {user.role === "CHEF" && (
+
           <DropdownMenuItem asChild>
-            <Link href={URL_PATHS.CHEF.HOME_PAGE}>
-              <User className="mr-2 h-5 w-5" />
-              <span>Go to CHEF&apos;s Home </span>
+            <Link href={URL_PATHS.USER.ORDERS.HOME_PAGE}>
+              <ShoppingBag className="mr-2 h-5 w-5" />
+              <span>My Orders</span>
             </Link>
           </DropdownMenuItem>
-        )}
-        {user.role === "ADMIN" && (
-          <>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.ADMIN.HOME_PAGE}>
-                <LayoutDashboard className="mr-2 h-5 w-5" />
-                <span>Go to Dashborad</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={URL_PATHS.HOME}>
-                <User className="mr-2 h-5 w-5" />
-                <span>Go to Use&apos;s Home </span>
-              </Link>
-            </DropdownMenuItem>
-          </>
-        )}
+        </WhoCanSee>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem
+          onClick={() =>
+            signOut({
+              redirect: true,
+              redirectTo: DEFAULT_REDIRECTED,
+            })
+          }
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

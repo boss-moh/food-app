@@ -1,3 +1,4 @@
+"use client";
 import {
   SelectContent,
   SelectItem,
@@ -5,50 +6,50 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { option } from "@/constants";
+import { option, options } from "@/constants";
 import { cn } from "@/lib";
+import { ComponentProps } from "react";
 
-type SelecterProps = {
+type SelecterProps = ComponentProps<typeof Select> & {
   defaultValue?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  options: option[] | string[];
+  options: options;
   className?: string;
 };
 
 export const Selecter = ({
-  defaultValue,
-  onChange,
+  defaultValue = "all",
+  onChange = () => {},
   placeholder,
   options,
   className,
+  ...rest
 }: SelecterProps) => {
   return (
-    <Select defaultValue={defaultValue} onValueChange={onChange}>
+    <Select defaultValue={defaultValue} onValueChange={onChange} {...rest}>
       <SelectTrigger className={cn("w-full md:w-[180px]", className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="capitalize">
         {options.map((option) => {
-          const { value, name } =
-            typeof option === "string"
-              ? { value: option, name: option }
-              : option;
+          const { value, name } = getValue(option);
           return (
             <SelectItem key={value} value={value}>
               {name}
             </SelectItem>
           );
         })}
-
-        {placeholder && (
-          <div className=" w-full  select-none   py-1.5 pl-8 pr-2 text-sm">
-            {placeholder}
-          </div>
-        )}
       </SelectContent>
     </Select>
   );
 };
 
 export default Selecter;
+
+const getValue = (option: option | string) => {
+  const { value, name } =
+    typeof option === "string" ? { value: option, name: option } : option;
+
+  return { value, name };
+};

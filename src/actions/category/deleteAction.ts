@@ -1,11 +1,10 @@
-'use server'
+"use server";
 import { IDSchmea, RoleStatus } from "@/constants";
 import { authAction } from "../next-safe-action";
 import { prisma } from "@/lib";
 import { authorizationMiddleware } from "../next-safe-action/middleware/auth";
 
 export const deleteCategoryAction = authAction
-  .metadata({name:'delete category'})
   .use(authorizationMiddleware([RoleStatus.CHEF]))
   .schema(IDSchmea)
   .action(async ({ parsedInput }) => {

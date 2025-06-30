@@ -13,12 +13,10 @@ type createFeedBack = addFeedBackType & {
 };
 
 export const feedAction = authAction
-  .metadata({ name: "create feed" })
 
   .use(authorizationMiddleware([RoleStatus.CUSTOMER]))
   .schema(addFeedBackSchmea.extend({ productId: z.string() }))
-  .action(async ({ parsedInput, ctx, metadata }) => {
-    console.log("Metadata received:", metadata); // Log metadata for debugging
+  .action(async ({ parsedInput, ctx }) => {
     const currentUser = ctx.session.user;
     const { productId } = parsedInput;
 

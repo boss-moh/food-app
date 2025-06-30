@@ -5,7 +5,7 @@ import {
   fetchOrdersCount,
   fetchSales,
   fetchUsersCount,
-} from "@/lib/data/admin";
+} from "@/data/admin";
 import { DollarSign, Package, ShoppingBag, Users } from "lucide-react";
 import { Suspense } from "react";
 import { OrderTable } from "./orders/OrderTable";

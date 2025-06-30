@@ -1,6 +1,6 @@
 export * from "./AddToOrderButton";
 export * from "./gridTemplate";
-export * from "./Search";
+export * from "./FormControlSearch";
 export * from "./Meals";
 export * from "./CategoriesSelecter";
 export * from "./Selecter";
@@ -16,3 +16,4 @@ export * from "./UserInfo";
 export * from "./rating";
 export * from "./FeedBacks";
 export * from "./InputWithLabel";
+export * from "./FormControlSearch/SearchInput";

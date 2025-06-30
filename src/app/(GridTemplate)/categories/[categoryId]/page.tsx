@@ -1,7 +1,7 @@
 import { GridItem, GridTemplate } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { DynamicProps, URL_PATHS } from "@/constants";
-import { fetchCategoryById, fetchProductsById } from "@/lib/data";
+import { fetchCategoryById, fetchProductsById } from "@/data";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
